@@ -1,91 +1,90 @@
 {
-  "$schema": "https://rag-studio.local/schemas/exercises-manifest.json",
-  "version": "4.0.0",
-  "course": "agent-rag-learning",
-  "exercises": {
-    "module_01_lexical_vs_semantic": {
-      "exerciseId": "lexical-vs-semantic",
-      "query": "distributed workforce policies",
-      "policy_corpus": [
-        "Policy_01_RemoteWork.txt",
-        "Policy_02_Security.txt",
-        "Policy_03_Expenses.txt"
-      ],
-      "embedding_model": "sentence-transformers/all-MiniLM-L6-v2",
-      "expected_lexical_matches": 0,
-      "expected_rank_1_document": "Policy_01_RemoteWork.txt"
+  "version": "4.2.0",
+  "course": "rag-mcp",
+  "modules": {
+    "mod_chunking": {
+      "title": "Module A: Markdown Chunking & Document Boundaries",
+      "badge": "Chunks & Source",
+      "tasks": [
+        "A1",
+        "A2",
+        "A3",
+        "A4",
+        "A5",
+        "A6",
+        "A7",
+        "A8"
+      ]
     },
-    "module_02_chunking": {
-      "exerciseId": "chunking-strategies",
-      "canonical_document": "doc_001.txt",
-      "chunk_size": 350,
-      "chunk_overlap": 50,
-      "length_function": "len",
-      "separators": ["\n\n", "\n", ". ", " ", ""],
-      "strip_whitespace": true,
-      "expected_canonical_chunks": 12,
-      "alternate_experiments": {
-        "exp_300_30": {
-          "chunk_size": 300,
-          "chunk_overlap": 30,
-          "expected_chunks": 14
-        },
-        "exp_250_40": {
-          "chunk_size": 250,
-          "chunk_overlap": 40,
-          "expected_chunks": 17
-        }
-      }
+    "mod_vector_math": {
+      "title": "Module B: Vector Similarity Mathematics (Cosine, Dot, L2)",
+      "badge": "Similarity Maths",
+      "tasks": [
+        "B1",
+        "B2",
+        "B3",
+        "B4",
+        "B5",
+        "B6",
+        "B7",
+        "B8",
+        "B9",
+        "B10"
+      ]
     },
-    "module_03_embeddings": {
-      "exerciseId": "embeddings-vector-math",
-      "model_id": "sentence-transformers/all-MiniLM-L6-v2",
-      "dimensions": 384,
-      "device": "cpu",
-      "normalization": true,
-      "sample_sentences": [
-        "Retrieval-Augmented Generation grounds AI answers with verified facts.",
-        "RAG systems search a vector database to provide context for LLMs.",
-        "Baking traditional sourdough bread requires wild yeast and hydration."
-      ],
-      "pairs": {
-        "related": [0, 1],
-        "distractor": [0, 2]
-      }
+    "mod_pca_embeddings": {
+      "title": "Module C: Visual Embeddings & 3D PCA Latent Space",
+      "badge": "3D PCA & Latent Space",
+      "tasks": [
+        "C1",
+        "C2",
+        "C3",
+        "C4",
+        "C5",
+        "C6",
+        "C7",
+        "C8"
+      ]
     },
-    "module_04_chromadb": {
-      "exerciseId": "vector-store-ops",
-      "collection_name": "rag_knowledge_base",
-      "distance_space": "cosine",
-      "canonical_corpus": [
-        "doc_001.txt",
-        "doc_002.txt",
-        "doc_003.txt"
-      ],
-      "expected_total_indexed_chunks": 37,
-      "query": "How does HNSW use skip lists and layers to navigate high-dimensional space?",
-      "top_k": 2,
-      "expected_top_source": "doc_003.txt"
+    "mod_chromadb": {
+      "title": "Module D: ChromaDB Persistent Storage & Retrieval",
+      "badge": "ChromaDB Storage",
+      "tasks": [
+        "D1",
+        "D2",
+        "D3",
+        "D4",
+        "D5",
+        "D6",
+        "D7",
+        "D8"
+      ]
     },
-    "module_05_rag_pipeline": {
-      "exerciseId": "grounded-rag-pipeline",
-      "question": "What is the computational complexity of exact k-NN compared to approximate search?",
-      "top_k": 2,
-      "grounding_prompt_header": "You are a specialized AI technical assistant. Answer the user's question using ONLY the verified context below.",
-      "required_citations": true
+    "mod_ann_indexes": {
+      "title": "Module E: Approximate Nearest Neighbors (HNSW & IVF)",
+      "badge": "ANN Indexing",
+      "tasks": [
+        "E1",
+        "E2",
+        "E3",
+        "E4",
+        "E5",
+        "E6",
+        "E7",
+        "E8"
+      ]
     },
-    "module_06_api_preview": {
-      "exerciseId": "api-preview-deployment",
-      "service_host": "127.0.0.1",
-      "service_port": 8000,
-      "gateway_prefix": "/preview/8000",
-      "endpoints": {
-        "health": "/health",
-        "query": "/query",
-        "docs": "/docs",
-        "openapi": "/openapi.json"
-      },
-      "test_query": "How does HNSW use skip lists and layers to navigate high-dimensional space?"
+    "mod_gemini_multimodal": {
+      "title": "Module F: Gemini Multimodal Embeddings (Extension)",
+      "badge": "Multimodal Embeddings",
+      "tasks": [
+        "F1",
+        "F2",
+        "F3",
+        "F4",
+        "F5",
+        "F6"
+      ]
     }
   }
 }

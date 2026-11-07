@@ -2,10 +2,10 @@ apiVersion: studio.course/v2
 kind: Course
 metadata:
   id: rag-mcp
-  version: 1.0.0
-  title: Foundations of RAG & Vector Databases
-  badge: RAG & Vector Search
-  description: Master multimodal embeddings, vector similarity math, ChromaDB HNSW indexing, and modular Python RAG systems.
+  version: 4.2.0
+  title: "Foundations of RAG: Embeddings & Vector Search"
+  badge: "RAG & Vector Search"
+  description: "From Markdown chunks to similarity metrics, PCA, ChromaDB, HNSW, IVF, and multimodal embeddings. 43 Reveal.js slides, 6 Jupyter labs, and 48 MCQ/NAT tasks."
   difficulty: intermediate
   estimatedMinutes: 180
 runtime:
@@ -25,18 +25,33 @@ content:
   slides: slides/index.html
   workspace: workspace
 modules:
-  - id: mod_rag_01
-    title: Multimodal Embeddings, Similarity Math & Indexing
-    taskIds: [t_embed_pca, t_similarity_math, t_vector_indexing]
-    slideIds: [embeddings-multimodal, similarity-and-indexing-overview, vector-similarity-math, vector-indexing-methods]
+  - id: mod_chunking
+    title: "Module A: Markdown Chunking & Document Boundaries"
+    taskIds: [A1, A2, A3, A4, A5, A6, A7, A8]
+    slideIds: [slide_01, slide_02, slide_03, slide_04, slide_05, slide_06]
     defaultTool: jupyter
-  - id: mod_rag_02
-    title: ChromaDB Setup, Ingestion & Semantic Retrieval
-    taskIds: [t_chroma_setup_retrieval]
-    slideIds: [chromadb-hnsw-l2]
+  - id: mod_vector_math
+    title: "Module B: Vector Similarity Mathematics (Cosine, Dot, L2)"
+    taskIds: [B1, B2, B3, B4, B5, B6, B7, B8, B9, B10]
+    slideIds: [slide_17, slide_18, slide_19, slide_20, slide_21, slide_22, slide_23, slide_24]
     defaultTool: jupyter
-  - id: mod_rag_03
-    title: Minimal Production Python RAG Project
-    taskIds: [t_proj_ingest, t_proj_verify, t_proj_main_cli]
-    slideIds: [prompt-synthesis, production-microservice-transition]
-    defaultTool: vscode
+  - id: mod_pca_embeddings
+    title: "Module C: Visual Embeddings & 3D PCA Latent Space"
+    taskIds: [C1, C2, C3, C4, C5, C6, C7, C8]
+    slideIds: [slide_07, slide_08, slide_09, slide_10, slide_11, slide_12, slide_13, slide_14, slide_15, slide_16]
+    defaultTool: jupyter
+  - id: mod_chromadb
+    title: "Module D: ChromaDB Persistent Storage & Retrieval"
+    taskIds: [D1, D2, D3, D4, D5, D6, D7, D8]
+    slideIds: [slide_25, slide_26, slide_33, slide_34, slide_35, slide_36]
+    defaultTool: jupyter
+  - id: mod_ann_indexes
+    title: "Module E: Approximate Nearest Neighbors (HNSW & IVF)"
+    taskIds: [E1, E2, E3, E4, E5, E6, E7, E8]
+    slideIds: [slide_27, slide_28, slide_29, slide_30, slide_31, slide_32, slide_37]
+    defaultTool: jupyter
+  - id: mod_gemini_multimodal
+    title: "Module F: Gemini Multimodal Embeddings (Extension)"
+    taskIds: [F1, F2, F3, F4, F5, F6]
+    slideIds: [slide_38, slide_39, slide_40, slide_41, slide_42, slide_43]
+    defaultTool: jupyter

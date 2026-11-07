@@ -67,29 +67,28 @@ Any user or agent can clone this repository and immediately build and launch the
 │   ├── app.js                  # Studio state manager, annotator, focus mode controller
 │   ├── style.css               # Unified studio stylesheet
 │   └── tasks.json              # Canonical task instructions and verification questions
-├── slides/                     # Offline Presentation Deck (8 Canonical Slides)
-│   ├── index.html              # Reveal.js presentation with KaTeX math & 3D space
-│   ├── app.js                  # Reveal initialization, Three.js 3D space, query simulator
-│   ├── style.css               # Deck layout, 16:9 stage, and interactive widget styles
-│   ├── vectors.json            # 384-d all-MiniLM embeddings & PCA 3D coordinates
-│   └── vendor/                 # Bundled Three.js and KaTeX libraries
+├── slides/                     # Offline Presentation Deck (43 Curated Slides)
+│   ├── index.html              # Reveal.js presentation with interview ribbons & doc links
+│   ├── dist/                   # Local bundled Reveal.js engine and CSS
+│   ├── vendor/                 # Local offline Plotly for 3D PCA plot
+│   └── data/                   # Sample image for cross-modal slide
 ├── courses/
 │   └── rag-mcp/                # Canonical Course Content Bundle
-│       ├── course.yaml         # Course definition schema (runtime, tools, modules)
-│       ├── tasks.json          # Course-specific task instructions
+│       ├── course.yaml         # Course definition schema (v2, 6 modules, slideIds, taskIds)
+│       ├── tasks.json          # 48 interactive tasks across 6 modules
 │       ├── slides/             # Slides mirror for container packaging
 │       └── workspace/          # Starter template files populated into learner workspace
 ├── workspace/                  # Learner Computational Workspace (mounted into container)
-│   ├── notebooks/              # Interactive JupyterLab notebooks (00, 01, 02)
-│   ├── mini_rag_project/       # Modular Python RAG production project
-│   │   ├── ingest.py           # Document chunking & ChromaDB ingestion
-│   │   ├── retriever.py        # Semantic similarity query engine
-│   │   ├── generator.py        # Grounded prompt synthesis & source attribution
-│   │   ├── main.py             # CLI entry point for RAG queries
-│   │   ├── config.py           # Embeddings model & Chroma storage configuration
-│   │   └── verify_rag.py       # Automated test suite for project grading
-│   ├── labs/                   # CLI lab verification helpers
-│   └── data/                   # Raw documents and persistent Chroma database
+│   ├── notebooks/              # 6 Interactive JupyterLab notebooks (00 through 05)
+│   │   ├── 00_markdown_chunking.ipynb          # Module A: Headings, paragraphs, word windows
+│   │   ├── 01_vector_math.ipynb                # Module B: Cosine, Dot product & Squared L2 math
+│   │   ├── 02_pca_and_embeddings.ipynb         # Module C: 3D PCA projection & toy vectors
+│   │   ├── 03_chromadb_search.ipynb            # Module D: ChromaDB collection indexing & query
+│   │   ├── 04_ann_indexes.ipynb                # Module E: HNSW graph search & IVF inverted lists
+│   │   └── 05_gemini_multimodal_optional.ipynb # Module F: Gemini text & multimodal embeddings
+│   ├── data/                   # field_notes.md, toy_vectors.json, cat_illustration.png
+│   ├── guides/                 # TEACHING_NOTES.md & REFERENCE_NOTEBOOK_REVIEW.md
+│   └── assessments/            # QUESTION_SHEET.md, questions.json & quiz.html
 └── packages/
     └── rag_course/             # Local Python package pre-installed in container
 ```

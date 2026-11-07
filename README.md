@@ -1,4 +1,4 @@
-# Studio Universal v4.2 — Foundations of RAG & Vector Databases 🚀
+# Studio Universal v4.2 — Foundations of RAG: Embeddings & Vector Search 🚀
 
 [![Version](https://img.shields.io/badge/version-4.2.0-blue.svg)](release-manifest.json)
 [![Architecture](https://img.shields.io/badge/architecture-Universal%20Single--Port%20Hub-emerald.svg)](spec.md)
@@ -62,17 +62,17 @@ Studio Universal v4.2 introduces major UX and architectural advancements adherin
                      ▼                               │   │   │                              ▼
         ┌─────────────────────────┐                  │   │   │                 ┌─────────────────────────┐
         │     Studio Web UI       │                  │   │   │                 │   Supervisor Probes     │
-        │  (5-Mode Slot Manager,  │                  │   │   │                 │   /health/live (200)    │
-        │   Tasks, MCQs, State)   │                  │   │   │                 │   /health/ready (JSON)  │
+        │  (6 Modules, 48 Tasks,  │                  │   │   │                 │   /health/live (200)    │
+        │   MCQs & NAT, State)    │                  │   │   │                 │   /health/ready (JSON)  │
         └─────────────────────────┘                  │   │   │                 └─────────────────────────┘
                                                      │   │   │
                      ┌───────────────────────────────┘   │   └──────────────────────────┐
                      │ /slides/                          │                              │ /preview/8000/
                      ▼                                   │                              ▼
         ┌─────────────────────────┐                      │                 ┌─────────────────────────┐
-        │   Reveal.js + Three.js  │                      │                 │   Full-Stack API App    │
-        │   Interactive 3D Deck   │                      │                 │   FastAPI microservice  │
-        │  & Dimension Inspector  │                      │                 │   (docs & OpenAPI spec) │
+        │   Reveal.js + Plotly    │                      │                 │   Full-Stack API App    │
+        │   43 Visual Slides,     │                      │                 │   FastAPI microservice  │
+        │  3D PCA & HNSW Explorer │                      │                 │   (docs & OpenAPI spec) │
         └─────────────────────────┘                      │                 └─────────────────────────┘
                                                          │
                      ┌───────────────────────────────────┴──────────────────────────────┐
@@ -87,7 +87,7 @@ Studio Universal v4.2 introduces major UX and architectural advancements adherin
                                                          ▼
                                           ┌──────────────────────────────┐
                                           │      Shared /workspace       │
-                                          │   Data, Labs, Notebooks,     │
+                                          │   6 Labs, Data, Notebooks,   │
                                           │   Pre-baked MiniLM Cache     │
                                           └──────────────────────────────┘
 ```
@@ -100,63 +100,41 @@ Studio Universal v4.2 introduces major UX and architectural advancements adherin
    - **✏️ Draw / Pen**: Smooth drawing with Bézier curves, highlighter, color picker, and eraser.
    - **👆 Interact**: Switches overlay canvas to `pointer-events: none`, allowing learners to freely click, scroll, and type in VS Code or Jupyter while preserving drawn annotations.
    - **Draggable Dock**: Grab handle allows positioning the toolbar anywhere on screen with boundary clamping.
-3. **Reveal.js Deck with KaTeX Typography & Three.js 3D Space:**
-   - Bundled offline KaTeX (`slides/vendor/katex/`) rendering crisp mathematical formulas ($\mathbf{W}, \mathbf{b}, d_{L2}^2, \text{Sim}_{\cos}$).
-   - 3D interactive WebGL vector space visualizer with PCA projections, cluster semantics, and collapsible interview questions on every slide.
-4. **Pedagogical Notebooks & Modular Production System:**
-   - 3 guided notebooks step-by-step through environment verification, mathematical similarity, and ChromaDB vector indexing.
-   - Production Python package `mini_rag_project/` demonstrating real-world clean architecture with `config.py`, `ingest.py`, `retriever.py`, `generator.py`, and `main.py`.
+3. **43-Slide Reveal.js Deck with Interview Ribbons & Official Documentation:**
+   - 43 curated visual slides covering document chunking, high-dimensional latent space, vector metrics math, 3D PCA, HNSW graph traversal, IVF inverted lists, and ChromaDB architecture.
+   - **Interview Thinking Prompt** on every slide encouraging learners to reason before revealing solutions.
+   - **Official Documentation Link** on every slide directing to authoritative docs (ChromaDB, scikit-learn, Faiss, Gemini, Sentence-Transformers).
+   - **Interactive Explorers**: Real-time chunking parameter slider, live similarity metric scaling, 3D PCA scatter plot using local offline Plotly, multi-layer HNSW graph hops, and IVF cluster probe visualizer.
+4. **6 Pedagogical Labs & 48 Auto-Graded Tasks:**
+   - 6 structured Jupyter notebooks containing embedded task boards, editable experiments, hints, and fully open worked answers.
+   - 48 auto-graded questions (31 Numeric Answer Type + 17 Multiple Choice Questions) integrated directly into the Studio task runner with instant validation.
 
 ---
 
-## 📚 Curriculum Structure
+## 📚 Curriculum Structure (6 Modules · 48 Tasks)
 
-The course is organized into **3 core modules** with **7 interactive tasks**, supported by both hands-on Jupyter notebooks and standalone Python scripts:
+The workshop is organized into **6 core modules** containing **48 interactive tasks**:
 
-| Module | Title | Notebook Track | Modular Python Track | Verification Objective |
-|:---:|---|---|---|---|
-| **0** | **Workspace & Knowledge Base Setup** | `00_environment_and_workspace_setup.ipynb` | `labs/00_env_check.py` | CPU offline model verification, ChromaDB storage validation, and directory permissions. |
-| **1** | **Embeddings, Similarity & Indexing** | `01_embeddings_similarity_and_indexing.ipynb` | `labs/embeddings_lab.py`<br>`labs/chunking_lab.py` | 384-dim sentence embeddings, Cosine vs Dot Product vs L2 distance math, and HNSW graphs. |
-| **2** | **ChromaDB & Production Mini-RAG** | `02_chromadb_setup_ingestion_retrieval.ipynb` | `mini_rag_project/main.py`<br>`mini_rag_project/verify_rag.py` | Persistent collection indexing, metadata filtering, top-k retrieval, and grounded citation prompt assembly. |
-
-### Diagnostic Verification Gate
-Learners and CI pipelines can run the end-to-end diagnostic verifier at any time:
-```bash
-python /workspace/labs/verify_rag.py --json
-# or for the production project:
-python /workspace/mini_rag_project/verify_rag.py
-```
+| Module | Code | Notebook | Topics & Practical Objectives | Tasks |
+|:---:|:---:|---|---|:---:|
+| **A** | `mod_chunking` | `00_markdown_chunking.ipynb` | Inspect source markdown, count headings/paragraphs/words, test word-window chunkers, and analyze chunk overlap trade-offs. | 8 |
+| **B** | `mod_vector_math` | `01_vector_math.ipynb` | Compute and compare Cosine Similarity, Dot Product, and Squared Euclidean ($L2$) distance; study scaling invariance and the normalization identity $d^2 = 2 - 2\cos(\theta)$. | 10 |
+| **C** | `mod_pca_embeddings` | `02_pca_and_embeddings.ipynb` | High-dimensional latent geometry, 6D toy vectors, 3D PCA variance projection, pairwise distance distortion, and pre-baked MiniLM embeddings. | 8 |
+| **D** | `mod_chromadb` | `03_chromadb_search.ipynb` | `PersistentClient` setup, collection creation, explicit vector insertion, distance ranking, metadata filtering (`where`), and disk re-opening. | 8 |
+| **E** | `mod_ann_indexes` | `04_ann_indexes.ipynb` | Approximate Nearest Neighbor algorithms: HNSW graph search (`ef_search`, $M$), IVF inverted file lists (`n_probe`), and Recall@k evaluation. | 8 |
+| **F** | `mod_gemini_multimodal` | `05_gemini_multimodal_optional.ipynb` | Text-only vs multimodal models, shared embedding spaces, retrieval task types, API key security, and cross-modal search. | 6 |
 
 ---
 
-## 📽️ Reveal.js Presentation Deck
+## 📽️ Integrated Presentation Deck
 
 The integrated presentation deck is accessible at `http://localhost:8080/slides/` or via the **Presentation Slides** tab:
 
-1. **Slide 1 — Multimodal Embeddings & High-Dimensional Projections:**
-   - Text chunks, images, and video represented as high-dimensional vectors ($D=384$) projected to 3D with PCA.
-   - Collapsible Interview Question: *Why do embedding models output fixed-length vectors regardless of input token length?*
-2. **Slide 2 — Vector Similarity Metrics Overview:**
-   - Comparison of Cosine Similarity, Dot Product, and Squared Euclidean Distance ($L2$ — ChromaDB default).
-   - Collapsible Interview Question: *When are Cosine Similarity and Squared Euclidean Distance monotonically equivalent?*
-3. **Slide 3 — Similarity Mathematics & Geometric Projections:**
-   - Full mathematical formulas, angle geometry, unit hypersphere normalization, and numerical examples.
-   - Collapsible Interview Question: *Why does ChromaDB use Squared Euclidean ($L2^2$) rather than standard Euclidean ($L2$)?*
-4. **Slide 4 — Vector Indexing Architecture (HNSW vs IVF):**
-   - Skip-list inspired Hierarchical Navigable Small World graphs vs Inverted File Index clustering.
-   - Collapsible Interview Question: *What is the curse of dimensionality, and why do exact k-NN searches fail at scale?*
-5. **Slide 5 — ChromaDB Query Engine & HNSW Search Mechanics:**
-   - Multi-layer graph traversal, beam search `efSearch`, and distance computations.
-   - Collapsible Interview Question: *What happens if `efSearch` is smaller than top-$k$, and how does it impact recall?*
-6. **Slide 6 — Grounded RAG Pipeline & Synthesis:**
-   - Query embedding, semantic retrieval, context window assembly, and citation grounding.
-   - Collapsible Interview Question: *How do you prevent the Lost-in-the-Middle phenomenon when feeding multiple retrieved chunks into an LLM?*
-7. **Slide 7 — Retrieval Failure Modes & Production Defenses:**
-   - Lexical mismatch, semantic drift, chunk fragmentation, and mitigation via hybrid search / reranking.
-   - Collapsible Interview Question: *How do you evaluate RAG retrieval quality without human labels in production?*
-8. **Slide 8 — End-to-End Hands-on RAG Architecture:**
-   - Visual architectural pipeline mapping raw documents to clean answers, linking directly to `mini_rag_project/`.
-   - Collapsible Interview Question: *How do you handle real-time document updates and deletions in a persistent vector database without full re-indexing?*
+- **Slides 01–06 (Module A):** Document ingestion, chunking trade-offs, and interactive chunk window sizing.
+- **Slides 07–16 (Module C):** Representation geometry, "Why not store cat = 1, dog = 2?", multimodal inputs, and live 3D PCA rotation.
+- **Slides 17–24 (Module B):** Vector distance metrics, Cosine vs Dot Product vs Squared $L2$, scaling playground, and normalization identities.
+- **Slides 25–37 (Modules D & E):** Vector databases, exact search, HNSW multi-layer navigation, IVF cluster probes, ChromaDB query mechanics, and recall evaluation.
+- **Slides 38–43 (Module F & RAG):** Gemini text vs multimodal models, end-to-end RAG architecture, retrieval failure modes, and retrospective checklist.
 
 ---
 
@@ -172,5 +150,5 @@ The integrated presentation deck is accessible at `http://localhost:8080/slides/
 
 ## 📄 License & Credits
 
-Built on open standards: code-server, JupyterLab, Reveal.js, Three.js, KaTeX, ChromaDB, and Sentence-Transformers.
+Built on open standards: code-server, JupyterLab, Reveal.js, Plotly, ChromaDB, hnswlib, and Sentence-Transformers.
 Distributed under the Apache 2.0 License.

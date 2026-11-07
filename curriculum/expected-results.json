@@ -1,253 +1,342 @@
 {
-  "version": "4.0.0",
-  "course": "agent-rag-learning",
+  "version": "4.2.0",
+  "course": "rag-mcp",
   "tasks": {
-    "t1_1": {
-      "exerciseId": "lexical-search",
-      "status": "PASS",
-      "inputHash": "8ff07dfc767265c7134bc7e4a88ee0c3b32c306a10a03b3e4ecfe65f586f6795",
-      "metrics": {
-        "query": "distributed workforce policies",
-        "matches_found": 0,
-        "matched_documents": [],
-        "synonym_mismatch_detected": true
-      }
+    "A1": {
+      "exerciseId": "mod_chunking_a1",
+      "module": "mod_chunking",
+      "type": "numeric",
+      "expected": 5.0,
+      "explanation": "Regex ^## matches five subsection headings."
     },
-    "t1_2": {
-      "exerciseId": "semantic-ranking",
-      "status": "PASS",
-      "inputHash": "8ff07dfc767265c7134bc7e4a88ee0c3b32c306a10a03b3e4ecfe65f586f6795",
-      "metrics": {
-        "query": "distributed workforce policies",
-        "top_document": "Policy_01_RemoteWork.txt",
-        "top_similarity": 0.2569,
-        "rankings": [
-          {
-            "document": "Policy_01_RemoteWork.txt",
-            "similarity": 0.2569,
-            "rank": 1
-          },
-          {
-            "document": "Policy_02_Security.txt",
-            "similarity": 0.1904,
-            "rank": 2
-          },
-          {
-            "document": "Policy_03_Expenses.txt",
-            "similarity": 0.1342,
-            "rank": 3
-          }
-        ]
-      }
+    "A2": {
+      "exerciseId": "mod_chunking_a2",
+      "module": "mod_chunking",
+      "type": "numeric",
+      "expected": 17.0,
+      "explanation": "The teaching file contains 17 nonempty blank-line-separated blocks."
     },
-    "t2_1": {
-      "exerciseId": "canonical-chunking",
-      "status": "PASS",
-      "inputHash": "db81fa1e59e38bdb7e47b798c69e5dde11b9a5361519e2bee0286dbe8dab9e35",
-      "metrics": {
-        "document": "doc_001.txt",
-        "document_length": 3164,
-        "chunk_size": 350,
-        "chunk_overlap": 50,
-        "total_chunks": 12,
-        "separators": [
-          "\n\n",
-          "\n",
-          ". ",
-          " ",
-          ""
-        ]
-      }
+    "A3": {
+      "exerciseId": "mod_chunking_a3",
+      "module": "mod_chunking",
+      "type": "numeric",
+      "expected": 281.0,
+      "explanation": "The deterministic metric is len(raw.split()), not model tokens."
     },
-    "t2_2": {
-      "exerciseId": "overlap",
-      "status": "PASS",
-      "inputHash": "db81fa1e59e38bdb7e47b798c69e5dde11b9a5361519e2bee0286dbe8dab9e35",
-      "metrics": {
-        "chunk_0_len": 325,
-        "chunk_1_len": 129,
-        "overlap_target": 50,
-        "boundary_preservation": true,
-        "explanation": "Chunk overlap prevents abrupt loss of context across semantic boundaries."
-      }
+    "A4": {
+      "exerciseId": "mod_chunking_a4",
+      "module": "mod_chunking",
+      "type": "numeric",
+      "expected": 10.0,
+      "explanation": "Stride = 40-10 = 30; 281 words produce 10 start positions."
     },
-    "t3_1": {
-      "exerciseId": "dimensions",
-      "status": "PASS",
-      "inputHash": "2ec9fff2b0ca3c249520560861dd4facb60cf9ae9553aeb8d4521491b391c1c0",
-      "metrics": {
-        "model": "sentence-transformers/all-MiniLM-L6-v2",
-        "device": "cpu",
-        "dimensions": 384,
-        "num_sentences": 3,
-        "is_finite": true,
-        "is_normalized": true,
-        "vector_norms": [
-          1.0,
-          1.0,
-          1.0
-        ]
-      }
+    "A5": {
+      "exerciseId": "mod_chunking_a5",
+      "module": "mod_chunking",
+      "type": "numeric",
+      "expected": 11.0,
+      "explanation": "Last window starts at word offset 270, leaving 11 words."
     },
-    "t3_2": {
-      "exerciseId": "cosine",
-      "status": "PASS",
-      "inputHash": "2ec9fff2b0ca3c249520560861dd4facb60cf9ae9553aeb8d4521491b391c1c0",
-      "metrics": {
-        "sim_rag1_rag2": 0.1855,
-        "sim_rag1_bread": -0.0166,
-        "difference": 0.202,
-        "higher_affinity_pair": "Sentence 1 vs Sentence 2",
-        "is_conceptually_sound": true
-      }
+    "A6": {
+      "exerciseId": "mod_chunking_a6",
+      "module": "mod_chunking",
+      "type": "numeric",
+      "expected": 6.0,
+      "explanation": "Stride 50. Starts: 0,50,100,150,200,250."
     },
-    "t4_1": {
-      "exerciseId": "index",
-      "status": "PASS",
-      "inputHash": "f8151b28dec60cfc85ae8964c6118425272bdc6ce3c77441f22b4dc9a6f275e1",
-      "metrics": {
-        "collection_name": "rag_knowledge_base",
-        "documents_processed": 3,
-        "indexed_chunks": 37,
-        "space": "cosine",
-        "storage_path": "/home/kit/Documents/Sep2026/TDS/agent-rag-learning/workspace/data/chroma_db/scripts"
-      }
+    "A7": {
+      "exerciseId": "mod_chunking_a7",
+      "module": "mod_chunking",
+      "type": "numeric",
+      "expected": 8.0,
+      "explanation": "Stride 40. The last chunk contains only one word."
     },
-    "t4_2": {
-      "exerciseId": "query",
-      "status": "PASS",
-      "inputHash": "79d1432e45beb1880619fbb2e9b01b32acf1db9e0926c41096c8481362a8994a",
-      "metrics": {
-        "query": "How does HNSW use skip lists and layers to navigate high-dimensional space?",
-        "top_source": "doc_003.txt",
-        "top_chunk_id": "doc_003.txt#c07",
-        "top_distance": 0.2794,
-        "retrieved_count": 2,
-        "results": [
-          {
-            "rank": 1,
-            "id": "doc_003.txt#c07",
-            "source": "doc_003.txt",
-            "distance": 0.2794,
-            "preview": "HNSW resolves these routing challenges by constructing a multi-layered hierarchical structure inspir"
-          },
-          {
-            "rank": 2,
-            "id": "doc_003.txt#c05",
-            "source": "doc_003.txt",
-            "distance": 0.3723,
-            "preview": ". HNSW builds upon the concept of navigable small world networks, where nodes represent vector data "
-          }
-        ]
-      }
+    "A8": {
+      "exerciseId": "mod_chunking_a8",
+      "module": "mod_chunking",
+      "type": "mcq",
+      "expected": "opt_1",
+      "explanation": "The simple example is intentionally word-window based, not a tokenizer or semantic splitter."
     },
-    "t5_1": {
-      "exerciseId": "grounded-prompt",
-      "status": "PASS",
-      "inputHash": "f635988b98713fbf1c6674421db35304dc29c7fa3253985a886339fd129dba68",
-      "metrics": {
-        "user_question": "What is the computational complexity of exact k-NN compared to approximate search?",
-        "retrieved_chunks": 2,
-        "citations": [
-          "doc_003.txt (id: doc_003.txt#c02)",
-          "doc_003.txt (id: doc_003.txt#c03)"
-        ],
-        "prompt_character_length": 917,
-        "citations_present": true,
-        "grounding_constraint_enforced": true
-      }
+    "B1": {
+      "exerciseId": "mod_vector_math_b1",
+      "module": "mod_vector_math",
+      "type": "numeric",
+      "expected": 2.0,
+      "explanation": "1\u00d72 + 0\u00d70 = 2."
     },
-    "t5_2": {
-      "exerciseId": "environment-check",
-      "status": "PASS",
-      "inputHash": "",
-      "metrics": {
-        "overall_status": "PASS",
-        "passed_checks": 7,
-        "total_checks": 7,
-        "checks": [
-          {
-            "name": "Python Engine (3.11)",
-            "status": "PASS",
-            "detail": "CPython 3.11.18 (executable: /tmp/test-venv/bin/python)",
-            "duration_ms": 0.0
-          },
-          {
-            "name": "Workspace Permissions",
-            "status": "PASS",
-            "detail": "Writable workspace confirmed at /home/kit/Documents/Sep2026/TDS/agent-rag-learning/workspace",
-            "duration_ms": 0.49
-          },
-          {
-            "name": "Package Dependencies",
-            "status": "PASS",
-            "detail": "All 10 core packages imported successfully",
-            "duration_ms": 3916.63
-          },
-          {
-            "name": "CPU Tensor Execution",
-            "status": "PASS",
-            "detail": "PyTorch 2.15.0+cu132 CPU execution verified (threads=1)",
-            "duration_ms": 0.17
-          },
-          {
-            "name": "Model & 384D Embeddings",
-            "status": "PASS",
-            "detail": "all-MiniLM-L6-v2 loaded: shape=(1, 384), finite, normalized (norm=1.0000)",
-            "duration_ms": 174.0
-          },
-          {
-            "name": "Canonical Text Splitter",
-            "status": "PASS",
-            "detail": "doc_001.txt partitioned into exactly 12 canonical chunks (len=3164)",
-            "duration_ms": 0.45
-          },
-          {
-            "name": "ChromaDB Cosine Index",
-            "status": "PASS",
-            "detail": "ChromaDB cosine collection lifecycle (add, query, persist, reopen, upsert) passed",
-            "duration_ms": 79.83
-          }
-        ]
-      }
+    "B2": {
+      "exerciseId": "mod_vector_math_b2",
+      "module": "mod_vector_math",
+      "type": "numeric",
+      "expected": 1.0,
+      "explanation": "(1\u22121)^2 + (0\u22121)^2 = 1."
     },
-    "t6_1": {
-      "exerciseId": "serve",
-      "status": "PASS",
-      "inputHash": "cbee297bf386db4c0258eea9862c4bd83f6a018318d526cfdfe922d8977171e4",
-      "metrics": {
-        "application": "FastAPI",
-        "service_health_path": "/health",
-        "docs_path": "/docs",
-        "openapi_path": "/openapi.json",
-        "query_path": "/query",
-        "root_path_support": true,
-        "configured_routes": [
-          "/openapi.json",
-          "/docs",
-          "/docs/oauth2-redirect",
-          "/health",
-          "/query"
-        ],
-        "proxy_mount_target": "/preview/8000"
-      }
+    "B3": {
+      "exerciseId": "mod_vector_math_b3",
+      "module": "mod_vector_math",
+      "type": "numeric",
+      "expected": 1.0,
+      "explanation": "The vectors point in the same direction."
     },
-    "t6_2": {
-      "exerciseId": "request",
-      "status": "PASS",
-      "inputHash": "746eff6b84eacece993e71aa33e9bfa536e1f8e98abb70311fa0955eaac8cdc3",
-      "metrics": {
-        "query": "How does HNSW use skip lists and layers to navigate high-dimensional space?",
-        "top_k": 2,
-        "status_code": 200,
-        "top_source": "doc_003.txt",
-        "citations_count": 2,
-        "citations": [
-          "doc_003.txt (id: doc_003.txt#c07)",
-          "doc_003.txt (id: doc_003.txt#c05)"
-        ],
-        "prompt_generated": true
-      }
+    "B4": {
+      "exerciseId": "mod_vector_math_b4",
+      "module": "mod_vector_math",
+      "type": "numeric",
+      "expected": 0.707,
+      "explanation": "1 / sqrt(2) \u2248 .7071."
+    },
+    "B5": {
+      "exerciseId": "mod_vector_math_b5",
+      "module": "mod_vector_math",
+      "type": "mcq",
+      "expected": "opt_0",
+      "explanation": "Dot(q,a)=2 and dot(q,b)=1."
+    },
+    "B6": {
+      "exerciseId": "mod_vector_math_b6",
+      "module": "mod_vector_math",
+      "type": "mcq",
+      "expected": "opt_2",
+      "explanation": "Both a and b are at squared distance 1 from q."
+    },
+    "B7": {
+      "exerciseId": "mod_vector_math_b7",
+      "module": "mod_vector_math",
+      "type": "numeric",
+      "expected": 6.0,
+      "explanation": "[3,0]\u00b7[2,0] = 6."
+    },
+    "B8": {
+      "exerciseId": "mod_vector_math_b8",
+      "module": "mod_vector_math",
+      "type": "numeric",
+      "expected": 10.0,
+      "explanation": "[5,0]\u00b7[2,0] = 10."
+    },
+    "B9": {
+      "exerciseId": "mod_vector_math_b9",
+      "module": "mod_vector_math",
+      "type": "numeric",
+      "expected": 0.586,
+      "explanation": "2\u22122\u00d70.70710678 \u2248 0.585786."
+    },
+    "B10": {
+      "exerciseId": "mod_vector_math_b10",
+      "module": "mod_vector_math",
+      "type": "mcq",
+      "expected": "opt_2",
+      "explanation": "Cosine normalizes away positive scaling."
+    },
+    "C1": {
+      "exerciseId": "mod_pca_embeddings_c1",
+      "module": "mod_pca_embeddings",
+      "type": "numeric",
+      "expected": 10.0,
+      "explanation": "Ten records; each has a distinct id."
+    },
+    "C2": {
+      "exerciseId": "mod_pca_embeddings_c2",
+      "module": "mod_pca_embeddings",
+      "type": "numeric",
+      "expected": 6.0,
+      "explanation": "Each vector has six authored coordinates."
+    },
+    "C3": {
+      "exerciseId": "mod_pca_embeddings_c3",
+      "module": "mod_pca_embeddings",
+      "type": "numeric",
+      "expected": 3.0,
+      "explanation": "n_components=3."
+    },
+    "C4": {
+      "exerciseId": "mod_pca_embeddings_c4",
+      "module": "mod_pca_embeddings",
+      "type": "numeric",
+      "expected": 10.0,
+      "explanation": "PCA projects each of ten input vectors."
+    },
+    "C5": {
+      "exerciseId": "mod_pca_embeddings_c5",
+      "module": "mod_pca_embeddings",
+      "type": "mcq",
+      "expected": "opt_1",
+      "explanation": "PCA finds orthogonal directions accounting for variance in the dataset."
+    },
+    "C6": {
+      "exerciseId": "mod_pca_embeddings_c6",
+      "module": "mod_pca_embeddings",
+      "type": "mcq",
+      "expected": "opt_1",
+      "explanation": "3D is a lossy projection unless data lives entirely in 3 dimensions."
+    },
+    "C7": {
+      "exerciseId": "mod_pca_embeddings_c7",
+      "module": "mod_pca_embeddings",
+      "type": "mcq",
+      "expected": "opt_1",
+      "explanation": "They were manually authored. Real cross-modal alignment requires a trained multimodal model."
+    },
+    "C8": {
+      "exerciseId": "mod_pca_embeddings_c8",
+      "module": "mod_pca_embeddings",
+      "type": "mcq",
+      "expected": "opt_2",
+      "explanation": "all-MiniLM-L6-v2 uses 384-dimensional sentence embeddings."
+    },
+    "D1": {
+      "exerciseId": "mod_chromadb_d1",
+      "module": "mod_chromadb",
+      "type": "numeric",
+      "expected": 10.0,
+      "explanation": "Ten unique vectors added."
+    },
+    "D2": {
+      "exerciseId": "mod_chromadb_d2",
+      "module": "mod_chromadb",
+      "type": "numeric",
+      "expected": 3.0,
+      "explanation": "There are at least three stored items."
+    },
+    "D3": {
+      "exerciseId": "mod_chromadb_d3",
+      "module": "mod_chromadb",
+      "type": "numeric",
+      "expected": 5.0,
+      "explanation": "With n_results=5 and ten available vectors, five IDs return."
+    },
+    "D4": {
+      "exerciseId": "mod_chromadb_d4",
+      "module": "mod_chromadb",
+      "type": "numeric",
+      "expected": 0.0,
+      "explanation": "Identical vectors have zero squared distance."
+    },
+    "D5": {
+      "exerciseId": "mod_chromadb_d5",
+      "module": "mod_chromadb",
+      "type": "numeric",
+      "expected": 0.0298,
+      "explanation": "Sum of six coordinate-wise squared differences = 0.0298."
+    },
+    "D6": {
+      "exerciseId": "mod_chromadb_d6",
+      "module": "mod_chromadb",
+      "type": "mcq",
+      "expected": "opt_1",
+      "explanation": "Squared L2 is a distance, so smaller is nearer."
+    },
+    "D7": {
+      "exerciseId": "mod_chromadb_d7",
+      "module": "mod_chromadb",
+      "type": "mcq",
+      "expected": "opt_1",
+      "explanation": "It filters eligible records via metadata."
+    },
+    "D8": {
+      "exerciseId": "mod_chromadb_d8",
+      "module": "mod_chromadb",
+      "type": "mcq",
+      "expected": "opt_1",
+      "explanation": "Modern persistent local Chroma uses PersistentClient(path=...)."
+    },
+    "E1": {
+      "exerciseId": "mod_ann_indexes_e1",
+      "module": "mod_ann_indexes",
+      "type": "numeric",
+      "expected": 480.0,
+      "explanation": "N=480, divided across three seeded clusters."
+    },
+    "E2": {
+      "exerciseId": "mod_ann_indexes_e2",
+      "module": "mod_ann_indexes",
+      "type": "numeric",
+      "expected": 8.0,
+      "explanation": "D=8."
+    },
+    "E3": {
+      "exerciseId": "mod_ann_indexes_e3",
+      "module": "mod_ann_indexes",
+      "type": "numeric",
+      "expected": 3.0,
+      "explanation": "The code selects three records and offsets them."
+    },
+    "E4": {
+      "exerciseId": "mod_ann_indexes_e4",
+      "module": "mod_ann_indexes",
+      "type": "numeric",
+      "expected": 12.0,
+      "explanation": "N_LISTS=12."
+    },
+    "E5": {
+      "exerciseId": "mod_ann_indexes_e5",
+      "module": "mod_ann_indexes",
+      "type": "numeric",
+      "expected": 3.0,
+      "explanation": "The first centroid has points [0,1,2]."
+    },
+    "E6": {
+      "exerciseId": "mod_ann_indexes_e6",
+      "module": "mod_ann_indexes",
+      "type": "numeric",
+      "expected": 5.0,
+      "explanation": "Two closest centroids collectively own 3+2 points."
+    },
+    "E7": {
+      "exerciseId": "mod_ann_indexes_e7",
+      "module": "mod_ann_indexes",
+      "type": "numeric",
+      "expected": 6.0,
+      "explanation": "Every list is selected."
+    },
+    "E8": {
+      "exerciseId": "mod_ann_indexes_e8",
+      "module": "mod_ann_indexes",
+      "type": "mcq",
+      "expected": "opt_1",
+      "explanation": "ef_search is a query-time HNSW search-width control."
+    },
+    "F1": {
+      "exerciseId": "mod_gemini_multimodal_f1",
+      "module": "mod_gemini_multimodal",
+      "type": "mcq",
+      "expected": "opt_0",
+      "explanation": "Gemini Embedding 001 supports text input, while Embedding 2 extends to multimodal."
+    },
+    "F2": {
+      "exerciseId": "mod_gemini_multimodal_f2",
+      "module": "mod_gemini_multimodal",
+      "type": "numeric",
+      "expected": 768.0,
+      "explanation": "The EmbedContentConfig sets output_dimensionality=768."
+    },
+    "F3": {
+      "exerciseId": "mod_gemini_multimodal_f3",
+      "module": "mod_gemini_multimodal",
+      "type": "mcq",
+      "expected": "opt_1",
+      "explanation": "The asymmetric document/query task pair is designed for retrieval."
+    },
+    "F4": {
+      "exerciseId": "mod_gemini_multimodal_f4",
+      "module": "mod_gemini_multimodal",
+      "type": "mcq",
+      "expected": "opt_2",
+      "explanation": "Same dimensionality does not make two learned spaces compatible; re-embed on migration."
+    },
+    "F5": {
+      "exerciseId": "mod_gemini_multimodal_f5",
+      "module": "mod_gemini_multimodal",
+      "type": "mcq",
+      "expected": "opt_2",
+      "explanation": "Gemini Embedding 2 is a multimodal embedding model."
+    },
+    "F6": {
+      "exerciseId": "mod_gemini_multimodal_f6",
+      "module": "mod_gemini_multimodal",
+      "type": "mcq",
+      "expected": "opt_1",
+      "explanation": "Keys should be supplied securely and not committed or printed."
     }
   }
 }

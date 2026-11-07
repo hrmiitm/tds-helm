@@ -1,0 +1,567 @@
+[
+  {
+    "module": "A",
+    "id": "A1",
+    "cell": "00 · A1",
+    "type": "nat",
+    "question": "How many second-level Markdown headings (##) are in field_notes.md?",
+    "answer": 5,
+    "tolerance": 0,
+    "explanation": "Regex ^## matches five subsection headings."
+  },
+  {
+    "module": "A",
+    "id": "A2",
+    "cell": "00 · A1",
+    "type": "nat",
+    "question": "How many paragraphs are found by the blank-line splitter?",
+    "answer": 17,
+    "tolerance": 0,
+    "explanation": "The teaching file contains 17 nonempty blank-line-separated blocks."
+  },
+  {
+    "module": "A",
+    "id": "A3",
+    "cell": "00 · A1",
+    "type": "nat",
+    "question": "How many whitespace-separated words are in the entire Markdown file?",
+    "answer": 281,
+    "tolerance": 0,
+    "explanation": "The deterministic metric is len(raw.split()), not model tokens."
+  },
+  {
+    "module": "A",
+    "id": "A4",
+    "cell": "00 · A2",
+    "type": "nat",
+    "question": "With CHUNK_WORDS=40 and OVERLAP_WORDS=10, how many chunks?",
+    "answer": 10,
+    "tolerance": 0,
+    "explanation": "Stride = 40-10 = 30; 281 words produce 10 start positions."
+  },
+  {
+    "module": "A",
+    "id": "A5",
+    "cell": "00 · A2",
+    "type": "nat",
+    "question": "At the default setting, how many words are in the final chunk?",
+    "answer": 11,
+    "tolerance": 0,
+    "explanation": "Last window starts at word offset 270, leaving 11 words."
+  },
+  {
+    "module": "A",
+    "id": "A6",
+    "cell": "00 · A4 EDIT",
+    "type": "nat",
+    "question": "After changing CHUNK_WORDS to 60, with overlap 10, how many chunks?",
+    "answer": 6,
+    "tolerance": 0,
+    "explanation": "Stride 50. Starts: 0,50,100,150,200,250."
+  },
+  {
+    "module": "A",
+    "id": "A7",
+    "cell": "00 · A4 EDIT",
+    "type": "nat",
+    "question": "With CHUNK_WORDS=40 and OVERLAP_WORDS=0, how many chunks?",
+    "answer": 8,
+    "tolerance": 0,
+    "explanation": "Stride 40. The last chunk contains only one word."
+  },
+  {
+    "module": "A",
+    "id": "A8",
+    "cell": "00 · A2",
+    "type": "mcq",
+    "question": "Which statement about the word-window chunker is true?",
+    "options": [
+      "It counts Gemini model tokens",
+      "It uses whitespace-separated words",
+      "It creates model embeddings",
+      "It guarantees sentences remain intact"
+    ],
+    "answer": 1,
+    "explanation": "The simple example is intentionally word-window based, not a tokenizer or semantic splitter."
+  },
+  {
+    "module": "B",
+    "id": "B1",
+    "cell": "01 · B1",
+    "type": "nat",
+    "question": "For q=[1,0] and a=[2,0], what is the dot product?",
+    "answer": 2,
+    "tolerance": 0,
+    "explanation": "1×2 + 0×0 = 2."
+  },
+  {
+    "module": "B",
+    "id": "B2",
+    "cell": "01 · B1",
+    "type": "nat",
+    "question": "For q=[1,0] and b=[1,1], what is the squared L2 distance?",
+    "answer": 1,
+    "tolerance": 0,
+    "explanation": "(1−1)^2 + (0−1)^2 = 1."
+  },
+  {
+    "module": "B",
+    "id": "B3",
+    "cell": "01 · B1",
+    "type": "nat",
+    "question": "What is cosine(q,a)?",
+    "answer": 1,
+    "tolerance": 0,
+    "explanation": "The vectors point in the same direction."
+  },
+  {
+    "module": "B",
+    "id": "B4",
+    "cell": "01 · B1",
+    "type": "nat",
+    "question": "What is cosine(q,b)? Round to 3 decimals.",
+    "answer": 0.707,
+    "tolerance": 0.0015,
+    "explanation": "1 / sqrt(2) ≈ .7071."
+  },
+  {
+    "module": "B",
+    "id": "B5",
+    "cell": "01 · B2",
+    "type": "mcq",
+    "question": "Which candidate wins by dot product?",
+    "options": [
+      "a",
+      "b",
+      "They tie",
+      "Neither"
+    ],
+    "answer": 0,
+    "explanation": "Dot(q,a)=2 and dot(q,b)=1."
+  },
+  {
+    "module": "B",
+    "id": "B6",
+    "cell": "01 · B2",
+    "type": "mcq",
+    "question": "Which candidate wins by squared L2 distance?",
+    "options": [
+      "a",
+      "b",
+      "They tie",
+      "Neither"
+    ],
+    "answer": 2,
+    "explanation": "Both a and b are at squared distance 1 from q."
+  },
+  {
+    "module": "B",
+    "id": "B7",
+    "cell": "01 · B3",
+    "type": "nat",
+    "question": "With SCALE=3, what is dot(scaled_q,a)?",
+    "answer": 6,
+    "tolerance": 0,
+    "explanation": "[3,0]·[2,0] = 6."
+  },
+  {
+    "module": "B",
+    "id": "B8",
+    "cell": "01 · B3 EDIT",
+    "type": "nat",
+    "question": "After editing SCALE to 5, what is dot(scaled_q,a)?",
+    "answer": 10,
+    "tolerance": 0,
+    "explanation": "[5,0]·[2,0] = 10."
+  },
+  {
+    "module": "B",
+    "id": "B9",
+    "cell": "01 · B4",
+    "type": "nat",
+    "question": "For normalized q and b, squared L2 is 2−2cos. Approximate to 3 decimals.",
+    "answer": 0.586,
+    "tolerance": 0.0015,
+    "explanation": "2−2×0.70710678 ≈ 0.585786."
+  },
+  {
+    "module": "B",
+    "id": "B10",
+    "cell": "01 · B4",
+    "type": "mcq",
+    "question": "Which metric does not change when q is multiplied by a positive scalar?",
+    "options": [
+      "Dot product",
+      "Squared L2",
+      "Cosine similarity",
+      "Vector norm"
+    ],
+    "answer": 2,
+    "explanation": "Cosine normalizes away positive scaling."
+  },
+  {
+    "module": "C",
+    "id": "C1",
+    "cell": "02 · C1",
+    "type": "nat",
+    "question": "How many records are in the supplied toy vector corpus?",
+    "answer": 10,
+    "tolerance": 0,
+    "explanation": "Ten records; each has a distinct id."
+  },
+  {
+    "module": "C",
+    "id": "C2",
+    "cell": "02 · C1",
+    "type": "nat",
+    "question": "How many dimensions does each toy input vector have?",
+    "answer": 6,
+    "tolerance": 0,
+    "explanation": "Each vector has six authored coordinates."
+  },
+  {
+    "module": "C",
+    "id": "C3",
+    "cell": "02 · C3",
+    "type": "nat",
+    "question": "How many components does PCA create in the notebook?",
+    "answer": 3,
+    "tolerance": 0,
+    "explanation": "n_components=3."
+  },
+  {
+    "module": "C",
+    "id": "C4",
+    "cell": "02 · C3",
+    "type": "nat",
+    "question": "How many rows will the PCA coordinate matrix contain?",
+    "answer": 10,
+    "tolerance": 0,
+    "explanation": "PCA projects each of ten input vectors."
+  },
+  {
+    "module": "C",
+    "id": "C5",
+    "cell": "02 · C3",
+    "type": "mcq",
+    "question": "What does PCA choose?",
+    "options": [
+      "Three random original features",
+      "Axes of greatest variance",
+      "Three nearest neighbors",
+      "New words generated by an LLM"
+    ],
+    "answer": 1,
+    "explanation": "PCA finds orthogonal directions accounting for variance in the dataset."
+  },
+  {
+    "module": "C",
+    "id": "C6",
+    "cell": "02 · C5",
+    "type": "mcq",
+    "question": "Are distances always identical before and after 6D→3D PCA?",
+    "options": [
+      "Yes, PCA preserves every distance",
+      "No, discarded dimensions can change distances",
+      "Only if the labels are text",
+      "Yes, when plotting in 3D"
+    ],
+    "answer": 1,
+    "explanation": "3D is a lossy projection unless data lives entirely in 3 dimensions."
+  },
+  {
+    "module": "C",
+    "id": "C7",
+    "cell": "02 · C1",
+    "type": "mcq",
+    "question": "What do the supplied image/video toy vectors demonstrate?",
+    "options": [
+      "Proven real multimodal embeddings",
+      "A visually useful *illustration* of a shared space",
+      "An image encoder trained on ImageNet",
+      "Gemini embedding API output"
+    ],
+    "answer": 1,
+    "explanation": "They were manually authored. Real cross-modal alignment requires a trained multimodal model."
+  },
+  {
+    "module": "C",
+    "id": "C8",
+    "cell": "02 · C6",
+    "type": "mcq",
+    "question": "The optional MiniLM text model normally outputs how many dimensions?",
+    "options": [
+      "3",
+      "6",
+      "384",
+      "3072"
+    ],
+    "answer": 2,
+    "explanation": "all-MiniLM-L6-v2 uses 384-dimensional sentence embeddings."
+  },
+  {
+    "module": "D",
+    "id": "D1",
+    "cell": "03 · D2",
+    "type": "nat",
+    "question": "After adding all toy items, what is collection.count()?",
+    "answer": 10,
+    "tolerance": 0,
+    "explanation": "Ten unique vectors added."
+  },
+  {
+    "module": "D",
+    "id": "D2",
+    "cell": "03 · D3",
+    "type": "nat",
+    "question": "With K=3, how many IDs are in the first query result?",
+    "answer": 3,
+    "tolerance": 0,
+    "explanation": "There are at least three stored items."
+  },
+  {
+    "module": "D",
+    "id": "D3",
+    "cell": "03 · D3 EDIT",
+    "type": "nat",
+    "question": "After setting K=5, how many IDs are returned?",
+    "answer": 5,
+    "tolerance": 0,
+    "explanation": "With n_results=5 and ten available vectors, five IDs return."
+  },
+  {
+    "module": "D",
+    "id": "D4",
+    "cell": "03 · D4",
+    "type": "nat",
+    "question": "What is squared L2 distance from Cat to Cat?",
+    "answer": 0,
+    "tolerance": 0,
+    "explanation": "Identical vectors have zero squared distance."
+  },
+  {
+    "module": "D",
+    "id": "D5",
+    "cell": "03 · D4",
+    "type": "nat",
+    "question": "What is the manually computed Cat–Dog squared L2? Give 4 decimal places.",
+    "answer": 0.0298,
+    "tolerance": 0.0001,
+    "explanation": "Sum of six coordinate-wise squared differences = 0.0298."
+  },
+  {
+    "module": "D",
+    "id": "D6",
+    "cell": "03 · D3",
+    "type": "mcq",
+    "question": "For Chroma’s local default l2 metric, what does a *smaller* returned distance mean?",
+    "options": [
+      "Less similar",
+      "Closer",
+      "Higher dot product necessarily",
+      "More tokens"
+    ],
+    "answer": 1,
+    "explanation": "Squared L2 is a distance, so smaller is nearer."
+  },
+  {
+    "module": "D",
+    "id": "D7",
+    "cell": "03 · D5",
+    "type": "mcq",
+    "question": "What does the `where={\"kind\":\"text\"}` argument do?",
+    "options": [
+      "Retrains the model",
+      "Applies a metadata filter",
+      "Switches HNSW to IVF",
+      "Changes vector dimension"
+    ],
+    "answer": 1,
+    "explanation": "It filters eligible records via metadata."
+  },
+  {
+    "module": "D",
+    "id": "D8",
+    "cell": "03 · D6",
+    "type": "mcq",
+    "question": "Which constructor persists local Chroma data to disk?",
+    "options": [
+      "chromadb.Client(Settings(persist_directory=...))",
+      "chromadb.PersistentClient(path=...)",
+      "PCA(n_components=3)",
+      "KMeans(n_clusters=3)"
+    ],
+    "answer": 1,
+    "explanation": "Modern persistent local Chroma uses PersistentClient(path=...)."
+  },
+  {
+    "module": "E",
+    "id": "E1",
+    "cell": "04 · E1",
+    "type": "nat",
+    "question": "How many synthetic vectors does the index benchmark create?",
+    "answer": 480,
+    "tolerance": 0,
+    "explanation": "N=480, divided across three seeded clusters."
+  },
+  {
+    "module": "E",
+    "id": "E2",
+    "cell": "04 · E1",
+    "type": "nat",
+    "question": "How many dimensions does each benchmark vector have?",
+    "answer": 8,
+    "tolerance": 0,
+    "explanation": "D=8."
+  },
+  {
+    "module": "E",
+    "id": "E3",
+    "cell": "04 · E1",
+    "type": "nat",
+    "question": "How many query vectors does the benchmark create?",
+    "answer": 3,
+    "tolerance": 0,
+    "explanation": "The code selects three records and offsets them."
+  },
+  {
+    "module": "E",
+    "id": "E4",
+    "cell": "04 · E3",
+    "type": "nat",
+    "question": "How many IVF lists are built in the KMeans example?",
+    "answer": 12,
+    "tolerance": 0,
+    "explanation": "N_LISTS=12."
+  },
+  {
+    "module": "E",
+    "id": "E5",
+    "cell": "04 · E5",
+    "type": "nat",
+    "question": "In the tiny fixed IVF example, how many candidates when n_probe=1?",
+    "answer": 3,
+    "tolerance": 0,
+    "explanation": "The first centroid has points [0,1,2]."
+  },
+  {
+    "module": "E",
+    "id": "E6",
+    "cell": "04 · E5",
+    "type": "nat",
+    "question": "In the tiny fixed IVF example, how many candidates when n_probe=2?",
+    "answer": 5,
+    "tolerance": 0,
+    "explanation": "Two closest centroids collectively own 3+2 points."
+  },
+  {
+    "module": "E",
+    "id": "E7",
+    "cell": "04 · E5",
+    "type": "nat",
+    "question": "In the tiny fixed IVF example, how many candidates when n_probe=3?",
+    "answer": 6,
+    "tolerance": 0,
+    "explanation": "Every list is selected."
+  },
+  {
+    "module": "E",
+    "id": "E8",
+    "cell": "04 · E2",
+    "type": "mcq",
+    "question": "Which setting controls how broadly HNSW searches at query time?",
+    "options": [
+      "n_probe",
+      "ef_search",
+      "PCA components",
+      "temperature"
+    ],
+    "answer": 1,
+    "explanation": "ef_search is a query-time HNSW search-width control."
+  },
+  {
+    "module": "F",
+    "id": "F1",
+    "cell": "05 · F1",
+    "type": "mcq",
+    "question": "Which Gemini model from the original uploaded notebooks is text-only?",
+    "options": [
+      "gemini-embedding-001",
+      "gemini-embedding-2",
+      "both text-only",
+      "neither"
+    ],
+    "answer": 0,
+    "explanation": "Gemini Embedding 001 supports text input, while Embedding 2 extends to multimodal."
+  },
+  {
+    "module": "F",
+    "id": "F2",
+    "cell": "05 · F1",
+    "type": "nat",
+    "question": "Which requested dimensionality does the Gemini 001 optional cell set?",
+    "answer": 768,
+    "tolerance": 0,
+    "explanation": "The EmbedContentConfig sets output_dimensionality=768."
+  },
+  {
+    "module": "F",
+    "id": "F3",
+    "cell": "05 · F1",
+    "type": "mcq",
+    "question": "For retrieval with Gemini 001, which task types should you pair?",
+    "options": [
+      "CLUSTERING for both",
+      "RETRIEVAL_DOCUMENT and RETRIEVAL_QUERY",
+      "SEMANTIC_SIMILARITY and CODE_EXECUTION",
+      "No model/task choice matters"
+    ],
+    "answer": 1,
+    "explanation": "The asymmetric document/query task pair is designed for retrieval."
+  },
+  {
+    "module": "F",
+    "id": "F4",
+    "cell": "05 · F3",
+    "type": "mcq",
+    "question": "Can you directly compare Gemini 001 vectors with Gemini Embedding 2 vectors?",
+    "options": [
+      "Yes if both have 768 dimensions",
+      "Yes after PCA",
+      "No, their learned spaces are incompatible",
+      "Only for cats"
+    ],
+    "answer": 2,
+    "explanation": "Same dimensionality does not make two learned spaces compatible; re-embed on migration."
+  },
+  {
+    "module": "F",
+    "id": "F5",
+    "cell": "05 · F3",
+    "type": "mcq",
+    "question": "Which statement about Gemini Embedding 2 is correct?",
+    "options": [
+      "It is text-only",
+      "It always preserves audio in video files",
+      "It can embed text and images in a shared learned space",
+      "It is the same as PCA"
+    ],
+    "answer": 2,
+    "explanation": "Gemini Embedding 2 is a multimodal embedding model."
+  },
+  {
+    "module": "F",
+    "id": "F6",
+    "cell": "05 · F0",
+    "type": "mcq",
+    "question": "Which practice protects the API key?",
+    "options": [
+      "Paste it into a committed notebook",
+      "Save in Colab Secrets or a local environment variable",
+      "Include it in submitted screenshots",
+      "Log it to show the TA"
+    ],
+    "answer": 1,
+    "explanation": "Keys should be supplied securely and not committed or printed."
+  }
+]

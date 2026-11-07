@@ -1505,7 +1505,7 @@
         list.appendChild(label);
       });
       dom.questionBody.appendChild(list);
-    } else if (q.type === 'numeric') {
+    } else if (q.type === 'numeric' || q.type === 'nat') {
       const group = document.createElement('div');
       group.className = 'numeric-input-group';
 

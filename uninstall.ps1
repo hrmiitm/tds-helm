@@ -12,3 +12,4 @@ $params = @()
 if ($PurgeImages) { $params += "-PurgeImages" }
 if ($DryRun) { $params += "-DryRun" }
 & "$ScriptDir\clean-uninstall.ps1" -Yes @params
+

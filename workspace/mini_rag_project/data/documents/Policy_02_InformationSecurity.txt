@@ -1,0 +1,11 @@
+# Corporate Policy 02: Information Security & Data Protection Protocol
+
+Section 1: Endpoint Security & Encryption
+All enterprise laptops, workstations, and mobile devices connecting to corporate services must enforce full-disk encryption utilizing AES-256 standards. Operating systems must be configured with automatic security patch updates, commercial antivirus protection, and automatic screen lockout after five (5) minutes of inactivity.
+
+Section 2: Network Access & Virtual Private Network (VPN)
+Accessing internal repository servers, staging databases, or restricted administrative consoles from public Wi-Fi or residential networks requires an authenticated connection via the corporate zero-trust VPN. Multi-factor authentication (MFA) via hardware security keys (FIDO2) or authenticator applications is mandatory for all access requests.
+
+Section 3: Incident Response & Data Classification
+Proprietary source code, customer records, and financial transaction ledgers are classified as Strictly Confidential. Any suspected data breach, misplaced hardware device, or unauthorized access attempt must be reported to the security operations center (SOC) within one (1) hour of detection.
+

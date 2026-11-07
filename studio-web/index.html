@@ -1,0 +1,818 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>RAG Studio (v4.0)</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+</head>
+<body class="dark-theme">
+
+  <!-- =========================================================================
+       GLOBAL APP HEADER (Minimal, Clean, Unslop Design)
+       ========================================================================= -->
+  <header class="app-header" id="app-header">
+    <div class="header-left">
+      <div class="brand">
+        <span class="brand-icon">
+          <svg class="svg-icon brand-svg-icon" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon></svg>
+        </span>
+        <span class="brand-name">RAG Studio</span>
+        <span class="brand-version">v4.2</span>
+      </div>
+
+      <!-- Hub Status Indicator -->
+      <div class="status-indicator-badge" id="health-indicator-badge" role="button" tabindex="0" title="Click to view service health diagnostics">
+        <span class="status-dot status-healthy" id="status-dot"></span>
+        <span class="status-text" id="status-text">Hub Ready</span>
+      </div>
+
+      <!-- Chapter / Track Selector (Flagship Chapters) -->
+      <button class="header-btn chapter-select-header-btn" id="btn-change-chapter" title="Switch Chapter: Vector DB & RAG vs MCP & Agent Tools">
+        <span class="btn-icon" id="topbar-chapter-icon">
+          <svg class="svg-icon" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="12 2 2 7 12 12 22 7 12 2"></polygon><polyline points="2 17 12 22 22 17"></polyline><polyline points="2 12 12 17 22 12"></polyline></svg>
+        </span>
+        <span class="topbar-chapter-badge" id="topbar-chapter-badge">Chapter 1</span>
+        <span class="btn-text" id="topbar-chapter-title">Vector DB &amp; RAG</span>
+        <span class="chapter-change-pill">Change Chapter <svg class="svg-icon" viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="6 9 12 15 18 9"></polyline></svg></span>
+      </button>
+
+      <!-- Course Catalog Selector -->
+      <button class="header-btn" id="btn-course-catalog" title="Open Multi-Course Catalog & Chapter Selector">
+        <span class="btn-icon">
+          <svg class="svg-icon" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path></svg>
+        </span>
+        <span class="btn-text" id="course-title-text">Course Catalog</span>
+        <span class="menu-arrow"><svg class="svg-icon" viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="6 9 12 15 18 9"></polyline></svg></span>
+      </button>
+
+      <!-- Module Dropdown Selector -->
+      <div class="module-dropdown-wrapper">
+        <select id="module-select" class="module-select" aria-label="Select Learning Module">
+          <!-- Populated by JavaScript -->
+        </select>
+      </div>
+    </div>
+
+    <!-- Right Controls: Focus, Annotate/Laser, Theme, Reset, Swap, Fullscreen, Timer -->
+    <div class="header-right">
+      <!-- Context-Aware Immersive Focus Mode Button -->
+      <button class="header-btn" id="btn-focus-toggle" title="Focus Active Pane (Full View without Header / Esc to exit)">
+        <span class="btn-icon">
+          <svg class="svg-icon" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="3"></circle><path d="M3 7V5a2 2 0 0 1 2-2h2"></path><path d="M17 3h2a2 2 0 0 1 2 2v2"></path><path d="M21 17v2a2 2 0 0 1-2 2h-2"></path><path d="M7 21H5a2 2 0 0 1-2-2v-2"></path></svg>
+        </span>
+        <span class="btn-text" id="focus-btn-text">Focus View</span>
+      </button>
+
+      <!-- Laser & Annotation Tool Button -->
+      <div class="annotation-menu-wrapper">
+        <button class="header-btn" id="btn-annotate-menu" title="Laser Pointer & Live Screen Drawing Tools">
+          <span class="btn-icon">
+            <svg class="svg-icon" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"></path><path d="m15 5 4 4"></path></svg>
+          </span>
+          <span class="btn-text">Annotate</span>
+          <span class="menu-arrow"><svg class="svg-icon" viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="6 9 12 15 18 9"></polyline></svg></span>
+        </button>
+        <div class="annotation-dropdown-menu hidden" id="annotation-dropdown">
+          <button class="menu-item" id="btn-tool-laser">
+            <span class="item-icon">
+              <svg class="svg-icon" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"></circle><circle cx="12" cy="12" r="3" fill="currentColor"></circle></svg>
+            </span>
+            <div class="item-text-group">
+              <span class="item-text">iPad-Style Laser Pointer</span>
+              <span class="item-desc">Glowing beam that dissolves after drawing</span>
+            </div>
+          </button>
+          <button class="menu-item" id="btn-tool-pen">
+            <span class="item-icon">
+              <svg class="svg-icon" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"></path><path d="m15 5 4 4"></path></svg>
+            </span>
+            <div class="item-text-group">
+              <span class="item-text">Live Screen Pen & Highlighter</span>
+              <span class="item-desc">Smooth freehand drawing with palette</span>
+            </div>
+          </button>
+          <button class="menu-item" id="btn-tool-interact">
+            <span class="item-icon">
+              <svg class="svg-icon" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m3 3 7.07 16.97 2.51-7.39 7.39-2.51L3 3z"></path><path d="m13 13 6 6"></path></svg>
+            </span>
+            <div class="item-text-group">
+              <span class="item-text">Interact / Cursor Mode</span>
+              <span class="item-desc">Click & type normally while keeping drawings</span>
+            </div>
+          </button>
+          <button class="menu-item" id="btn-tool-off">
+            <span class="item-icon">
+              <svg class="svg-icon" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+            </span>
+            <div class="item-text-group">
+              <span class="item-text">Close Annotation Dock</span>
+            </div>
+          </button>
+        </div>
+      </div>
+
+      <!-- Dark / Light Theme Toggle -->
+      <button class="header-btn-icon" id="btn-theme-toggle" title="Toggle Dark / Light Theme" aria-label="Toggle Theme">
+        <span id="theme-icon" class="theme-icon-wrapper">
+          <svg class="svg-icon" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"></path></svg>
+        </span>
+      </button>
+
+      <!-- Reset Workspace Environment -->
+      <button class="header-btn-icon" id="btn-reset-env" title="Reset Workspace to Clean State" aria-label="Reset Workspace">
+        <svg class="svg-icon" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"></path><path d="M3 3v5h5"></path></svg>
+      </button>
+
+      <!-- Swap Panes Button -->
+      <button class="header-btn-icon" id="btn-swap-panes" title="Swap Left and Right Panes" aria-label="Swap Panes">
+        <svg class="svg-icon" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m16 3 4 4-4 4"></path><path d="M20 7H4"></path><path d="m8 21-4-4 4-4"></path><path d="M4 17h16"></path></svg>
+      </button>
+
+      <!-- Native Fullscreen Button -->
+      <button class="header-btn-icon" id="btn-fullscreen" title="Toggle Window Fullscreen" aria-label="Toggle Fullscreen">
+        <svg class="svg-icon" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 3H5a2 2 0 0 0-2 2v3"></path><path d="M21 8V5a2 2 0 0 0-2-2h-3"></path><path d="M3 16v3a2 2 0 0 0 2 2h3"></path><path d="M16 21h3a2 2 0 0 0 2-2v-3"></path></svg>
+      </button>
+
+      <!-- Non-destructive Session Countdown Timer -->
+      <div class="session-timer-widget" id="session-timer-widget" title="Session countdown timer (Click to pause/resume)">
+        <span class="timer-icon">
+          <svg class="svg-icon" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+        </span>
+        <span class="timer-value" id="timer-display">60:00</span>
+      </div>
+
+      <!-- Progress Modal Launcher -->
+      <button class="header-btn-icon" id="btn-progress-modal" title="Import / Export Progress JSON" aria-label="Progress Modal">
+        <svg class="svg-icon" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path><polyline points="17 21 17 13 7 13 7 21"></polyline><polyline points="7 3 7 8 15 8"></polyline></svg>
+      </button>
+    </div>
+  </header>
+
+  <!-- =========================================================================
+       AUTO-HIDING FOCUS ESCAPE HUD (Subtle, Fades out after 2.5s, reveals on top hover)
+       ========================================================================= -->
+  <aside class="floating-focus-hud hidden" id="floating-focus-hud" aria-label="Focus mode indicator">
+    <div class="hud-inner">
+      <span class="hud-icon">
+        <svg class="svg-icon" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="3"></circle><path d="M3 7V5a2 2 0 0 1 2-2h2"></path><path d="M17 3h2a2 2 0 0 1 2 2v2"></path><path d="M21 17v2a2 2 0 0 1-2 2h-2"></path><path d="M7 21H5a2 2 0 0 1-2-2v-2"></path></svg>
+      </span>
+      <span class="hud-text">Focus View · Press <strong>Esc</strong> to restore split</span>
+      <button class="hud-action-btn" id="btn-hud-annotate" title="Toggle Screen Annotator & Laser (Ctrl+Shift+A)">
+        <svg class="svg-icon" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"></path><path d="m15 5 4 4"></path></svg>
+        <span id="hud-annotate-text">Annotate</span>
+      </button>
+      <button class="hud-exit-btn" id="btn-hud-exit-focus" title="Restore Dual-Pane Split (Esc)">
+        <svg class="svg-icon" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+        <span>Exit Focus</span>
+      </button>
+    </div>
+  </aside>
+
+  <!-- Persistent Focus Quick Action Dock (Top-Right in Immersive Focus) -->
+  <aside class="focus-actions-dock" id="focus-actions-dock" aria-label="Focus mode quick controls">
+    <button class="focus-dock-btn btn-dock-annotate" id="btn-focus-annotate-persistent" title="Toggle Annotator (Pen / Laser) · Ctrl+Shift+A">
+      <svg class="svg-icon" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"></path><path d="m15 5 4 4"></path></svg>
+      <span id="dock-annotate-label">Annotate</span>
+    </button>
+    <button class="focus-dock-btn btn-dock-exit" id="btn-focus-exit-persistent" title="Exit Focus Mode (Esc)">
+      <svg class="svg-icon" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+      <span>Exit Focus</span>
+    </button>
+  </aside>
+
+  <!-- Visible Touch Exit Button for Focus Mode (Touchscreens / mobile viewports) -->
+  <button class="focus-touch-exit-btn" id="btn-focus-touch-exit" aria-label="Exit Focus View" title="Restore Dual-Pane Split">
+    <svg class="svg-icon" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+    <span>Exit Focus</span>
+  </button>
+
+  <!-- =========================================================================
+       MOBILE PANE SWITCHER (Segmented control on narrow viewports <= 768px)
+       ========================================================================= -->
+  <nav class="mobile-pane-switcher" id="mobile-pane-switcher" role="tablist" aria-label="Mobile View Switcher">
+    <button class="mobile-pane-tab active" id="btn-mobile-pane-left" role="tab" aria-selected="true" data-pane="left">
+      <span class="mobile-tab-icon">
+        <svg class="svg-icon" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="8" height="4" x="8" y="2" rx="1" ry="1"></rect><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"></path></svg>
+      </span>
+      <span class="mobile-tab-text">Learning &amp; Slides</span>
+    </button>
+    <button class="mobile-pane-tab" id="btn-mobile-pane-right" role="tab" aria-selected="false" data-pane="right">
+      <span class="mobile-tab-icon">
+        <svg class="svg-icon" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="16 18 22 12 16 6"></polyline><polyline points="8 6 2 12 8 18"></polyline></svg>
+      </span>
+      <span class="mobile-tab-text">Workspace &amp; Tools</span>
+    </button>
+  </nav>
+
+  <!-- =========================================================================
+       MAIN SPLIT CONTAINER (Left: Learning/Slides | Right: Workspaces/Tools)
+       ========================================================================= -->
+  <main class="split-workspace-container" id="workspace-container">
+    
+    <!-- =======================================================================
+         LEFT PANE: LEARNING & PRESENTATION (Tasks / Slides)
+         ======================================================================= -->
+    <section class="workspace-pane pane-left" id="pane-left" data-active-view="tasks" tabindex="0">
+      <!-- Left Pane Header -->
+      <div class="pane-header">
+        <div class="view-switcher-tabs" role="tablist">
+          <button class="view-tab-btn active" id="tab-left-tasks" data-view="tasks" role="tab" aria-selected="true">
+            <span class="tab-icon">
+              <svg class="svg-icon" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="8" height="4" x="8" y="2" rx="1" ry="1"></rect><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"></path><path d="M12 11h4"></path><path d="M12 16h4"></path><path d="M8 11h.01"></path><path d="M8 16h.01"></path></svg>
+            </span>
+            <span class="tab-text">Tasks & Labs</span>
+          </button>
+          <button class="view-tab-btn" id="tab-left-slides" data-view="slides" role="tab" aria-selected="false">
+            <span class="tab-icon">
+              <svg class="svg-icon" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 3h20"></path><path d="M21 3v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V3"></path><path d="m7 21 5-5 5 5"></path></svg>
+            </span>
+            <span class="tab-text">Presentation Slides</span>
+          </button>
+        </div>
+
+        <div class="pane-header-actions">
+          <span class="step-counter-text" id="step-counter">Task 1 of 2</span>
+          <button class="pane-action-btn" id="btn-fullscreen-slides" title="Open Slides in Fullscreen Modal">
+            <svg class="svg-icon" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 3H5a2 2 0 0 0-2 2v3"></path><path d="M21 8V5a2 2 0 0 0-2-2h-3"></path><path d="M3 16v3a2 2 0 0 0 2 2h3"></path><path d="M16 21h3a2 2 0 0 0 2-2v-3"></path></svg>
+            <span>Fullscreen Slides</span>
+          </button>
+          <button class="pane-action-btn" id="btn-reload-left" title="Reload Left View" aria-label="Reload View">
+            <svg class="svg-icon" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12a9 9 0 1 1-9-9c2.52 0 4.93 1 6.74 2.74L21 8"></path><path d="M21 3v5h-5"></path></svg>
+          </button>
+        </div>
+      </div>
+
+      <!-- Left Pane Body -->
+      <div class="pane-content-wrapper">
+        
+        <!-- VIEW A: CURRICULUM TASKS -->
+        <div class="view-panel active" id="view-panel-tasks">
+          <!-- Task Sub-tabs: Task Description vs Solution -->
+          <div class="task-subtabs-bar">
+            <div class="subtabs-group">
+              <button class="subtab-btn active" id="subtab-btn-task" data-tab="task">
+                <svg class="svg-icon" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line></svg>
+                <span>Instructions</span>
+              </button>
+              <button class="subtab-btn" id="subtab-btn-solution" data-tab="solution">
+                <svg class="svg-icon" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .2 2.2 1.5 3.5.7.7 1.3 1.5 1.5 2.5"></path><path d="M9 18h6"></path><path d="M10 22h4"></path></svg>
+                <span>Reference Solution</span>
+              </button>
+            </div>
+            <div class="task-badge-pill" id="task-badge-id">t0_1</div>
+          </div>
+
+          <!-- Instructions Body -->
+          <div class="task-view-body active" id="subview-task">
+            <div class="task-meta-bar">
+              <span class="task-badge-module" id="task-badge-module">Module 0</span>
+              <span class="task-badge-track" id="task-badge-track">CLI Script & Notebook Tracks</span>
+            </div>
+
+            <h2 class="task-heading" id="task-title">Explore Workspace Structure & Verify Python Environment</h2>
+            <p class="task-narrative" id="task-instructions">Begin your journey by exploring the workspace directory layout in VS Code or JupyterLab. Execute the environment verification script 'labs/00_env_check.py' or open notebook 'notebooks/00_environment_and_workspace_setup.ipynb' to verify the pre-cached offline embedding model and Python 3.11 virtual environment.</p>
+
+            <!-- Copyable Terminal Commands -->
+            <div class="task-commands-box" id="task-commands-box">
+              <div class="box-header">
+                <span class="box-title">
+                  <svg class="svg-icon" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="4 17 10 11 4 5"></polyline><line x1="12" y1="19" x2="20" y2="19"></line></svg>
+                  <span>Terminal Commands</span>
+                </span>
+                <span class="box-subtitle">Execute in VS Code terminal (/workspace)</span>
+              </div>
+              <div class="commands-list" id="commands-list">
+                <!-- Dynamically populated -->
+              </div>
+            </div>
+
+            <!-- Deep Link Affordances -->
+            <div class="track-links-bar" id="track-links-bar">
+              <span class="track-label">Switch Workspace Tab:</span>
+              <button class="link-pill-btn" id="btn-switch-to-vscode" title="Switch Right Pane to VS Code">
+                <svg class="svg-icon" viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="16 18 22 12 16 6"></polyline><polyline points="8 6 2 12 8 18"></polyline></svg>
+                <span>VS Code</span>
+              </button>
+              <button class="link-pill-btn" id="btn-switch-to-jupyter" title="Switch Right Pane to JupyterLab">
+                <svg class="svg-icon" viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 6h4"></path><path d="M2 10h4"></path><path d="M2 14h4"></path><path d="M2 18h4"></path><rect width="16" height="20" x="4" y="2" rx="2"></rect><path d="M9.5 8h5"></path><path d="M9.5 12h5"></path><path d="M9.5 16h5"></path></svg>
+                <span>JupyterLab</span>
+              </button>
+            </div>
+
+            <!-- Verification Question Card -->
+            <div class="verification-card" id="verification-card">
+              <div class="card-header">
+                <div class="header-title-group">
+                  <span class="verification-icon">
+                    <svg class="svg-icon" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"></circle><circle cx="12" cy="12" r="3"></circle></svg>
+                  </span>
+                  <span class="verification-title">Objective Verification</span>
+                </div>
+                <span class="answer-status-pill status-unanswered" id="answer-status-pill">Not Answered</span>
+              </div>
+
+              <p class="question-prompt-text" id="question-prompt"></p>
+
+              <!-- Dynamic Question Form (MCQ or Numeric) -->
+              <div class="question-interactive-body" id="question-body">
+                <!-- Dynamically populated -->
+              </div>
+
+              <!-- Feedback / Explanation Alert -->
+              <div class="feedback-alert hidden" id="feedback-alert">
+                <div class="feedback-header">
+                  <span class="feedback-icon" id="feedback-icon">
+                    <svg class="svg-icon" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                  </span>
+                  <span class="feedback-title" id="feedback-title">Objective Verified</span>
+                </div>
+                <div class="feedback-text" id="feedback-text"></div>
+              </div>
+
+              <!-- Progressive Hint Disclosure -->
+              <div class="hint-disclosure">
+                <button class="hint-toggle-btn" id="hint-toggle-btn">
+                  <svg class="svg-icon" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .2 2.2 1.5 3.5.7.7 1.3 1.5 1.5 2.5"></path><path d="M9 18h6"></path><path d="M10 22h4"></path></svg>
+                  <span>Show Hint</span>
+                </button>
+                <div class="hint-content-box hidden" id="hint-content-box"></div>
+              </div>
+            </div>
+
+            <!-- Task Navigation Footer -->
+            <div class="task-navigation-footer">
+              <button class="btn btn-secondary" id="btn-prev-task"><svg class="svg-icon" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg><span>Previous Task</span></button>
+              <button class="btn btn-primary" id="btn-next-task"><span>Next Task</span><svg class="svg-icon" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg></button>
+            </div>
+          </div>
+
+          <!-- Official Solution Body -->
+          <div class="task-view-body" id="subview-solution">
+            <div class="solution-container">
+              <div class="solution-header">
+                <span class="solution-icon">
+                  <svg class="svg-icon" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .2 2.2 1.5 3.5.7.7 1.3 1.5 1.5 2.5"></path><path d="M9 18h6"></path><path d="M10 22h4"></path></svg>
+                </span>
+                <div class="solution-title-group">
+                  <h3>Official Reference Solution</h3>
+                  <p>Architectural rationale, verified outputs, and execution proof</p>
+                </div>
+              </div>
+              <div class="solution-content-body" id="solution-content-body">
+                <!-- Dynamically populated -->
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- VIEW B: REVEAL.JS SLIDES EMBED -->
+        <div class="view-panel" id="view-panel-slides">
+          <div class="iframe-container" id="container-left-slides">
+            <iframe id="iframe-left-slides" src="/slides/?chapter=rag-intro" title="Reveal.js Presentation Deck" allow="fullscreen" loading="lazy"></iframe>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- =======================================================================
+         DRAGGABLE SPLITTER DIVIDER
+         ======================================================================= -->
+    <div class="split-divider" id="split-divider" role="separator" aria-orientation="vertical" tabindex="0" title="Drag to resize panes">
+      <div class="divider-handle"></div>
+    </div>
+
+    <!-- =======================================================================
+         RIGHT PANE: WORKSPACES & PRACTICE TOOLS (VS Code, Jupyter, Preview, Excalidraw)
+         ======================================================================= -->
+    <section class="workspace-pane pane-right" id="pane-right" data-active-tab="vscode" tabindex="0">
+      <!-- Right Pane Header with Tab Strip -->
+      <div class="pane-header">
+        <div class="tools-tab-strip" role="tablist">
+          <button class="tool-tab-btn active" id="tab-tool-vscode" data-tool="vscode" role="tab" aria-selected="true">
+            <span class="tool-icon">
+              <svg class="svg-icon" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="16 18 22 12 16 6"></polyline><polyline points="8 6 2 12 8 18"></polyline></svg>
+            </span>
+            <span class="tool-label">VS Code</span>
+          </button>
+          <button class="tool-tab-btn" id="tab-tool-jupyter" data-tool="jupyter" role="tab" aria-selected="false">
+            <span class="tool-icon">
+              <svg class="svg-icon" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 6h4"></path><path d="M2 10h4"></path><path d="M2 14h4"></path><path d="M2 18h4"></path><rect width="16" height="20" x="4" y="2" rx="2"></rect><path d="M9.5 8h5"></path><path d="M9.5 12h5"></path><path d="M9.5 16h5"></path></svg>
+            </span>
+            <span class="tool-label">JupyterLab</span>
+          </button>
+          <button class="tool-tab-btn" id="tab-workspace-browser" data-tool="browser" role="tab" aria-selected="false">
+            <span class="tool-icon">
+              <svg class="svg-icon" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"></circle><line x1="2" y1="12" x2="22" y2="12"></line><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path></svg>
+            </span>
+            <span class="tool-label">Browser</span>
+          </button>
+          <button class="tool-tab-btn" id="tab-tool-whiteboard" data-tool="whiteboard" role="tab" aria-selected="false">
+            <span class="tool-icon">
+              <svg class="svg-icon" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="13.5" cy="6.5" r=".5" fill="currentColor"></circle><circle cx="17.5" cy="10.5" r=".5" fill="currentColor"></circle><circle cx="8.5" cy="7.5" r=".5" fill="currentColor"></circle><circle cx="6.5" cy="12.5" r=".5" fill="currentColor"></circle><path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10c.926 0 1.648-.746 1.648-1.688 0-.437-.18-.835-.437-1.125-.29-.289-.438-.652-.438-1.125a1.64 1.64 0 0 1 1.668-1.668h1.996c3.051 0 5.555-2.503 5.555-5.554C21.965 6.012 17.461 2 12 2z"></path></svg>
+            </span>
+            <span class="tool-label">Excalidraw</span>
+          </button>
+        </div>
+
+        <div class="pane-header-actions">
+          <span class="tab-status-pill" id="right-tab-status">/workspace</span>
+          <a class="pane-action-btn" id="btn-direct-link" href="/vscode/?folder=/workspace" target="_blank" rel="noopener noreferrer" title="Open active tool directly in new tab" aria-label="Open tool in new tab">
+            <svg class="svg-icon" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>
+          </a>
+          <button class="pane-action-btn" id="btn-reload-right" title="Reload Active Workspace Tool" aria-label="Reload Tool">
+            <svg class="svg-icon" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12a9 9 0 1 1-9-9c2.52 0 4.93 1 6.74 2.74L21 8"></path><path d="M21 3v5h-5"></path></svg>
+          </button>
+        </div>
+      </div>
+
+      <!-- Right Pane Body (Tab Content Containers) -->
+      <div class="pane-content-wrapper">
+        
+        <!-- TAB 1: VS CODE -->
+        <div class="tool-panel active" id="panel-tool-vscode">
+          <div class="iframe-container" id="container-vscode">
+            <iframe id="iframe-vscode" src="/vscode/?folder=/workspace" title="VS Code Editor" allow="clipboard-read; clipboard-write; fullscreen"></iframe>
+          </div>
+        </div>
+
+        <!-- TAB 2: JUPYTERLAB -->
+        <div class="tool-panel" id="panel-tool-jupyter">
+          <div class="iframe-container" id="container-jupyter">
+            <iframe id="iframe-jupyter" src="/jupyter/lab/tree/notebooks" title="JupyterLab Computational Environment" allow="clipboard-read; clipboard-write; fullscreen"></iframe>
+          </div>
+        </div>
+
+        <!-- TAB 3: BROWSER (CHROMIUM & WEB SEARCH) -->
+        <div class="tool-panel" id="panel-workspace-browser">
+          <div class="browser-chrome-bar" id="browser-chrome-bar">
+            <div class="browser-nav-group">
+              <button class="browser-nav-btn" id="btn-browser-back" title="Back" aria-label="Back">
+                <svg class="svg-icon" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>
+              </button>
+              <button class="browser-nav-btn" id="btn-browser-forward" title="Forward" aria-label="Forward">
+                <svg class="svg-icon" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+              </button>
+              <button class="browser-nav-btn" id="btn-browser-reload" title="Reload Page" aria-label="Reload">
+                <svg class="svg-icon" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 1 1-9-9c2.52 0 4.93 1 6.74 2.74L21 8"></path><path d="M21 3v5h-5"></path></svg>
+              </button>
+              <button class="browser-nav-btn" id="btn-browser-home" title="Google Home" aria-label="Home">
+                <svg class="svg-icon" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
+              </button>
+            </div>
+            
+            <form class="browser-address-form" id="browser-address-form" onsubmit="return false;">
+              <div class="browser-address-input-wrapper">
+                <svg class="svg-icon browser-search-icon" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+                <input type="text" class="browser-address-input" id="browser-address-input" placeholder="Search Google or type a web URL..." value="https://www.google.com" spellcheck="false" autocomplete="off" />
+              </div>
+              <button type="submit" class="browser-btn-go" id="btn-browser-go">Go</button>
+            </form>
+
+            <div class="browser-quick-links">
+              <button class="quick-link-pill" type="button" data-url="https://www.google.com">Google</button>
+              <button class="quick-link-pill" type="button" data-url="https://docs.python.org/3.11/">Python Docs</button>
+              <button class="quick-link-pill" type="button" data-url="https://huggingface.co/models">HuggingFace</button>
+              <button class="quick-link-pill" type="button" data-url="https://docs.trychroma.com/">ChromaDB</button>
+              <button class="quick-link-pill" type="button" data-url="https://modelcontextprotocol.io/">MCP Spec</button>
+            </div>
+
+            <a class="browser-btn-external" id="btn-browser-external" href="https://www.google.com" target="_blank" rel="noopener noreferrer" title="Open in External Browser Tab" aria-label="Open in External Tab">
+              <svg class="svg-icon" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>
+            </a>
+          </div>
+
+          <div class="iframe-container" id="container-browser">
+            <iframe id="iframe-browser" src="/browser/vnc.html?autoconnect=true&resize=remote&reconnect=true&path=browser/websockify" title="Chromium Browser" allow="clipboard-read; clipboard-write; fullscreen"></iframe>
+          </div>
+        </div>
+
+        <!-- TAB 4: OFFICIAL EXCALIDRAW TOOL -->
+        <div class="tool-panel" id="panel-tool-whiteboard">
+          <div class="iframe-container" id="container-excalidraw">
+            <iframe id="iframe-excalidraw" src="/excalidraw/" title="Excalidraw Workspace" allow="clipboard-read; clipboard-write"></iframe>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+  </main>
+
+  <!-- =========================================================================
+       LIVE SCREEN ANNOTATION & IPAD-STYLE LASER POINTER OVERLAY
+       ========================================================================= -->
+  <div class="screen-annotation-wrapper pointer-events-none" id="screen-annotation-wrapper">
+    <canvas id="screen-annotation-canvas"></canvas>
+
+    <!-- Floating Drawing & Laser Controls (Draggable) -->
+    <aside class="floating-drawing-toolbar hidden" id="floating-pen-toolbar" aria-label="Screen Drawing Toolbar">
+      <div class="floating-handle" id="floating-toolbar-handle" title="Drag to reposition toolbar anywhere">
+        <svg class="svg-icon" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9" cy="12" r="1"></circle><circle cx="9" cy="5" r="1"></circle><circle cx="9" cy="19" r="1"></circle><circle cx="15" cy="12" r="1"></circle><circle cx="15" cy="5" r="1"></circle><circle cx="15" cy="19" r="1"></circle></svg>
+        <span>Move</span>
+      </div>
+      
+      <!-- Mode Toggle: Laser vs Pen vs Highlighter vs Eraser vs Interact -->
+      <div class="floating-tools">
+        <button class="floating-tool-btn active" id="tool-mode-laser" title="iPad Laser (Persistent fading trail)">
+          <svg class="svg-icon" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="7" fill="#f43f5e" stroke="#f43f5e"></circle></svg>
+          <span>Laser</span>
+        </button>
+        <button class="floating-tool-btn" id="tool-mode-pen" title="Smooth Pen">
+          <svg class="svg-icon" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"></path><path d="m15 5 4 4"></path></svg>
+          <span>Pen</span>
+        </button>
+        <button class="floating-tool-btn" id="tool-mode-highlighter" title="Highlighter">
+          <svg class="svg-icon" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m9 11-6 6v3h3l6-6"></path><path d="m22 7-4.5-4.5a2.12 2.12 0 0 0-3 0L10 7l4.5 4.5 4.5-4.5a2.12 2.12 0 0 0 0-3Z"></path></svg>
+          <span>Highlight</span>
+        </button>
+        <button class="floating-tool-btn" id="tool-mode-erase" title="Eraser">
+          <svg class="svg-icon" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m7 21-4.3-4.3c-1-1-1-2.5 0-3.4l9.6-9.6c1-1 2.5-1 3.4 0l5.6 5.6c1 1 1 2.5 0 3.4L13 21"></path><path d="M22 21H7"></path><path d="m5 11 9 9"></path></svg>
+          <span>Eraser</span>
+        </button>
+        <button class="floating-tool-btn" id="tool-mode-interact" title="Interact / Pause drawing (allows scrolling, typing, clicking in app)">
+          <svg class="svg-icon" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m3 3 7.07 16.97 2.51-7.39 7.39-2.51L3 3z"></path><path d="m13 13 6 6"></path></svg>
+          <span>Interact</span>
+        </button>
+      </div>
+
+      <!-- Color Swatches -->
+      <div class="floating-colors" id="floating-colors-row">
+        <button class="floating-color-dot active" data-color="#f43f5e" style="background:#f43f5e;" title="Rose"></button>
+        <button class="floating-color-dot" data-color="#22c55e" style="background:#22c55e;" title="Emerald"></button>
+        <button class="floating-color-dot" data-color="#38bdf8" style="background:#38bdf8;" title="Cyan"></button>
+        <button class="floating-color-dot" data-color="#facc15" style="background:#facc15;" title="Yellow"></button>
+        <button class="floating-color-dot" data-color="#ffffff" style="background:#ffffff;" title="White"></button>
+      </div>
+
+      <!-- Stroke Thickness -->
+      <div class="floating-sizes" id="floating-sizes-row">
+        <button class="floating-size-btn active" data-size="3" title="Thin">1x</button>
+        <button class="floating-size-btn" data-size="6" title="Medium">2x</button>
+        <button class="floating-size-btn" data-size="12" title="Thick">3x</button>
+      </div>
+
+      <!-- Actions -->
+      <div class="floating-actions">
+        <button class="floating-action-btn" id="btn-floating-undo" title="Undo Last Stroke" aria-label="Undo">
+          <svg class="svg-icon" viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 14 4 9l5-5"></path><path d="M4 9h10.5a5.5 5.5 0 0 1 5.5 5.5v0a5.5 5.5 0 0 1-5.5 5.5H11"></path></svg>
+        </button>
+        <button class="floating-action-btn" id="btn-floating-clear" title="Clear All Drawings" aria-label="Clear All">
+          <svg class="svg-icon" viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 6h18"></path><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"></path><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"></path><line x1="10" y1="11" x2="10" y2="17"></line><line x1="14" y1="11" x2="14" y2="17"></line></svg>
+        </button>
+        <button class="floating-action-btn btn-close-annotation" id="btn-floating-close" title="Hide Toolbar (Drawings Persist)" aria-label="Close Toolbar">
+          <svg class="svg-icon" viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+        </button>
+      </div>
+    </aside>
+  </div>
+
+  <!-- =========================================================================
+       FULLSCREEN SLIDES OVERLAY (Top Controls Bar for Annotate and Exit Focus)
+       ========================================================================= -->
+  <div class="modal-overlay hidden" id="fullscreen-slides-modal" role="dialog" aria-modal="true" aria-label="Fullscreen Slides Presentation">
+    <div class="modal-fullscreen-header">
+      <div class="modal-fullscreen-title-group">
+        <span class="hub-logo">RAG Studio</span>
+        <span class="active-badge" style="background: rgba(14, 165, 233, 0.15); color: #38bdf8; font-size: 11px; padding: 2px 8px; border-radius: 4px; border: 1px solid rgba(14, 165, 233, 0.3);">Focus View</span>
+        <span class="focus-deck-title" style="color: var(--text-secondary); font-size: 13px; font-weight: 500;">Interactive Presentation Deck</span>
+      </div>
+      <div class="modal-fullscreen-actions">
+        <button class="header-btn" id="btn-modal-annotate" title="Toggle Drawing Annotations & Laser">
+          <span class="btn-icon">
+            <svg class="svg-icon" viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"></path><path d="m15 5 4 4"></path></svg>
+          </span>
+          <span class="btn-text">Annotate</span>
+        </button>
+        <button class="header-btn btn-exit-focus-top" id="btn-modal-exit-slides" title="Exit Focus Mode (Esc)" style="background: rgba(244, 63, 94, 0.15); border: 1px solid rgba(244, 63, 94, 0.5); color: #fb7185;">
+          <span class="btn-icon">
+            <svg class="svg-icon" viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+          </span>
+          <span class="btn-text" style="font-weight: 600;">Exit Focus (Esc)</span>
+        </button>
+      </div>
+    </div>
+    <div class="modal-fullscreen-container">
+      <iframe id="iframe-modal-slides" src="about:blank" title="Fullscreen Reveal.js Presentation" allow="fullscreen"></iframe>
+    </div>
+  </div>
+
+  <!-- =========================================================================
+       CHAPTER SELECTION MODAL (Track / Container Switcher)
+       ========================================================================= -->
+  <div class="modal-backdrop hidden" id="chapter-select-modal" role="dialog" aria-modal="true" aria-label="Select Studio Chapter Track">
+    <div class="modal-card modal-card-xl chapter-modal-card">
+      <div class="modal-card-header">
+        <div class="modal-title-group">
+          <span class="modal-icon chapter-modal-icon">
+            <svg class="svg-icon" viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="12 2 2 7 12 12 22 7 12 2"></polygon><polyline points="2 17 12 22 22 17"></polyline><polyline points="2 12 12 17 22 12"></polyline></svg>
+          </span>
+          <div>
+            <h3 class="modal-title">Select Studio Chapter &amp; Container Track</h3>
+            <p class="modal-subtitle">Choose which specialized learning track to launch. You can switch chapters anytime from the top navigation bar.</p>
+          </div>
+        </div>
+        <button class="modal-close-btn" id="btn-close-chapter-modal" aria-label="Close Chapter Selection">
+          <svg class="svg-icon" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+        </button>
+      </div>
+
+      <div class="modal-card-body">
+        <div class="chapter-selection-grid">
+          <!-- Card 1: Chapter 1 RAG -->
+          <div class="chapter-choice-card" id="chapter-card-rag" data-course-id="rag-intro" tabindex="0" role="button" aria-label="Select Chapter 1: Vector Databases & RAG Fundamentals">
+            <div class="chapter-card-glow chapter-card-glow-rag"></div>
+            <div class="chapter-card-header">
+              <span class="chapter-card-icon">
+                <svg class="svg-icon" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="12 2 2 7 12 12 22 7 12 2"></polygon><polyline points="2 17 12 22 22 17"></polyline><polyline points="2 12 12 17 22 12"></polyline></svg>
+              </span>
+              <div class="chapter-card-badges">
+                <span class="chapter-card-track-badge">Chapter 1</span>
+                <span class="chapter-card-status-badge" id="chapter-status-rag">Available</span>
+              </div>
+            </div>
+            <h4 class="chapter-card-title">Chapter 1: Vector Databases &amp; RAG Fundamentals</h4>
+            <p class="chapter-card-desc">
+              Master continuous dense vector representations, sentence embeddings, cosine similarity geometry, ChromaDB vector indexing, and grounded RAG synthesis.
+            </p>
+            <div class="chapter-card-features">
+              <div class="chapter-feature-item">
+                <span class="feature-icon">
+                  <svg class="svg-icon" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path></svg>
+                </span>
+                <span><strong>5 Modules:</strong> Lexical Search, Chunking, Dense Vectors, ChromaDB &amp; Grounded RAG</span>
+              </div>
+              <div class="chapter-feature-item">
+                <span class="feature-icon">
+                  <svg class="svg-icon" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"></circle><circle cx="12" cy="12" r="6"></circle><circle cx="12" cy="12" r="2"></circle></svg>
+                </span>
+                <span><strong>10 Hands-on Tasks:</strong> Python labs, Jupyter notebooks, interactive verifications</span>
+              </div>
+              <div class="chapter-feature-item">
+                <span class="feature-icon">
+                  <svg class="svg-icon" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="16.5" y1="9.4" x2="7.5" y2="4.21"></line><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path><polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline><line x1="12" y1="22.08" x2="12" y2="12"></line></svg>
+                </span>
+                <span><strong>Runtime:</strong> ChromaDB HNSW Engine, SentenceTransformers (all-MiniLM-L6-v2)</span>
+              </div>
+            </div>
+            <div class="chapter-card-footer">
+              <span class="chapter-card-meta">Est. 150 mins • Intermediate</span>
+              <button class="btn-select-chapter" id="btn-select-rag">
+                <span>Launch Course</span>
+                <span class="arrow-icon">
+                  <svg class="svg-icon" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+                </span>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- =========================================================================
+       MULTI-COURSE CATALOG & CHAPTER SWITCHER MODAL
+       ========================================================================= -->
+  <div class="modal-backdrop hidden" id="catalog-modal" role="dialog" aria-modal="true" aria-label="Multi-Course Catalog">
+    <div class="modal-card modal-card-lg">
+      <div class="modal-card-header">
+        <div class="modal-title-group">
+          <span class="modal-icon">
+            <svg class="svg-icon" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path></svg>
+          </span>
+          <div>
+            <h3 class="modal-title">Course &amp; Chapter Catalog</h3>
+            <p class="modal-subtitle">Select an interactive hands-on course to load its environment and curriculum</p>
+          </div>
+        </div>
+        <button class="modal-close-btn" id="btn-close-catalog-modal" aria-label="Close Modal">
+          <svg class="svg-icon" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+        </button>
+      </div>
+
+      <div class="modal-card-body">
+        <div class="courses-catalog-grid" id="courses-catalog-grid">
+          <!-- Dynamically populated from catalog/index.json -->
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- =========================================================================
+       ENVIRONMENT RESET MODAL
+       ========================================================================= -->
+  <div class="modal-backdrop hidden" id="reset-env-modal" role="dialog" aria-modal="true" aria-label="Reset Workspace Environment">
+    <div class="modal-card">
+      <div class="modal-card-header">
+        <div class="modal-title-group">
+          <span class="modal-icon">
+            <svg class="svg-icon" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"></path><path d="M3 3v5h5"></path></svg>
+          </span>
+          <h3 class="modal-title">Reset Workspace Environment</h3>
+        </div>
+        <button class="modal-close-btn" id="btn-close-reset-modal" aria-label="Close Modal">
+          <svg class="svg-icon" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+        </button>
+      </div>
+
+      <div class="modal-card-body">
+        <p class="modal-instructions">
+          Are you sure you want to reset your workspace? This will restore <code>/workspace</code> back to its pristine starter state from the course template.
+        </p>
+        <p class="modal-subtext">
+          • All starter notebooks, datasets, and scripts will be restored.<br>
+          • Verified task answers in the curriculum will be preserved.<br>
+          • Use this if your environment is in a broken state and you want to start fresh.
+        </p>
+
+        <div class="modal-action-row" style="margin-top: 1.5rem;">
+          <button class="btn btn-secondary" id="btn-cancel-reset">Cancel</button>
+          <button class="btn btn-danger" id="btn-confirm-reset">Yes, Reset Workspace</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- =========================================================================
+       PROGRESS IMPORT / EXPORT MODAL
+       ========================================================================= -->
+  <div class="modal-backdrop hidden" id="progress-modal" role="dialog" aria-modal="true" aria-label="Curriculum Progress Export and Import">
+    <div class="modal-card">
+      <div class="modal-card-header">
+        <div class="modal-title-group">
+          <span class="modal-icon">
+            <svg class="svg-icon" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path><polyline points="17 21 17 13 7 13 7 21"></polyline><polyline points="7 3 7 8 15 8"></polyline></svg>
+          </span>
+          <h3 class="modal-title">Curriculum Progress Manager</h3>
+        </div>
+        <button class="modal-close-btn" id="btn-close-progress-modal" aria-label="Close Modal">
+          <svg class="svg-icon" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+        </button>
+      </div>
+
+      <div class="modal-card-body">
+        <p class="modal-instructions">
+          Export your completed verification answers and exercise state to backup your progress or transfer it across machines.
+        </p>
+
+        <div class="modal-action-row">
+          <button class="btn btn-secondary" id="btn-export-progress">
+            <svg class="svg-icon" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+            <span>Export Progress JSON</span>
+          </button>
+          <label class="btn btn-secondary">
+            <svg class="svg-icon" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" y1="3" x2="12" y2="15"></line></svg>
+            <span>Import Progress JSON</span>
+            <input type="file" id="import-file-input" accept=".json" style="display:none;">
+          </label>
+          <button class="btn btn-text-danger" id="btn-reset-progress">Reset All Answers</button>
+        </div>
+
+        <div class="progress-textarea-wrapper">
+          <label for="progress-json-view" class="input-label">Progress Manifest Preview:</label>
+          <textarea id="progress-json-view" class="progress-textarea" readonly rows="8" spellcheck="false"></textarea>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- =========================================================================
+       HEALTH STATUS DIAGNOSTIC MODAL
+       ========================================================================= -->
+  <div class="modal-backdrop hidden" id="health-modal" role="dialog" aria-modal="true" aria-label="Service Diagnostic Probes">
+    <div class="modal-card">
+      <div class="modal-card-header">
+        <div class="modal-title-group">
+          <span class="modal-icon">
+            <svg class="svg-icon" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 12h-4l-3 9L9 3l-3 9H2"></path></svg>
+          </span>
+          <h3 class="modal-title">Universal Hub Health Diagnostics</h3>
+        </div>
+        <button class="modal-close-btn" id="btn-close-health-modal" aria-label="Close Modal">
+          <svg class="svg-icon" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+        </button>
+      </div>
+
+      <div class="modal-card-body">
+        <div class="health-checks-table" id="health-checks-table">
+          <!-- Populated by JavaScript -->
+        </div>
+
+        <div class="health-actions-row">
+          <button class="btn btn-secondary" id="btn-reprobe-health">Reprobe Services Now</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Notification Toast Container -->
+  <div class="toast-container" id="toast-container" aria-live="polite"></div>
+
+  <!-- App Script -->
+  <script src="app.js"></script>
+</body>
+</html>

@@ -1,0 +1,34 @@
+{
+  "version": "1.0.0",
+  "updatedAt": "2026-11-07T00:00:00Z",
+  "activeCourseId": "rag-mcp",
+  "courses": [
+    {
+      "id": "rag-mcp",
+      "course_id": "rag-mcp",
+      "version": "1.0.0",
+      "title": "Foundations of RAG & Vector Databases",
+      "description": "Master multimodal embeddings, vector similarity math, ChromaDB HNSW indexing, and modular Python RAG systems.",
+      "status": "Active",
+      "badge": "RAG & Vectors",
+      "difficulty": "Intermediate",
+      "modules": 8,
+      "moduleCount": 8,
+      "tasks": 10,
+      "taskCount": 10,
+      "estimatedMinutes": 120,
+      "icon": "layers",
+      "tags": [
+        "rag",
+        "vector-db",
+        "embeddings",
+        "chromadb",
+        "hnsw",
+        "python"
+      ],
+      "specPath": "courses/rag-mcp/course.yaml",
+      "installed": true,
+      "compatible": true
+    }
+  ]
+}

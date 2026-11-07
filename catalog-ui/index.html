@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Studio Universal - Chapter Hub</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+</head>
+<body class="dark-theme">
+
+  <!-- =========================================================================
+       VIEW 1: CHAPTER CATALOG DASHBOARD (Landing View)
+       ========================================================================= -->
+  <div id="catalog-view" class="view-container">
+    <!-- Top Header -->
+    <header class="hub-header">
+      <div class="header-brand">
+        <svg class="brand-icon" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon>
+        </svg>
+        <span class="brand-title">Studio Universal</span>
+        <span class="brand-tag">v4.2</span>
+      </div>
+
+      <div class="header-center">
+        <div class="search-box">
+          <svg class="search-icon" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <circle cx="11" cy="11" r="8"></circle>
+            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+          </svg>
+          <input type="text" id="chapter-search" placeholder="Search chapters, topics, tools..." autocomplete="off">
+        </div>
+      </div>
+
+      <div class="header-actions">
+        <div class="engine-badge" id="engine-status-badge" title="Container Runtime Engine">
+          <span class="status-dot status-connected" id="engine-dot"></span>
+          <span id="engine-name-label">Docker</span>
+        </div>
+        <button class="icon-btn" id="btn-refresh-catalog" title="Refresh Chapters & Status" aria-label="Refresh">
+          <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M21 12a9 9 0 1 1-9-9c2.52 0 4.93 1 6.74 2.74L21 8"></path>
+            <path d="M21 3v5h-5"></path>
+          </svg>
+        </button>
+        <button class="icon-btn" id="btn-toggle-theme" title="Toggle Theme" aria-label="Toggle Theme">
+          <svg id="theme-sun-icon" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <circle cx="12" cy="12" r="5"></circle>
+            <line x1="12" y1="1" x2="12" y2="3"></line>
+            <line x1="12" y1="21" x2="12" y2="23"></line>
+            <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+            <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+            <line x1="1" y1="12" x2="3" y2="12"></line>
+            <line x1="21" y1="12" x2="23" y2="12"></line>
+            <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+            <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+          </svg>
+        </button>
+      </div>
+    </header>
+
+    <!-- Main Content Area -->
+    <main class="hub-main">
+      <div class="policy-notice">
+        <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <circle cx="12" cy="12" r="10"></circle>
+          <line x1="12" y1="16" x2="12" y2="12"></line>
+          <line x1="12" y1="8" x2="12.01" y2="8"></line>
+        </svg>
+        <span>One chapter runs at a time. Launching another chapter gracefully stops the active one to preserve system RAM and CPU.</span>
+      </div>
+
+      <div class="chapters-grid" id="chapters-grid">
+        <!-- Rendered dynamically by app.js -->
+        <div class="loading-placeholder">Loading available learning chapters...</div>
+      </div>
+    </main>
+
+    <!-- Operation Progress Banner (Visible during lifecycle actions) -->
+    <div id="operation-banner" class="operation-banner hidden">
+      <div class="operation-info">
+        <span class="spinner-icon"></span>
+        <span id="operation-status-text">Starting container...</span>
+      </div>
+      <div class="operation-actions">
+        <button class="btn-subtle" id="btn-cancel-operation">Cancel</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- =========================================================================
+       VIEW 2: ACTIVE WORKSPACE STUDIO (Embedded Learning View)
+       ========================================================================= -->
+  <div id="workspace-view" class="view-container hidden">
+    <!-- Workspace Bar -->
+    <div class="workspace-top-bar">
+      <button class="btn-back" id="btn-back-to-catalog">
+        <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <line x1="19" y1="12" x2="5" y2="12"></line>
+          <polyline points="12 19 5 12 12 5"></polyline>
+        </svg>
+        <span>Back to Chapters</span>
+      </button>
+
+      <div class="active-chapter-title-group">
+        <span class="active-chapter-badge" id="active-chapter-badge">Chapter 1</span>
+        <span class="active-chapter-name" id="active-chapter-name">Vector Databases & RAG</span>
+      </div>
+
+      <div class="workspace-top-actions">
+        <!-- Persistent Focus View Controls on Top Bar -->
+        <div class="catalog-focus-controls hidden" id="catalog-focus-controls">
+          <button class="btn-top-focus btn-top-annotate" id="btn-catalog-annotate" title="Toggle Annotations & Drawing Tools">
+            <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"></path><path d="m15 5 4 4"></path></svg>
+            <span>Annotate</span>
+          </button>
+          <button class="btn-top-focus btn-top-exit" id="btn-catalog-exit-focus" title="Exit Focus View (Restore Dual Split)">
+            <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+            <span>Exit Focus</span>
+          </button>
+        </div>
+
+        <span class="status-indicator-pill">
+          <span class="status-dot status-healthy"></span>
+          <span>Running (Port 8080)</span>
+        </span>
+        <button class="btn-subtle" id="btn-workspace-options">
+          <span>Chapter Options</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Workspace Frame -->
+    <div class="workspace-frame-container">
+      <iframe id="workspace-iframe" src="about:blank" title="Studio Workspace" allow="clipboard-read; clipboard-write; fullscreen"></iframe>
+    </div>
+  </div>
+
+  <!-- =========================================================================
+       MODAL: BACK NAVIGATION OPTIONS
+       ========================================================================= -->
+  <div id="modal-back" class="modal-overlay hidden" role="dialog" aria-modal="true" aria-labelledby="back-modal-title">
+    <div class="modal-card">
+      <h3 class="modal-title" id="back-modal-title">Return to Chapter Catalog</h3>
+      <p class="modal-desc">Would you like to stop the active chapter container to free system memory, or keep it running in the background?</p>
+      
+      <div class="modal-actions-column">
+        <button class="btn-primary" id="btn-stop-and-return">
+          <strong>Stop and Return (Recommended)</strong>
+          <small>Stops the container and frees 3GB RAM. All progress and files are saved.</small>
+        </button>
+        <button class="btn-secondary" id="btn-keep-and-return">
+          <strong>Keep Running and Return</strong>
+          <small>Leaves container running in background. Launching another chapter will stop it.</small>
+        </button>
+        <button class="btn-text" id="btn-cancel-return">Cancel</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- =========================================================================
+       MODAL: FACTORY RESET CONFIRMATION
+       ========================================================================= -->
+  <div id="modal-reset" class="modal-overlay hidden" role="dialog" aria-modal="true" aria-labelledby="reset-modal-title">
+    <div class="modal-card modal-danger">
+      <h3 class="modal-title" id="reset-modal-title">Reset Chapter to Factory State</h3>
+      <p class="modal-desc">This action will delete all modifications, checkpoints, and answer progress for <strong id="reset-chapter-target-name">this chapter</strong>, and re-seed the workspace from starter files.</p>
+      
+      <div class="reset-warning-box">
+        <strong>Warning:</strong> Other chapters will NOT be affected.
+      </div>
+
+      <div class="modal-actions-row">
+        <button class="btn-text" id="btn-cancel-reset">Cancel</button>
+        <button class="btn-danger" id="btn-confirm-reset">Reset Chapter Data</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast Notification System -->
+  <div id="toast-container" class="toast-container" aria-live="polite"></div>
+
+  <script src="app.js"></script>
+</body>
+</html>
+

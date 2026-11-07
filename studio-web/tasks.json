@@ -1,0 +1,298 @@
+{
+  "$schema": "./task-schema.json",
+  "version": "4.2.0",
+  "course": "rag-mcp",
+  "title": "Foundations of RAG & Vector Databases",
+  "modules": [
+    {
+      "id": "mod_rag_01",
+      "title": "Module 1: Multimodal Embeddings, Similarity Math & Indexing",
+      "badge": "Core Theory",
+      "tasks": [
+        {
+          "id": "t_embed_pca",
+          "exerciseId": "multimodal-embeddings-pca",
+          "prerequisites": [],
+          "module": "mod_rag_01",
+          "title": "Explore Multimodal Embeddings & PCA 3D Latent Space",
+          "instructions": "Open notebook 'notebooks/01_embeddings_similarity_and_indexing.ipynb' and execute Section 1. Inspect the 384-dimensional vector coordinates for the multimodal chunks (Cat, Dog, Table Cat, Image, Video) and run the Principal Component Analysis (PCA) projection to 3D space.",
+          "commands": [
+            "cd /workspace",
+            "python -c 'from sentence_transformers import SentenceTransformer; from sklearn.decomposition import PCA; m = SentenceTransformer(\"sentence-transformers/all-MiniLM-L6-v2\"); embs = m.encode([\"Cat\", \"Dog\", \"On the table cat is there.\", \"Cat Image\", \"Pet Video\"]); pca = PCA(n_components=3); pca.fit(embs); print(round(float(sum(pca.explained_variance_ratio_)), 2))'"
+          ],
+          "tracks": {
+            "notebook": {
+              "path": "notebooks/01_embeddings_similarity_and_indexing.ipynb",
+              "cellTag": "embeddings-multimodal"
+            },
+            "script": {
+              "path": "mini_rag_project/ingest.py",
+              "args": []
+            }
+          },
+          "question": {
+            "type": "numeric",
+            "prompt": "What is the total explained variance ratio preserved when projecting the 384-dimensional embeddings down to 3 principal components (rounded to 2 decimal places)?",
+            "expected": 0.89,
+            "absoluteTolerance": 0.02,
+            "relativeTolerance": 0.05,
+            "integerOnly": false,
+            "explanation": "PCA reduction from 384 dimensions to 3 principal axes captures approximately 89.13% (0.89) of the total semantic variance across our multimodal corpus."
+          },
+          "referenceSolution": "from sklearn.decomposition import PCA\npca = PCA(n_components=3, random_state=42)\nprojected = pca.fit_transform(embeddings)\nprint(round(float(sum(pca.explained_variance_ratio_)), 2))"
+        },
+        {
+          "id": "t_similarity_math",
+          "exerciseId": "vector-proximity-math",
+          "prerequisites": [
+            "t_embed_pca"
+          ],
+          "module": "mod_rag_01",
+          "title": "Compute Vector Proximity Mathematics (Cosine vs Squared L2)",
+          "instructions": "In notebook 'notebooks/01_embeddings_similarity_and_indexing.ipynb', run Section 2 to evaluate the pure NumPy mathematical implementations of Cosine Similarity, Dot Product, and Squared Euclidean Distance (L2). Observe the mathematical identity d\u00b2 = 2 - 2\u00b7cos(\u03b8) on unit vectors.",
+          "commands": [
+            "cd /workspace",
+            "python -c 'import numpy as np; cos_sim = 0.6792; l2_sq = 2.0 - 2.0 * cos_sim; print(f\"{l2_sq:.4f}\")'"
+          ],
+          "tracks": {
+            "notebook": {
+              "path": "notebooks/01_embeddings_similarity_and_indexing.ipynb",
+              "cellTag": "similarity-math"
+            },
+            "script": {
+              "path": "mini_rag_project/retriever.py",
+              "args": []
+            }
+          },
+          "question": {
+            "type": "numeric",
+            "prompt": "For unit-normalized vectors with Cosine similarity cos(\u03b8) = 0.6792 (the exact similarity between 'Cat' and 'On the table cat is there.'), what is their exact Squared Euclidean (L2) distance d\u00b2 = 2 - 2\u00b7cos(\u03b8) (rounded to 4 decimal places)?",
+            "expected": 0.6416,
+            "absoluteTolerance": 0.001,
+            "relativeTolerance": 0.01,
+            "integerOnly": false,
+            "explanation": "For unit-normalized vectors (\u2016u\u2016 = \u2016v\u2016 = 1), the squared Euclidean distance is algebraically defined as d\u00b2 = \u2016u - v\u2016\u00b2 = \u2016u\u2016\u00b2 + \u2016v\u2016\u00b2 - 2(u\u00b7v) = 2 - 2\u00b7cos(\u03b8). Substituting cos(\u03b8) = 0.6792 yields 2 - 2(0.6792) = 0.6416."
+          },
+          "referenceSolution": "cos_val = 0.6792\nl2_sq = 2.0 - 2.0 * cos_val\nprint(f'{l2_sq:.4f}')"
+        },
+        {
+          "id": "t_vector_indexing",
+          "exerciseId": "ann-vector-indexing",
+          "prerequisites": [
+            "t_similarity_math"
+          ],
+          "module": "mod_rag_01",
+          "title": "ANN Indexing Mechanisms: IVF Voronoi vs HNSW Graphs",
+          "instructions": "Execute Section 3 of 'notebooks/01_embeddings_similarity_and_indexing.ipynb' to simulate Inverted File (IVF) k-means clustering and Hierarchical Navigable Small World (HNSW) geometric skip-list routing.",
+          "commands": [
+            "cd /workspace",
+            "python -c 'print(\"HNSW logarithmic search: O(log N)\")'"
+          ],
+          "tracks": {
+            "notebook": {
+              "path": "notebooks/01_embeddings_similarity_and_indexing.ipynb",
+              "cellTag": "ivf-simulation"
+            },
+            "script": {
+              "path": "mini_rag_project/ingest.py",
+              "args": []
+            }
+          },
+          "question": {
+            "type": "mcq",
+            "prompt": "Why does ChromaDB use HNSW graphs with Squared Euclidean (L2) distance instead of raw Euclidean distance or standard B-tree indexing?",
+            "options": [
+              {
+                "id": "opt_a",
+                "text": "HNSW circumvents the curse of dimensionality via small-world graph topology to achieve O(log N) search, while omitting the square root saves CPU clock cycles with strictly identical neighbor ranking."
+              },
+              {
+                "id": "opt_b",
+                "text": "B-trees are incompatible with Python dictionaries."
+              },
+              {
+                "id": "opt_c",
+                "text": "Squared Euclidean distance guarantees that embeddings become 1-dimensional."
+              },
+              {
+                "id": "opt_d",
+                "text": "Square roots cannot be calculated on Linux operating systems."
+              }
+            ],
+            "correctOptionId": "opt_a",
+            "explanation": "HNSW uses small-world network percolation to search high-dimensional space in logarithmic O(log N) time without coordinate bounding boxes. Omitting the square root function saves CPU cycles because f(x) = sqrt(x) is strictly monotonic, preserving identical neighbor ranking."
+          },
+          "referenceSolution": "# ChromaDB pairs hnswlib (C++ HNSW implementation) with Squared L2 distance (hnsw:space: 'l2')"
+        }
+      ]
+    },
+    {
+      "id": "mod_rag_02",
+      "title": "Module 2: ChromaDB Setup, Ingestion & Semantic Retrieval",
+      "badge": "Vector Database",
+      "tasks": [
+        {
+          "id": "t_chroma_setup_retrieval",
+          "exerciseId": "chromadb-lifecycle",
+          "prerequisites": [
+            "t_vector_indexing"
+          ],
+          "module": "mod_rag_02",
+          "title": "ChromaDB Client Setup, Multimodal Ingestion & Query Execution",
+          "instructions": "Open notebook 'notebooks/02_chromadb_setup_ingestion_retrieval.ipynb'. Run all cells to initialize the ChromaDB client, create a collection configured with 'hnsw:space'='l2', ingest the 8 multimodal knowledge base documents, and execute the semantic query 'Where is the cat sitting?'.",
+          "commands": [
+            "cd /workspace",
+            "python -c 'import chromadb; client = chromadb.Client(); col = client.create_collection(\"test\", metadata={\"hnsw:space\": \"l2\"}); col.add(documents=[\"Cat\", \"Dog\", \"On the table cat is there.\"], ids=[\"1\",\"2\",\"3\"]); res = col.query(query_texts=[\"Where is the cat sitting?\"], n_results=3); print(len(res[\"documents\"][0]))'"
+          ],
+          "tracks": {
+            "notebook": {
+              "path": "notebooks/02_chromadb_setup_ingestion_retrieval.ipynb",
+              "cellTag": "chromadb-retrieval"
+            },
+            "script": {
+              "path": "mini_rag_project/retriever.py",
+              "args": []
+            }
+          },
+          "question": {
+            "type": "numeric",
+            "prompt": "When ingesting the 8 knowledge base documents into ChromaDB and executing the semantic query for 'Where is the cat sitting?' with n_results=3, what is the exact integer count of retrieved documents returned in the result dictionary?",
+            "expected": 3,
+            "absoluteTolerance": 0,
+            "relativeTolerance": 0,
+            "integerOnly": true,
+            "explanation": "Calling collection.query(query_texts=['Where is the cat sitting?'], n_results=3) returns exactly 3 candidate documents ranked by ascending squared L2 distance."
+          },
+          "referenceSolution": "import chromadb\nclient = chromadb.Client()\ncol = client.create_collection('multimodal_knowledge')\n# query with n_results=3\nres = col.query(query_texts=['Where is the cat sitting?'], n_results=3)\nprint(len(res['documents'][0]))"
+        }
+      ]
+    },
+    {
+      "id": "mod_rag_03",
+      "title": "Module 3: Minimal Production Python RAG Project",
+      "badge": "Hands-on Project",
+      "tasks": [
+        {
+          "id": "t_proj_ingest",
+          "exerciseId": "project-ingestion",
+          "prerequisites": [
+            "t_chroma_setup_retrieval"
+          ],
+          "module": "mod_rag_03",
+          "title": "Ingest Corporate Policies into ChromaDB via Minimal Python Pipeline",
+          "instructions": "Navigate to the project directory 'mini_rag_project/'. Inspect 'config.py' and 'ingest.py'. Execute 'python ingest.py' in the terminal to chunk the 3 corporate policy documents with sliding overlap (chunk_size=350, chunk_overlap=50) and populate the ChromaDB persistent collection.",
+          "commands": [
+            "cd /workspace/mini_rag_project",
+            "python ingest.py"
+          ],
+          "tracks": {
+            "notebook": {
+              "path": "notebooks/02_chromadb_setup_ingestion_retrieval.ipynb",
+              "cellTag": "chromadb-ingestion"
+            },
+            "script": {
+              "path": "mini_rag_project/ingest.py",
+              "args": []
+            }
+          },
+          "question": {
+            "type": "numeric",
+            "prompt": "When executing 'python ingest.py' against the 3 corporate policy text files in 'mini_rag_project/data/documents/', how many total document chunks are partitioned and indexed into the ChromaDB 'corporate_policies' collection?",
+            "expected": 12,
+            "absoluteTolerance": 0,
+            "relativeTolerance": 0,
+            "integerOnly": true,
+            "explanation": "The 3 corporate policy documents (Remote Work, Information Security, Paid Time Off) are chunked into windows of size 350 with overlap 50, producing exactly 4 chunks each for a total of 12 indexed vector chunks."
+          },
+          "referenceSolution": "import subprocess\nsubprocess.run(['python', 'mini_rag_project/ingest.py'])"
+        },
+        {
+          "id": "t_proj_verify",
+          "exerciseId": "project-verification",
+          "prerequisites": [
+            "t_proj_ingest"
+          ],
+          "module": "mod_rag_03",
+          "title": "Execute Semantic Retrieval, Answer Synthesis & Automated Verification",
+          "instructions": "Run the automated verification suite 'python verify_rag.py' in 'mini_rag_project/'. It executes 6 automated test assertions covering chunk counts, distance metric configuration ('l2'), telecommuting semantic search, encryption retrieval, grounded synthesis with citation anchors, and out-of-domain query refusal.",
+          "commands": [
+            "cd /workspace/mini_rag_project",
+            "python verify_rag.py"
+          ],
+          "tracks": {
+            "notebook": {
+              "path": "notebooks/02_chromadb_setup_ingestion_retrieval.ipynb",
+              "cellTag": "chromadb-retrieval"
+            },
+            "script": {
+              "path": "mini_rag_project/verify_rag.py",
+              "args": []
+            }
+          },
+          "question": {
+            "type": "numeric",
+            "prompt": "When executing the comprehensive automated test suite via 'python verify_rag.py', how many verification tests passed (out of 6)?",
+            "expected": 6,
+            "absoluteTolerance": 0,
+            "relativeTolerance": 0,
+            "integerOnly": true,
+            "explanation": "All 6 automated assertions pass: 1) chunk count verification (12), 2) distance metric configuration ('l2'), 3) telecommuting semantic retrieval (< 1.0), 4) encryption retrieval (< 1.5), 5) grounded answer synthesis with citation tags, and 6) out-of-domain query refusal."
+          },
+          "referenceSolution": "import subprocess\nsubprocess.run(['python', 'mini_rag_project/verify_rag.py'])"
+        },
+        {
+          "id": "t_proj_main_cli",
+          "exerciseId": "project-cli-synthesis",
+          "prerequisites": [
+            "t_proj_verify"
+          ],
+          "module": "mod_rag_03",
+          "title": "Query the Production RAG CLI Application",
+          "instructions": "Execute the CLI application 'python main.py --query \"What are the rules and equipment allowances for telecommuting?\"' in 'mini_rag_project/'. Inspect how 'generator.py' synthesizes a grounded answer with strict bracketed citations and refusal safeguards.",
+          "commands": [
+            "cd /workspace/mini_rag_project",
+            "python main.py --query 'What are the rules and equipment allowances for telecommuting?'"
+          ],
+          "tracks": {
+            "notebook": {
+              "path": "notebooks/02_chromadb_setup_ingestion_retrieval.ipynb",
+              "cellTag": "chromadb-retrieval"
+            },
+            "script": {
+              "path": "mini_rag_project/main.py",
+              "args": [
+                "--query",
+                "What are the rules and equipment allowances for telecommuting?"
+              ]
+            }
+          },
+          "question": {
+            "type": "mcq",
+            "prompt": "How does ContextSynthesizer in 'generator.py' prevent factual hallucinations when a user asks a question not covered by corporate policies (e.g., 'how to bake sourdough bread')?",
+            "options": [
+              {
+                "id": "opt_a",
+                "text": "It checks the top retrieval similarity score against a confidence threshold (0.45) and returns an explicit refusal ('The provided corporate policy documents do not contain information...')."
+              },
+              {
+                "id": "opt_b",
+                "text": "It queries Wikipedia automatically."
+              },
+              {
+                "id": "opt_c",
+                "text": "It re-indexes the ChromaDB database."
+              },
+              {
+                "id": "opt_d",
+                "text": "It generates a fictional corporate policy answer."
+              }
+            ],
+            "correctOptionId": "opt_a",
+            "explanation": "To prevent hallucinations, ContextSynthesizer checks whether the best retrieved chunk exceeds the similarity threshold. If confidence is below threshold, it refuses to answer rather than guessing."
+          },
+          "referenceSolution": "# generator.py checks: if not context_results or context_results[0].similarity_score < self.similarity_threshold: return refusal"
+        }
+      ]
+    }
+  ]
+}

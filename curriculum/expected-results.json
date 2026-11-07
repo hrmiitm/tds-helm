@@ -1,0 +1,253 @@
+{
+  "version": "4.0.0",
+  "course": "agent-rag-learning",
+  "tasks": {
+    "t1_1": {
+      "exerciseId": "lexical-search",
+      "status": "PASS",
+      "inputHash": "8ff07dfc767265c7134bc7e4a88ee0c3b32c306a10a03b3e4ecfe65f586f6795",
+      "metrics": {
+        "query": "distributed workforce policies",
+        "matches_found": 0,
+        "matched_documents": [],
+        "synonym_mismatch_detected": true
+      }
+    },
+    "t1_2": {
+      "exerciseId": "semantic-ranking",
+      "status": "PASS",
+      "inputHash": "8ff07dfc767265c7134bc7e4a88ee0c3b32c306a10a03b3e4ecfe65f586f6795",
+      "metrics": {
+        "query": "distributed workforce policies",
+        "top_document": "Policy_01_RemoteWork.txt",
+        "top_similarity": 0.2569,
+        "rankings": [
+          {
+            "document": "Policy_01_RemoteWork.txt",
+            "similarity": 0.2569,
+            "rank": 1
+          },
+          {
+            "document": "Policy_02_Security.txt",
+            "similarity": 0.1904,
+            "rank": 2
+          },
+          {
+            "document": "Policy_03_Expenses.txt",
+            "similarity": 0.1342,
+            "rank": 3
+          }
+        ]
+      }
+    },
+    "t2_1": {
+      "exerciseId": "canonical-chunking",
+      "status": "PASS",
+      "inputHash": "db81fa1e59e38bdb7e47b798c69e5dde11b9a5361519e2bee0286dbe8dab9e35",
+      "metrics": {
+        "document": "doc_001.txt",
+        "document_length": 3164,
+        "chunk_size": 350,
+        "chunk_overlap": 50,
+        "total_chunks": 12,
+        "separators": [
+          "\n\n",
+          "\n",
+          ". ",
+          " ",
+          ""
+        ]
+      }
+    },
+    "t2_2": {
+      "exerciseId": "overlap",
+      "status": "PASS",
+      "inputHash": "db81fa1e59e38bdb7e47b798c69e5dde11b9a5361519e2bee0286dbe8dab9e35",
+      "metrics": {
+        "chunk_0_len": 325,
+        "chunk_1_len": 129,
+        "overlap_target": 50,
+        "boundary_preservation": true,
+        "explanation": "Chunk overlap prevents abrupt loss of context across semantic boundaries."
+      }
+    },
+    "t3_1": {
+      "exerciseId": "dimensions",
+      "status": "PASS",
+      "inputHash": "2ec9fff2b0ca3c249520560861dd4facb60cf9ae9553aeb8d4521491b391c1c0",
+      "metrics": {
+        "model": "sentence-transformers/all-MiniLM-L6-v2",
+        "device": "cpu",
+        "dimensions": 384,
+        "num_sentences": 3,
+        "is_finite": true,
+        "is_normalized": true,
+        "vector_norms": [
+          1.0,
+          1.0,
+          1.0
+        ]
+      }
+    },
+    "t3_2": {
+      "exerciseId": "cosine",
+      "status": "PASS",
+      "inputHash": "2ec9fff2b0ca3c249520560861dd4facb60cf9ae9553aeb8d4521491b391c1c0",
+      "metrics": {
+        "sim_rag1_rag2": 0.1855,
+        "sim_rag1_bread": -0.0166,
+        "difference": 0.202,
+        "higher_affinity_pair": "Sentence 1 vs Sentence 2",
+        "is_conceptually_sound": true
+      }
+    },
+    "t4_1": {
+      "exerciseId": "index",
+      "status": "PASS",
+      "inputHash": "f8151b28dec60cfc85ae8964c6118425272bdc6ce3c77441f22b4dc9a6f275e1",
+      "metrics": {
+        "collection_name": "rag_knowledge_base",
+        "documents_processed": 3,
+        "indexed_chunks": 37,
+        "space": "cosine",
+        "storage_path": "/home/kit/Documents/Sep2026/TDS/agent-rag-learning/workspace/data/chroma_db/scripts"
+      }
+    },
+    "t4_2": {
+      "exerciseId": "query",
+      "status": "PASS",
+      "inputHash": "79d1432e45beb1880619fbb2e9b01b32acf1db9e0926c41096c8481362a8994a",
+      "metrics": {
+        "query": "How does HNSW use skip lists and layers to navigate high-dimensional space?",
+        "top_source": "doc_003.txt",
+        "top_chunk_id": "doc_003.txt#c07",
+        "top_distance": 0.2794,
+        "retrieved_count": 2,
+        "results": [
+          {
+            "rank": 1,
+            "id": "doc_003.txt#c07",
+            "source": "doc_003.txt",
+            "distance": 0.2794,
+            "preview": "HNSW resolves these routing challenges by constructing a multi-layered hierarchical structure inspir"
+          },
+          {
+            "rank": 2,
+            "id": "doc_003.txt#c05",
+            "source": "doc_003.txt",
+            "distance": 0.3723,
+            "preview": ". HNSW builds upon the concept of navigable small world networks, where nodes represent vector data "
+          }
+        ]
+      }
+    },
+    "t5_1": {
+      "exerciseId": "grounded-prompt",
+      "status": "PASS",
+      "inputHash": "f635988b98713fbf1c6674421db35304dc29c7fa3253985a886339fd129dba68",
+      "metrics": {
+        "user_question": "What is the computational complexity of exact k-NN compared to approximate search?",
+        "retrieved_chunks": 2,
+        "citations": [
+          "doc_003.txt (id: doc_003.txt#c02)",
+          "doc_003.txt (id: doc_003.txt#c03)"
+        ],
+        "prompt_character_length": 917,
+        "citations_present": true,
+        "grounding_constraint_enforced": true
+      }
+    },
+    "t5_2": {
+      "exerciseId": "environment-check",
+      "status": "PASS",
+      "inputHash": "",
+      "metrics": {
+        "overall_status": "PASS",
+        "passed_checks": 7,
+        "total_checks": 7,
+        "checks": [
+          {
+            "name": "Python Engine (3.11)",
+            "status": "PASS",
+            "detail": "CPython 3.11.18 (executable: /tmp/test-venv/bin/python)",
+            "duration_ms": 0.0
+          },
+          {
+            "name": "Workspace Permissions",
+            "status": "PASS",
+            "detail": "Writable workspace confirmed at /home/kit/Documents/Sep2026/TDS/agent-rag-learning/workspace",
+            "duration_ms": 0.49
+          },
+          {
+            "name": "Package Dependencies",
+            "status": "PASS",
+            "detail": "All 10 core packages imported successfully",
+            "duration_ms": 3916.63
+          },
+          {
+            "name": "CPU Tensor Execution",
+            "status": "PASS",
+            "detail": "PyTorch 2.15.0+cu132 CPU execution verified (threads=1)",
+            "duration_ms": 0.17
+          },
+          {
+            "name": "Model & 384D Embeddings",
+            "status": "PASS",
+            "detail": "all-MiniLM-L6-v2 loaded: shape=(1, 384), finite, normalized (norm=1.0000)",
+            "duration_ms": 174.0
+          },
+          {
+            "name": "Canonical Text Splitter",
+            "status": "PASS",
+            "detail": "doc_001.txt partitioned into exactly 12 canonical chunks (len=3164)",
+            "duration_ms": 0.45
+          },
+          {
+            "name": "ChromaDB Cosine Index",
+            "status": "PASS",
+            "detail": "ChromaDB cosine collection lifecycle (add, query, persist, reopen, upsert) passed",
+            "duration_ms": 79.83
+          }
+        ]
+      }
+    },
+    "t6_1": {
+      "exerciseId": "serve",
+      "status": "PASS",
+      "inputHash": "cbee297bf386db4c0258eea9862c4bd83f6a018318d526cfdfe922d8977171e4",
+      "metrics": {
+        "application": "FastAPI",
+        "service_health_path": "/health",
+        "docs_path": "/docs",
+        "openapi_path": "/openapi.json",
+        "query_path": "/query",
+        "root_path_support": true,
+        "configured_routes": [
+          "/openapi.json",
+          "/docs",
+          "/docs/oauth2-redirect",
+          "/health",
+          "/query"
+        ],
+        "proxy_mount_target": "/preview/8000"
+      }
+    },
+    "t6_2": {
+      "exerciseId": "request",
+      "status": "PASS",
+      "inputHash": "746eff6b84eacece993e71aa33e9bfa536e1f8e98abb70311fa0955eaac8cdc3",
+      "metrics": {
+        "query": "How does HNSW use skip lists and layers to navigate high-dimensional space?",
+        "top_k": 2,
+        "status_code": 200,
+        "top_source": "doc_003.txt",
+        "citations_count": 2,
+        "citations": [
+          "doc_003.txt (id: doc_003.txt#c07)",
+          "doc_003.txt (id: doc_003.txt#c05)"
+        ],
+        "prompt_generated": true
+      }
+    }
+  }
+}

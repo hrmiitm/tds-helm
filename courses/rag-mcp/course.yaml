@@ -1,0 +1,42 @@
+apiVersion: studio.course/v2
+kind: Course
+metadata:
+  id: rag-mcp
+  version: 1.0.0
+  title: Foundations of RAG & Vector Databases
+  badge: RAG & Vector Search
+  description: Master multimodal embeddings, vector similarity math, ChromaDB HNSW indexing, and modular Python RAG systems.
+  difficulty: intermediate
+  estimatedMinutes: 180
+runtime:
+  profile: rag-cpu
+  image: rag-studio:4.2.0
+  architectures: [linux/amd64, linux/arm64]
+  tools: [vscode, jupyter, preview]
+  optionalTools: [browser]
+  network: offline
+  resources:
+    cpuMilli: 2000
+    memoryMiB: 3072
+  startupSeconds: 120
+  previewPorts: [8000]
+content:
+  tasks: tasks.json
+  slides: slides/index.html
+  workspace: workspace
+modules:
+  - id: mod_rag_01
+    title: Multimodal Embeddings, Similarity Math & Indexing
+    taskIds: [t_embed_pca, t_similarity_math, t_vector_indexing]
+    slideIds: [embeddings-multimodal, similarity-and-indexing-overview, vector-similarity-math, vector-indexing-methods]
+    defaultTool: jupyter
+  - id: mod_rag_02
+    title: ChromaDB Setup, Ingestion & Semantic Retrieval
+    taskIds: [t_chroma_setup_retrieval]
+    slideIds: [chromadb-hnsw-l2]
+    defaultTool: jupyter
+  - id: mod_rag_03
+    title: Minimal Production Python RAG Project
+    taskIds: [t_proj_ingest, t_proj_verify, t_proj_main_cli]
+    slideIds: [prompt-synthesis, production-microservice-transition]
+    defaultTool: vscode

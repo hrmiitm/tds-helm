@@ -1,0 +1,22 @@
+{
+  "workbench.colorTheme": "Default Dark Modern",
+  "security.workspace.trust.enabled": false,
+  "telemetry.telemetryLevel": "off",
+  "update.mode": "none",
+  "files.autoSave": "afterDelay",
+  "files.autoSaveDelay": 1000,
+  "files.exclude": {
+    "**/.git": true,
+    "**/.course_version": true,
+    "**/.active_chapter": true,
+    "**/.vscode": true,
+    "**/__pycache__": true,
+    "**/*.pyc": true,
+    "**/rag_course": true,
+    "**/rag_course.egg-info": true,
+    "**/setup.py": true,
+    "**/requirements.txt": true,
+    "**/results": true,
+    "**/solutions": true
+  }
+}

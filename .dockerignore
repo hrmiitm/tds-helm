@@ -1,0 +1,21 @@
+# .dockerignore — RAG Studio v4.0
+old-design/
+old-design-v2/
+desktop-app/node_modules/
+desktop-app/dist/
+.git/
+.gemini/
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.pytest_cache/
+.coverage
+htmlcov/
+.venv/
+venv/
+*.egg-info/
+dist/
+build/
+.DS_Store
+

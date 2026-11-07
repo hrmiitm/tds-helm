@@ -1,0 +1,24 @@
+{
+  "name": "studio-orchestrator",
+  "version": "4.2.0",
+  "description": "Studio Universal Multi-Chapter Orchestrator & Gateway Controller",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsc",
+    "watch": "tsc -w",
+    "test": "node tests/test_engine.js",
+    "test:suite": "node --test --experimental-strip-types tests/engine.test.ts"
+  },
+  "keywords": ["studio", "orchestrator", "docker", "podman", "gateway"],
+  "author": "Google DeepMind / Studio Universal Team",
+  "license": "Apache-2.0",
+  "dependencies": {
+    "express": "^4.21.2"
+  },
+  "devDependencies": {
+    "@types/express": "^5.0.0",
+    "@types/node": "^22.10.2",
+    "typescript": "^5.7.2"
+  }
+}

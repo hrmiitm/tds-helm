@@ -1,0 +1,109 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://rag-studio.local/schemas/task-manifest.json",
+  "title": "RAGStudioTaskManifest",
+  "description": "Canonical schema for RAG Studio educational tasks, verification, and tracks",
+  "type": "object",
+  "required": ["version", "course", "modules"],
+  "properties": {
+    "$schema": { "type": "string" },
+    "version": { "type": "string" },
+    "course": { "type": "string" },
+    "modules": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "title", "badge", "tasks"],
+        "properties": {
+          "id": { "type": "string", "pattern": "^(mod_[0-9]{2}|chapter-[a-zA-Z0-9_-]+)$" },
+          "title": { "type": "string" },
+          "badge": { "type": "string" },
+          "tasks": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": ["id", "exerciseId", "prerequisites", "title", "instructions", "commands", "tracks", "question", "solution"],
+              "properties": {
+                "id": { "type": "string", "pattern": "^([a-zA-Z0-9_-]+_)?t[1-6]_[1-2]$" },
+                "exerciseId": { "type": "string" },
+                "prerequisites": {
+                  "type": "array",
+                  "items": { "type": "string" }
+                },
+                "module": { "type": "string" },
+                "title": { "type": "string" },
+                "instructions": { "type": "string" },
+                "commands": {
+                  "type": "array",
+                  "items": { "type": "string" }
+                },
+                "tracks": {
+                  "type": "object",
+                  "required": ["notebook", "script"],
+                  "properties": {
+                    "notebook": {
+                      "type": "object",
+                      "required": ["path", "cellTag"],
+                      "properties": {
+                        "path": { "type": "string" },
+                        "cellTag": { "type": "string" }
+                      }
+                    },
+                    "script": {
+                      "type": "object",
+                      "required": ["path", "args"],
+                      "properties": {
+                        "path": { "type": "string" },
+                        "args": {
+                          "type": "array",
+                          "items": { "type": "string" }
+                        }
+                      }
+                    }
+                  }
+                },
+                "question": {
+                  "type": "object",
+                  "required": ["type", "prompt", "explanation"],
+                  "properties": {
+                    "type": { "type": "string", "enum": ["numeric", "mcq"] },
+                    "prompt": { "type": "string" },
+                    "explanation": { "type": "string" },
+                    "hint": { "type": "string" },
+                    "expected": { "type": "number" },
+                    "absoluteTolerance": { "type": "number", "minimum": 0 },
+                    "relativeTolerance": { "type": "number", "minimum": 0 },
+                    "integerOnly": { "type": "boolean" },
+                    "options": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "required": ["id", "text"],
+                        "properties": {
+                          "id": { "type": "string" },
+                          "text": { "type": "string" }
+                        }
+                      }
+                    },
+                    "correctOptionId": { "type": "string" }
+                  },
+                  "allOf": [
+                    {
+                      "if": { "properties": { "type": { "const": "numeric" } } },
+                      "then": { "required": ["expected", "absoluteTolerance", "relativeTolerance", "integerOnly"] }
+                    },
+                    {
+                      "if": { "properties": { "type": { "const": "mcq" } } },
+                      "then": { "required": ["options", "correctOptionId"] }
+                    }
+                  ]
+                },
+                "solution": { "type": "string" }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

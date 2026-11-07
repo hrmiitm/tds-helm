@@ -1,0 +1,60 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:studio:verification-result-schema:v1",
+  "title": "Studio Universal Verification Result Schema",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "schemaVersion": {
+      "const": "studio.verify/v1"
+    },
+    "runId": {
+      "type": "string"
+    },
+    "taskId": {
+      "type": "string"
+    },
+    "sessionId": {
+      "type": "string"
+    },
+    "generation": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "packageDigest": {
+      "type": "string"
+    },
+    "status": {
+      "enum": ["pass", "fail", "error"]
+    },
+    "checks": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "id": { "type": "string" },
+          "pass": { "type": "boolean" },
+          "message": { "type": "string" }
+        },
+        "required": ["id", "pass", "message"]
+      }
+    },
+    "metrics": {
+      "type": "object"
+    },
+    "durationMs": {
+      "type": "number",
+      "minimum": 0
+    }
+  },
+  "required": [
+    "schemaVersion",
+    "runId",
+    "taskId",
+    "sessionId",
+    "generation",
+    "status",
+    "checks"
+  ]
+}

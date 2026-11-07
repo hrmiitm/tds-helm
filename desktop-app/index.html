@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; style-src 'self' 'unsafe-inline'; script-src 'self';">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>RAG Studio — Connecting</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="connection-card">
+    <div class="logo-badge">
+      <svg class="icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#38bdf8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <polygon points="12 2 2 7 12 12 22 7 12 2"></polygon>
+        <polyline points="2 17 12 22 22 17"></polyline>
+        <polyline points="2 12 12 17 22 12"></polyline>
+      </svg>
+      <h1>RAG Studio Desktop</h1>
+    </div>
+
+    <div class="status-indicator" id="statusBox">
+      <div class="spinner" id="spinner"></div>
+      <span id="statusText">Checking container connection...</span>
+    </div>
+
+    <p class="description">
+      Connecting to the local RAG Studio hub container. If the container is not running yet, start it with the command below.
+    </p>
+
+    <div class="code-box">
+      <code>docker run -d --name rag-studio --cpus=2 --memory=3g --stop-timeout=15 -p 127.0.0.1:8080:8080 -v rag-studio-workspace:/workspace -v rag-studio-user:/home/coder rag-studio:4.2.0</code>
+      <button id="copyBtn" class="secondary-btn" title="Copy to clipboard">Copy</button>
+    </div>
+
+    <div class="url-config">
+      <label for="hubUrlInput">Hub Origin URL:</label>
+      <div class="input-row">
+        <input type="text" id="hubUrlInput" value="http://localhost:8080" placeholder="http://localhost:8080">
+        <button id="retryBtn" class="primary-btn">Retry Connection</button>
+      </div>
+      <div class="error-msg" id="errorMsg"></div>
+    </div>
+
+    <div class="footer-notes">
+      <span>Native Keyboard Shortcuts enabled: Ctrl+W, Ctrl+P, Ctrl+N go directly to VS Code</span>
+    </div>
+  </div>
+
+  <script src="renderer.js"></script>
+</body>
+</html>
+

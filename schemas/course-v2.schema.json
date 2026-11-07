@@ -1,0 +1,349 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:studio:course-schema:v2",
+  "title": "Studio Universal Course Schema v2",
+  "description": "Standardized schema for declarative course specifications in Studio Universal v2 (upgrade.md Section 7.1)",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "apiVersion",
+    "kind",
+    "metadata",
+    "runtime",
+    "content",
+    "modules"
+  ],
+  "properties": {
+    "apiVersion": {
+      "type": "string",
+      "const": "studio.course/v2"
+    },
+    "kind": {
+      "type": "string",
+      "const": "Course"
+    },
+    "metadata": {
+      "$ref": "#/$defs/metadata"
+    },
+    "runtime": {
+      "$ref": "#/$defs/runtime"
+    },
+    "content": {
+      "$ref": "#/$defs/content"
+    },
+    "modules": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/module"
+      },
+      "minItems": 1,
+      "maxItems": 100
+    }
+  },
+  "$defs": {
+    "id": {
+      "type": "string",
+      "pattern": "^[a-z][a-z0-9_-]{0,63}$"
+    },
+    "version": {
+      "type": "string",
+      "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$"
+    },
+    "relpath": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 240,
+      "pattern": "^(?!/)(?!.*(?:^|/)\\.{1,2}(?:/|$))(?!.*[\\\\\\x00-\\x1f])[A-Za-z0-9_./-]+$"
+    },
+    "toolName": {
+      "type": "string",
+      "enum": [
+        "vscode",
+        "jupyter",
+        "preview",
+        "browser",
+        "terminal"
+      ]
+    },
+    "metadata": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "version",
+        "title",
+        "badge",
+        "description",
+        "difficulty",
+        "estimatedMinutes"
+      ],
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/id"
+        },
+        "version": {
+          "$ref": "#/$defs/version"
+        },
+        "title": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 120
+        },
+        "badge": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 60
+        },
+        "description": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 2000
+        },
+        "difficulty": {
+          "type": "string",
+          "enum": [
+            "beginner",
+            "intermediate",
+            "advanced",
+            "Beginner",
+            "Intermediate",
+            "Advanced"
+          ]
+        },
+        "estimatedMinutes": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 1440
+        },
+        "language": {
+          "type": "string",
+          "pattern": "^[a-z]{2}(?:-[A-Z]{2})?$"
+        },
+        "authors": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 120
+          },
+          "minItems": 1
+        },
+        "license": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 80
+        },
+        "tags": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/id"
+          }
+        }
+      }
+    },
+    "resources": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "cpuMilli",
+        "memoryMiB"
+      ],
+      "properties": {
+        "cpuMilli": {
+          "type": "integer",
+          "minimum": 100,
+          "maximum": 2000
+        },
+        "memoryMiB": {
+          "type": "integer",
+          "minimum": 128,
+          "maximum": 3072
+        },
+        "diskMiB": {
+          "type": "integer",
+          "minimum": 256,
+          "maximum": 102400
+        }
+      }
+    },
+    "runtime": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "profile",
+        "image",
+        "tools",
+        "network",
+        "resources",
+        "startupSeconds"
+      ],
+      "properties": {
+        "profile": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 64
+        },
+        "image": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 240
+        },
+        "architectures": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": [
+              "linux/amd64",
+              "linux/arm64"
+            ]
+          },
+          "minItems": 1,
+          "maxItems": 2,
+          "uniqueItems": true
+        },
+        "tools": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/toolName"
+          },
+          "minItems": 1,
+          "uniqueItems": true
+        },
+        "optionalTools": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/toolName"
+          },
+          "uniqueItems": true
+        },
+        "network": {
+          "type": "string",
+          "enum": [
+            "offline",
+            "egress",
+            "none"
+          ]
+        },
+        "resources": {
+          "$ref": "#/$defs/resources"
+        },
+        "startupSeconds": {
+          "type": "integer",
+          "minimum": 10,
+          "maximum": 300
+        },
+        "previewPorts": {
+          "type": "array",
+          "items": {
+            "type": "integer",
+            "minimum": 1024,
+            "maximum": 65535
+          },
+          "uniqueItems": true
+        },
+        "env": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "string"
+          }
+        },
+        "credentialRefs": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "content": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "tasks",
+        "slides",
+        "workspace"
+      ],
+      "properties": {
+        "tasks": {
+          "$ref": "#/$defs/relpath"
+        },
+        "slides": {
+          "$ref": "#/$defs/relpath"
+        },
+        "workspace": {
+          "$ref": "#/$defs/relpath"
+        }
+      }
+    },
+    "module": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "title",
+        "taskIds",
+        "slideIds",
+        "defaultTool"
+      ],
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/id"
+        },
+        "title": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 120
+        },
+        "badge": {
+          "type": "string",
+          "maxLength": 60
+        },
+        "taskIds": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "minItems": 1,
+          "uniqueItems": true
+        },
+        "slideIds": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "minItems": 1,
+          "uniqueItems": true
+        },
+        "defaultTool": {
+          "$ref": "#/$defs/toolName"
+        },
+        "defaultLayout": {
+          "type": "string",
+          "enum": [
+            "lecture",
+            "notebook",
+            "guided",
+            "fullstack"
+          ]
+        },
+        "estimatedMinutes": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 1440
+        },
+        "prerequisites": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/id"
+          }
+        },
+        "topicIds": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/id"
+          }
+        }
+      }
+    }
+  }
+}

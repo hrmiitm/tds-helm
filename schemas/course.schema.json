@@ -1,0 +1,955 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:studio:course-schema:v1",
+  "title": "Studio Universal Course Schema",
+  "description": "Standardized schema for declarative multi-course specifications in Studio Universal v4.2",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "apiVersion": {
+      "type": "string"
+    },
+    "kind": {
+      "type": "string"
+    },
+    "course_id": {
+      "$ref": "#/$defs/id"
+    },
+    "version": {
+      "$ref": "#/$defs/version"
+    },
+    "title": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 120
+    },
+    "description": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 2000
+    },
+    "difficulty": {
+      "enum": [
+        "Beginner",
+        "Intermediate",
+        "Advanced"
+      ]
+    },
+    "estimatedMinutes": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 1440
+    },
+    "metadata": {
+      "$ref": "#/$defs/metadata"
+    },
+    "runtime": {
+      "$ref": "#/$defs/runtime"
+    },
+    "starter_files": {
+      "$ref": "#/$defs/starter_files"
+    },
+    "topics": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/topic"
+      },
+      "minItems": 1,
+      "maxItems": 1000
+    },
+    "environments": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/environment"
+      },
+      "minItems": 1,
+      "maxItems": 1000
+    },
+    "chapters": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/chapter"
+      },
+      "minItems": 1,
+      "maxItems": 1000
+    },
+    "tasks": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/task"
+      },
+      "minItems": 1,
+      "maxItems": 1000
+    },
+    "validators": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/validator"
+      },
+      "minItems": 0,
+      "maxItems": 1000
+    }
+  },
+  "anyOf": [
+    {
+      "description": "Studio Universal v4.2 Standard Specification (§1.2)",
+      "required": [
+        "apiVersion",
+        "kind",
+        "metadata",
+        "topics",
+        "environments",
+        "chapters",
+        "tasks",
+        "validators"
+      ]
+    },
+    {
+      "description": "Declarative Course Specification",
+      "required": [
+        "course_id",
+        "title",
+        "topics",
+        "tasks"
+      ]
+    }
+  ],
+  "definitions": {
+    "$ref": "#/$defs"
+  },
+  "$defs": {
+    "id": {
+      "type": "string",
+      "pattern": "^[a-z][a-z0-9_-]{0,63}$"
+    },
+    "version": {
+      "type": "string",
+      "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$"
+    },
+    "path": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 240,
+      "pattern": "^(?!/)(?!.*(?:^|/)\\.{1,2}(?:/|$))(?!.*[\\\\\\x00-\\x1f])[A-Za-z0-9_./-]+$"
+    },
+    "sha256": {
+      "type": "string",
+      "pattern": "^[a-f0-9]{64}$"
+    },
+    "image": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9./:_-]+(@sha256:[a-f0-9]{64}|:[a-zA-Z0-9_.-]+)?$"
+    },
+    "metadata": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/id"
+        },
+        "course_id": {
+          "$ref": "#/$defs/id"
+        },
+        "version": {
+          "$ref": "#/$defs/version"
+        },
+        "title": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 120
+        },
+        "summary": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 500
+        },
+        "description": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 2000
+        },
+        "language": {
+          "type": "string",
+          "pattern": "^[a-z]{2}(?:-[A-Z]{2})?$"
+        },
+        "authors": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 120
+          },
+          "minItems": 1,
+          "maxItems": 1000
+        },
+        "license": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 80
+        },
+        "tags": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/id"
+          },
+          "minItems": 0,
+          "maxItems": 1000
+        }
+      },
+      "required": [
+        "id",
+        "version",
+        "title",
+        "summary",
+        "language",
+        "authors",
+        "license",
+        "tags"
+      ]
+    },
+    "topic": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/id"
+        },
+        "title": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 120
+        },
+        "objectives": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 500
+          },
+          "minItems": 1,
+          "maxItems": 1000
+        }
+      },
+      "required": [
+        "id",
+        "title",
+        "objectives"
+      ]
+    },
+    "resources": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "cpuMilli": {
+          "type": "integer",
+          "minimum": 100,
+          "maximum": 8000
+        },
+        "memoryMiB": {
+          "type": "integer",
+          "minimum": 128,
+          "maximum": 32768
+        },
+        "diskMiB": {
+          "type": "integer",
+          "minimum": 256,
+          "maximum": 102400
+        },
+        "startupSeconds": {
+          "type": "integer",
+          "minimum": 10,
+          "maximum": 300
+        }
+      },
+      "required": [
+        "cpuMilli",
+        "memoryMiB",
+        "diskMiB",
+        "startupSeconds"
+      ]
+    },
+    "build": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "dockerfile": {
+          "$ref": "#/$defs/path"
+        },
+        "context": {
+          "$ref": "#/$defs/path"
+        },
+        "lockfiles": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/path"
+          },
+          "minItems": 1,
+          "maxItems": 1000
+        }
+      },
+      "required": [
+        "dockerfile",
+        "context",
+        "lockfiles"
+      ]
+    },
+    "environment": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/id"
+        },
+        "profile": {
+          "enum": [
+            "standard",
+            "cloud-cli",
+            "nested-docker"
+          ]
+        },
+        "architectures": {
+          "type": "array",
+          "items": {
+            "enum": [
+              "linux/amd64",
+              "linux/arm64"
+            ]
+          },
+          "minItems": 1,
+          "maxItems": 2,
+          "uniqueItems": true
+        },
+        "image": {
+          "$ref": "#/$defs/image"
+        },
+        "build": {
+          "$ref": "#/$defs/build"
+        },
+        "tools": {
+          "type": "array",
+          "items": {
+            "enum": [
+              "vscode",
+              "jupyter",
+              "preview"
+            ]
+          },
+          "minItems": 1,
+          "maxItems": 3,
+          "uniqueItems": true
+        },
+        "network": {
+          "enum": [
+            "offline",
+            "egress"
+          ]
+        },
+        "resources": {
+          "$ref": "#/$defs/resources"
+        },
+        "previewPorts": {
+          "type": "array",
+          "items": {
+            "type": "integer",
+            "minimum": 1024,
+            "maximum": 65535
+          },
+          "maxItems": 8,
+          "uniqueItems": true
+        },
+        "credentialRefs": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/id"
+          },
+          "minItems": 0,
+          "maxItems": 1000
+        }
+      },
+      "required": [
+        "id",
+        "profile",
+        "architectures",
+        "tools",
+        "network",
+        "resources",
+        "previewPorts",
+        "credentialRefs"
+      ],
+      "anyOf": [
+        {
+          "required": [
+            "image"
+          ]
+        },
+        {
+          "required": [
+            "build"
+          ]
+        }
+      ]
+    },
+    "slides": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "entry": {
+          "$ref": "#/$defs/path"
+        },
+        "slideIds": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/id"
+          },
+          "minItems": 1,
+          "maxItems": 200,
+          "uniqueItems": true
+        }
+      },
+      "required": [
+        "entry",
+        "slideIds"
+      ]
+    },
+    "workspace": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "seed": {
+          "$ref": "#/$defs/path"
+        },
+        "seedSha256": {
+          "$ref": "#/$defs/sha256"
+        }
+      },
+      "required": [
+        "seed"
+      ]
+    },
+    "chapter": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/id"
+        },
+        "title": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 120
+        },
+        "topicIds": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/id"
+          },
+          "minItems": 1,
+          "maxItems": 1000
+        },
+        "prerequisites": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/id"
+          },
+          "minItems": 0,
+          "maxItems": 1000
+        },
+        "environmentId": {
+          "$ref": "#/$defs/id"
+        },
+        "estimatedMinutes": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 480
+        },
+        "slides": {
+          "$ref": "#/$defs/slides"
+        },
+        "workspace": {
+          "$ref": "#/$defs/workspace"
+        },
+        "taskIds": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/id"
+          },
+          "minItems": 1,
+          "maxItems": 1000,
+          "uniqueItems": true
+        },
+        "defaultLayout": {
+          "enum": [
+            "guided",
+            "lecture",
+            "notebook",
+            "fullstack"
+          ]
+        },
+        "defaultTool": {
+          "enum": [
+            "vscode",
+            "jupyter",
+            "preview",
+            "excalidraw"
+          ]
+        }
+      },
+      "required": [
+        "id",
+        "title",
+        "topicIds",
+        "prerequisites",
+        "environmentId",
+        "estimatedMinutes",
+        "slides",
+        "workspace",
+        "taskIds",
+        "defaultLayout",
+        "defaultTool"
+      ]
+    },
+    "notebook": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "path": {
+          "$ref": "#/$defs/path"
+        },
+        "cellTag": {
+          "$ref": "#/$defs/id"
+        }
+      },
+      "required": [
+        "path",
+        "cellTag"
+      ]
+    },
+    "script": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "path": {
+          "$ref": "#/$defs/path"
+        },
+        "args": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "maxLength": 500
+          },
+          "minItems": 0,
+          "maxItems": 1000
+        }
+      },
+      "required": [
+        "path",
+        "args"
+      ]
+    },
+    "tracks": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "notebook": {
+          "$ref": "#/$defs/notebook"
+        },
+        "script": {
+          "$ref": "#/$defs/script"
+        },
+        "terminal": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "command": {
+              "type": "string"
+            },
+            "commands": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          }
+        }
+      },
+      "minProperties": 1
+    },
+    "option": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/id"
+        },
+        "text": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 1000
+        }
+      },
+      "required": [
+        "id",
+        "text"
+      ]
+    },
+    "mcq": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "type": {
+          "const": "mcq"
+        },
+        "prompt": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 2000
+        },
+        "options": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/option"
+          },
+          "minItems": 2,
+          "maxItems": 10
+        },
+        "correctOptionId": {
+          "$ref": "#/$defs/id"
+        },
+        "explanation": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 4000
+        }
+      },
+      "required": [
+        "type",
+        "prompt",
+        "options",
+        "correctOptionId",
+        "explanation"
+      ]
+    },
+    "numeric": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "type": {
+          "const": "numeric"
+        },
+        "prompt": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 2000
+        },
+        "expected": {
+          "type": "number"
+        },
+        "absoluteTolerance": {
+          "type": "number",
+          "minimum": 0
+        },
+        "relativeTolerance": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "integerOnly": {
+          "type": "boolean"
+        },
+        "explanation": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 4000
+        }
+      },
+      "required": [
+        "type",
+        "prompt",
+        "expected",
+        "absoluteTolerance",
+        "relativeTolerance",
+        "integerOnly",
+        "explanation"
+      ]
+    },
+    "cli": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "type": {
+          "const": "cli"
+        },
+        "prompt": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 2000
+        },
+        "validatorId": {
+          "$ref": "#/$defs/id"
+        },
+        "explanation": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 4000
+        }
+      },
+      "required": [
+        "type",
+        "prompt",
+        "validatorId",
+        "explanation"
+      ]
+    },
+    "test": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "type": {
+          "const": "test"
+        },
+        "prompt": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 2000
+        },
+        "validatorId": {
+          "$ref": "#/$defs/id"
+        },
+        "command": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 1000
+        },
+        "test_command": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 1000
+        },
+        "script": {
+          "$ref": "#/$defs/path"
+        },
+        "explanation": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 4000
+        }
+      },
+      "required": [
+        "type",
+        "prompt",
+        "explanation"
+      ]
+    },
+    "task": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/id"
+        },
+        "chapterId": {
+          "$ref": "#/$defs/id"
+        },
+        "moduleId": {
+          "$ref": "#/$defs/id"
+        },
+        "module": {
+          "$ref": "#/$defs/id"
+        },
+        "title": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 160
+        },
+        "instructions": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 4000
+        },
+        "prerequisites": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/id"
+          },
+          "minItems": 0,
+          "maxItems": 1000
+        },
+        "required": {
+          "type": "boolean"
+        },
+        "weight": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 100
+        },
+        "tracks": {
+          "$ref": "#/$defs/tracks"
+        },
+        "hints": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "maxLength": 2000
+          },
+          "minItems": 0,
+          "maxItems": 1000
+        },
+        "solution": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 4000
+        },
+        "verification": {
+          "oneOf": [
+            {
+              "$ref": "#/$defs/mcq"
+            },
+            {
+              "$ref": "#/$defs/numeric"
+            },
+            {
+              "$ref": "#/$defs/cli"
+            },
+            {
+              "$ref": "#/$defs/test"
+            }
+          ]
+        }
+      },
+      "required": [
+        "id",
+        "title",
+        "instructions",
+        "prerequisites",
+        "required",
+        "weight",
+        "tracks",
+        "hints",
+        "solution",
+        "verification"
+      ]
+    },
+    "validator": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/id"
+        },
+        "environmentId": {
+          "$ref": "#/$defs/id"
+        },
+        "argv": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 1000
+          },
+          "minItems": 1,
+          "maxItems": 32
+        },
+        "timeoutSeconds": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 120
+        },
+        "maxOutputBytes": {
+          "type": "integer",
+          "minimum": 1024,
+          "maximum": 65536
+        },
+        "expectedExitCode": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 0
+        },
+        "resultSchema": {
+          "$ref": "#/$defs/path"
+        }
+      },
+      "required": [
+        "id",
+        "environmentId",
+        "argv",
+        "timeoutSeconds",
+        "maxOutputBytes",
+        "expectedExitCode",
+        "resultSchema"
+      ]
+    },
+    "runtime": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "base_image": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 240
+        },
+        "image": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 240
+        },
+        "ports": {
+          "type": "array",
+          "items": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 65535
+          },
+          "maxItems": 16,
+          "uniqueItems": true
+        },
+        "env": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "string"
+          }
+        },
+        "resources": {
+          "$ref": "#/$defs/resources"
+        }
+      },
+      "required": [
+        "base_image",
+        "ports",
+        "env"
+      ]
+    },
+    "starter_files": {
+      "oneOf": [
+        {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 240
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "source": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 240
+            },
+            "target": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 240
+            },
+            "seed": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 240
+            }
+          },
+          "required": [
+            "source"
+          ]
+        }
+      ]
+    }
+  }
+}

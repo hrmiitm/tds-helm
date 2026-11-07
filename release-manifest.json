@@ -1,0 +1,45 @@
+{
+  "name": "studio-universal",
+  "version": "4.2.0",
+  "revision": "4.2.0",
+  "releaseDate": "2026-11-07",
+  "architectures": ["linux/amd64", "linux/arm64"],
+  "model": {
+    "name": "sentence-transformers/all-MiniLM-L6-v2",
+    "dimensions": 384,
+    "metric": "cosine",
+    "cacheDirectory": "/opt/hf_cache/models/all-MiniLM-L6-v2",
+    "sha256": "7dbbc903615c14f70ed21844dd3bf110eb422d7683fa40053de47f71d094c90d"
+  },
+  "runtime": {
+    "python": "3.11",
+    "torch": "2.6.0+cpu",
+    "jupyterlab": "4.x",
+    "jupyter_server": "2.x",
+    "chromadb": "0.5.23",
+    "code_server": "4.x",
+    "revealjs": "5.2.1",
+    "katex": "0.16.47",
+    "threejs": "r128",
+    "electron": "33.x"
+  },
+  "networking": {
+    "gatewayPort": 8080,
+    "internalVscodePort": 8081,
+    "internalJupyterPort": 8888,
+    "internalPreviewPort": 8000
+  },
+  "curriculum": {
+    "manifest": "curriculum/tasks.source.json",
+    "totalModules": 6,
+    "totalTasks": 12,
+    "tasks": [
+      "t1_1", "t1_2",
+      "t2_1", "t2_2",
+      "t3_1", "t3_2",
+      "t4_1", "t4_2",
+      "t5_1", "t5_2",
+      "t6_1", "t6_2"
+    ]
+  }
+}

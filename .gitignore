@@ -1,0 +1,48 @@
+# Dependencies
+node_modules/
+**/node_modules/
+.venv/
+venv/
+env/
+ENV/
+
+# Python cache & build
+__pycache__/
+*.py[cod]
+*$py.class
+*.egg-info/
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Local databases & run state
+*.sqlite3
+chroma.sqlite3
+**/chroma_storage/*
+!**/chroma_storage/.gitkeep
+**/chroma_db/*
+!**/chroma_db/.gitkeep
+
+# Desktop app packaging output
+desktop-app/dist/
+release/
+
+# Logs & temporary files
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.temp/
+.tmp/
+*.tmp
+*.swp
+*~
+
+# OS artifacts
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# IDE & agent internal directories
+.idea/
+.gemini/

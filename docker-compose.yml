@@ -1,0 +1,89 @@
+version: '3.8'
+
+services:
+  # CHAPTER 1: Vector Databases, Embeddings & RAG Fundamentals
+  chapter-1:
+    image: rag-studio:4.2.0
+    container_name: rag-studio-ch1
+    environment:
+      - CHAPTER=rag-intro
+      - STUDIO_COURSE_ID=rag-intro
+    ports:
+      - "127.0.0.1:8080:8080"
+    volumes:
+      - rag-workspace-ch1:/workspace
+      - rag-user-ch1:/home/coder
+    deploy:
+      resources:
+        limits:
+          cpus: '2'
+          memory: 3G
+    stop_grace_period: 15s
+
+  # CHAPTER 2: Model Context Protocol (MCP) & Autonomous Agent Tools
+  chapter-2:
+    image: rag-studio:4.2.0
+    container_name: rag-studio-ch2
+    environment:
+      - CHAPTER=mcp-agentic
+      - STUDIO_COURSE_ID=mcp-agentic
+    ports:
+      - "127.0.0.1:8080:8080"
+    volumes:
+      - rag-workspace-ch2:/workspace
+      - rag-user-ch2:/home/coder
+    deploy:
+      resources:
+        limits:
+          cpus: '2'
+          memory: 3G
+    stop_grace_period: 15s
+
+  # CHAPTER 3: Cloud Architecture & Serverless on GCP
+  chapter-3:
+    image: rag-studio:4.2.0
+    container_name: rag-studio-ch3
+    environment:
+      - CHAPTER=gcp-intro
+      - STUDIO_COURSE_ID=gcp-intro
+    ports:
+      - "127.0.0.1:8080:8080"
+    volumes:
+      - rag-workspace-ch3:/workspace
+      - rag-user-ch3:/home/coder
+    deploy:
+      resources:
+        limits:
+          cpus: '2'
+          memory: 3G
+    stop_grace_period: 15s
+
+  # CHAPTER 4: Multi-Agent Systems & Autonomous Tool Swarms
+  chapter-4:
+    image: rag-studio:4.2.0
+    container_name: rag-studio-ch4
+    environment:
+      - CHAPTER=agentic-ai
+      - STUDIO_COURSE_ID=agentic-ai
+    ports:
+      - "127.0.0.1:8080:8080"
+    volumes:
+      - rag-workspace-ch4:/workspace
+      - rag-user-ch4:/home/coder
+    deploy:
+      resources:
+        limits:
+          cpus: '2'
+          memory: 3G
+    stop_grace_period: 15s
+
+volumes:
+  rag-workspace-ch1:
+  rag-user-ch1:
+  rag-workspace-ch2:
+  rag-user-ch2:
+  rag-workspace-ch3:
+  rag-user-ch3:
+  rag-workspace-ch4:
+  rag-user-ch4:
+

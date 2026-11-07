@@ -350,11 +350,15 @@
         <div class="card-meta-row">
           <span class="meta-item">
             <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
-            ${chapter.estimatedMinutes || 120} min
+            ${chapter.estimatedMinutes || chapter.metadata?.estimatedMinutes || 180} min
           </span>
           <span class="meta-item">
             <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path></svg>
-            ${chapter.tasks || 10} Tasks
+            ${chapter.tasks || chapter.metadata?.tasks || 48} Tasks
+          </span>
+          <span class="meta-item">
+            <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg>
+            ${chapter.moduleCount || chapter.modules?.length || 6} Modules
           </span>
           <span class="meta-item">
             ${chapter.difficulty || 'Intermediate'}

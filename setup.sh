@@ -12,6 +12,15 @@ IMAGE_NAME="rag-studio:4.2.0"
 GATEWAY_PORT=8080
 GATEWAY_URL="http://127.0.0.1:$GATEWAY_PORT"
 
+REBUILD=0
+for arg in "$@"; do
+    case "$arg" in
+        --rebuild|-r|--build|--clean|-c)
+            REBUILD=1
+            ;;
+    esac
+done
+
 COLOR_CYAN='\033[0;36m'
 COLOR_GREEN='\033[0;32m'
 COLOR_YELLOW='\033[1;33m'
@@ -57,14 +66,29 @@ fi
 NODE_VER=$(node -v)
 log_ok "Node.js runtime verified: $NODE_VER"
 
-# Step 3: Check / Build Container Image
-log_info "Checking runtime image '$IMAGE_NAME'..."
-if ! $ENGINE image inspect "$IMAGE_NAME" >/dev/null 2>&1; then
-    log_warn "Runtime image '$IMAGE_NAME' not found locally. Initiating automated build..."
-    $ENGINE build -t "$IMAGE_NAME" .
-    log_ok "Container image built successfully: $IMAGE_NAME"
-else
-    log_ok "Runtime image found: $IMAGE_NAME"
+# Step 3: Verify and Build Container Image
+log_info "Verifying container image '$IMAGE_NAME'..."
+if [ "$REBUILD" -eq 1 ]; then
+    log_warn "Rebuild flag specified. Cleaning existing session and freeing port $GATEWAY_PORT..."
+    fuser -k "$GATEWAY_PORT/tcp" 2>/dev/null || true
+    $ENGINE rm -f rag-studio-rag-mcp 2>/dev/null || true
+    $ENGINE volume rm rag-workspace-rag-mcp 2>/dev/null || true
+    sleep 1
+fi
+
+RUNNING_IMAGE=$($ENGINE inspect -f '{{.Image}}' rag-studio-rag-mcp 2>/dev/null || echo "")
+
+log_info "Building / verifying production image '$IMAGE_NAME' (using Docker cache)..."
+$ENGINE build -t "$IMAGE_NAME" .
+log_ok "Container image verified: $IMAGE_NAME"
+
+TARGET_IMAGE=$($ENGINE inspect -f '{{.Id}}' "$IMAGE_NAME" 2>/dev/null || echo "")
+
+if [ -n "$RUNNING_IMAGE" ] && [ "$RUNNING_IMAGE" != "$TARGET_IMAGE" ]; then
+    log_warn "Active container 'rag-studio-rag-mcp' was built from an older image. Refreshing container..."
+    $ENGINE rm -f rag-studio-rag-mcp 2>/dev/null || true
+    $ENGINE volume rm rag-workspace-rag-mcp 2>/dev/null || true
+    log_ok "Stale container and volume cleaned."
 fi
 
 # Step 4: Build Host Orchestrator Controller

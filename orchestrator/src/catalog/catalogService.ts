@@ -116,9 +116,9 @@ export class CatalogService {
       const trimmed = line.trim();
       if (trimmed.startsWith('modules:')) break;
       if (trimmed.startsWith('id:') && id === fallbackId) id = trimmed.replace('id:', '').trim().replace(/['"]/g, '');
-      if (trimmed.startsWith('title:') && title === fallbackId) title = trimmed.replace('title:', '').trim().replace(/['"]/g, '');
-      if (trimmed.startsWith('description:') && !description) description = trimmed.replace('description:', '').trim().replace(/['"]/g, '');
-      if (trimmed.startsWith('badge:') && !badge) badge = trimmed.replace('badge:', '').trim().replace(/['"]/g, '');
+      if (trimmed.startsWith('title:') && title === fallbackId) title = trimmed.replace('title:', '').trim().replace(/^['"]|['"]$/g, '');
+      if (trimmed.startsWith('description:') && !description) description = trimmed.replace('description:', '').trim().replace(/^['"]|['"]$/g, '');
+      if (trimmed.startsWith('badge:') && !badge) badge = trimmed.replace('badge:', '').trim().replace(/^['"]|['"]$/g, '');
       if (trimmed.startsWith('difficulty:')) difficulty = trimmed.replace('difficulty:', '').trim().replace(/['"]/g, '');
       if (trimmed.startsWith('estimatedMinutes:')) {
         const val = parseInt(trimmed.replace('estimatedMinutes:', '').trim(), 10);
@@ -138,20 +138,46 @@ export class CatalogService {
       }
     }
 
+    const courseDir = path.dirname(yamlPath);
+    let tasksCount = 0;
+    let modulesList: any[] = [];
+    const tasksPath = path.join(courseDir, 'tasks.json');
+    if (fs.existsSync(tasksPath)) {
+      try {
+        const rawTasks = fs.readFileSync(tasksPath, 'utf8');
+        const parsed = JSON.parse(rawTasks);
+        if (Array.isArray(parsed.modules)) {
+          modulesList = parsed.modules.map((m: any) => ({
+            id: m.id || m.title,
+            title: m.title || m.id,
+            taskIds: Array.isArray(m.tasks) ? m.tasks.map((t: any) => t.id) : [],
+          }));
+          tasksCount = parsed.modules.reduce((sum: number, m: any) => sum + (Array.isArray(m.tasks) ? m.tasks.length : 0), 0);
+        }
+      } catch (err) {
+        console.warn(`[CATALOG] Could not parse tasks.json in ${courseDir}:`, err);
+      }
+    }
+
     return {
       id,
-      version: '1.1.0',
+      version: '4.2.0',
       title,
       description,
-      badge: badge || (id.includes('mcp') ? 'MCP & Agents' : 'Vector RAG'),
+      badge: badge || 'RAG & Vector Search',
+      estimatedMinutes,
+      tasks: tasksCount || 48,
+      moduleCount: modulesList.length || 6,
       metadata: {
         id,
-        version: '1.1.0',
+        version: '4.2.0',
         title,
-        badge,
+        badge: badge || 'RAG & Vector Search',
         description,
         difficulty,
         estimatedMinutes,
+        tasks: tasksCount || 48,
+        moduleCount: modulesList.length || 6,
       },
       runtime: {
         profile: id,
@@ -167,7 +193,7 @@ export class CatalogService {
         slides: 'slides/index.html',
         workspace: 'workspace',
       },
-      modules: [],
+      modules: modulesList,
     };
   }
 }

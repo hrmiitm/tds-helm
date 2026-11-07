@@ -1,9 +1,12 @@
-# ==============================================================================
+﻿# ==============================================================================
 # setup.ps1 — Universal Quick-Start Launcher for Studio Universal & Labs
 # Supports: Windows 10/11 (PowerShell 5.1+, PowerShell 7+)
 # ==============================================================================
 [CmdletBinding()]
-param()
+param(
+    [switch]$Rebuild,
+    [switch]$Clean
+)
 
 $ErrorActionPreference = "Stop"
 $ScriptDir = Split-Path -Parent $MyInvocation.MyCommand.Definition
@@ -48,19 +51,23 @@ if (-not (Get-Command node -ErrorAction SilentlyContinue) -or -not (Get-Command 
 $nodeVer = node -v
 Write-Success "Node.js runtime verified: $nodeVer"
 
-# Step 3: Check / Build Container Image
-Write-Info "Checking runtime image '$ImageName'..."
-$imgCheck = docker images -q $ImageName
-if (-not $imgCheck) {
-    Write-Warn "Runtime image '$ImageName' not found locally. Initiating automated build..."
-    docker build -t $ImageName .
-    if ($LASTEXITCODE -ne 0) {
-        Write-Err "Docker build failed."
-        exit 5
-    }
-    Write-Success "Container image built successfully: $ImageName"
-} else {
-    Write-Success "Runtime image found: $ImageName"
+# Step 3: Verify and Build Container Image
+Write-Info "Verifying and updating runtime image '$ImageName' (cached layers are reused)..."
+$runningImg = (docker inspect -f '{{.Image}}' rag-studio-rag-mcp 2>$null)
+
+docker build -t $ImageName .
+if ($LASTEXITCODE -ne 0) {
+    Write-Err "Docker build failed."
+    exit 5
+}
+Write-Success "Container image verified: $ImageName"
+
+$targetImg = (docker inspect -f '{{.Id}}' $ImageName 2>$null)
+if ($Rebuild -or $Clean -or ($runningImg -and ($runningImg -ne $targetImg))) {
+    Write-Warn "Refreshing container and workspace volume for updated image..."
+    docker rm -f rag-studio-rag-mcp 2>$null
+    docker volume rm rag-workspace-rag-mcp 2>$null
+    Write-Success "Stale container and volume cleaned."
 }
 
 # Step 4: Build Host Orchestrator Controller

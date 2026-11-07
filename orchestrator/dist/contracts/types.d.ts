@@ -62,6 +62,8 @@ export interface ChapterMetadata {
     authors?: string[];
     tags?: string[];
     license?: string;
+    tasks?: number;
+    moduleCount?: number;
 }
 export interface ChapterRuntimeConfig {
     profile?: string;
@@ -104,6 +106,9 @@ export interface Chapter {
     activeGeneration?: number;
     contentDigest?: string;
     lastError?: string;
+    tasks?: number;
+    moduleCount?: number;
+    estimatedMinutes?: number;
 }
 export interface PortMapping {
     hostIp?: string;

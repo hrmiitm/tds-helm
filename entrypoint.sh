@@ -102,9 +102,9 @@ fi
 
 if [ -d "$TEMPLATE_DIR" ]; then
     CURRENT_VERSION=$(cat /workspace/.course_version 2>/dev/null || echo "")
-    EXPECTED_VERSION="4.3.0-$ACTIVE_CHAPTER"
+    EXPECTED_VERSION="4.4.0-$ACTIVE_CHAPTER"
     NOTEBOOKS_COUNT=$(find /workspace/notebooks -name "*.ipynb" 2>/dev/null | wc -l || echo "0")
-    if [ "$CURRENT_VERSION" != "$EXPECTED_VERSION" ] || [ -z "$(ls -A /workspace 2>/dev/null)" ] || [ "$NOTEBOOKS_COUNT" -eq 0 ]; then
+    if [ "$CURRENT_VERSION" != "$EXPECTED_VERSION" ] || [ -z "$(ls -A /workspace 2>/dev/null)" ] || [ "$NOTEBOOKS_COUNT" -lt 6 ]; then
         echo "[supervisor] Seeding workspace for $ACTIVE_CHAPTER from $TEMPLATE_DIR..."
         rm -rf /workspace/* /workspace/.[!.]* 2>/dev/null || true
         cp -a "$TEMPLATE_DIR/." /workspace/

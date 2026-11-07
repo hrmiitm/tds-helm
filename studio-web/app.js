@@ -873,7 +873,7 @@
   function setupRightPaneTabStrip() {
     const tabs = [
       { id: 'vscode', btn: dom.tabToolVscode, panel: dom.panelToolVscode, label: '/workspace', direct: '/vscode/?folder=/workspace' },
-      { id: 'jupyter', btn: dom.tabToolJupyter, panel: dom.panelToolJupyter, label: '/workspace/notebooks', direct: '/jupyter/lab/tree/notebooks' },
+      { id: 'jupyter', btn: dom.tabToolJupyter, panel: dom.panelToolJupyter, label: '/workspace/src/notebooks', direct: '/jupyter/lab/tree/src/notebooks' },
       { id: 'browser', btn: dom.tabWorkspaceBrowser, panel: dom.panelWorkspaceBrowser, label: 'Chromium', direct: '/browser/vnc.html?autoconnect=true&resize=remote&reconnect=true&path=browser/websockify' },
       { id: 'whiteboard', btn: dom.tabToolWhiteboard, panel: dom.panelToolWhiteboard, label: 'Excalidraw', direct: '/excalidraw/' }
     ];
@@ -1557,19 +1557,30 @@
 
   function validateNumeric(task, rawValue) {
     const q = task.question;
+    const strVal = String(rawValue || '').trim().toLowerCase();
     const val = parseFloat(rawValue);
-    if (isNaN(val)) {
-      showToast('Please enter a valid numeric value');
-      return;
+    let isCorrect = false;
+
+    // Check direct numeric comparison
+    if (!isNaN(val) && typeof q.expected === 'number') {
+      const expected = q.expected;
+      const absTol = q.absoluteTolerance !== undefined ? q.absoluteTolerance : 0.001;
+      const relTol = q.relativeTolerance || 0;
+      const maxDiff = Math.max(absTol, relTol * Math.abs(expected));
+      if (Math.abs(val - expected) <= maxDiff) {
+        isCorrect = true;
+      }
     }
 
-    const expected = q.expected;
-    const absTol = q.absoluteTolerance || 0;
-    const relTol = q.relativeTolerance || 0;
-    const maxDiff = Math.max(absTol, relTol * Math.abs(expected));
-    const isCorrect = Math.abs(val - expected) <= maxDiff;
+    // Check textual or alternative matches (e.g. 'Doc #23', '30 paragraphs')
+    if (!isCorrect && task.solution) {
+      const solClean = String(task.solution).trim().toLowerCase();
+      if (strVal === solClean || strVal.includes(solClean)) {
+        isCorrect = true;
+      }
+    }
 
-    state.answers[task.id] = { answered: true, correct: isCorrect, value: val };
+    state.answers[task.id] = { answered: true, correct: isCorrect, value: rawValue };
     saveProgress();
 
     updateAnswerPill(isCorrect);

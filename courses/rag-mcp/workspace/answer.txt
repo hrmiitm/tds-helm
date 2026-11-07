@@ -1,0 +1,10 @@
+The catalog part number is SKU-9921, and it generated $19.4 million during its first thirty days (first month) on the market.
+The bug incident code was #BUG-404, and it was resolved by firmware hotfix version v2.1.0-hotfix.
+Aura reported consolidated annual revenue of $482.4 million and achieved an adjusted EBITDA of $64.8 million for fiscal year 2023.
+Aura entered into a secondary component sourcing contract with EuroSil Foundry valued at $18.5 million in August 2023.
+Aura developed GreenVolt, an on-chip energy-harvesting subsystem enabling field hardware to run indefinitely in remote off-grid locations.
+The acquisition was cancelled after CFO Marcus Brody opposed the hostile buyout, and Brody redirected $20.0 million into an open-market corporate share repurchase initiative.
+Aura established a $75.0 million low-interest sustainability revolving credit facility administered by Horizon Bank to finance clinical trials and medical equipment compliance.
+Aura spent $7.3 million as a one-time cash settlement without admitting liability to resolve the patent dispute with NeuralGrid Inc.
+Elena Vance guided full-year 2024 consolidated revenue upward to a range of $610 million to $635 million, alongside positive free cash flow.
+The codename is Project Helios, and the software annual recurring revenue (ARR) for Aura OS reached $38.7 million across 410 enterprise clients by mid-2024.

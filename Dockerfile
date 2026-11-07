@@ -71,7 +71,10 @@ RUN pip install --no-cache-dir --upgrade pip setuptools wheel && \
         uvicorn \
         scikit-learn \
         "plotly>=5.18.0" \
-        "hnswlib>=0.8.0"
+        "hnswlib>=0.8.0" \
+        google-genai \
+        python-dotenv \
+        nbformat
 
 # 6. Register canonical Jupyter kernelspec
 RUN /opt/venv/bin/python -m ipykernel install --prefix=/opt/venv \

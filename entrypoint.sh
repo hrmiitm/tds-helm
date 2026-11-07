@@ -102,12 +102,13 @@ fi
 
 if [ -d "$TEMPLATE_DIR" ]; then
     CURRENT_VERSION=$(cat /workspace/.course_version 2>/dev/null || echo "")
-    EXPECTED_VERSION="4.4.0-$ACTIVE_CHAPTER"
-    NOTEBOOKS_COUNT=$(find /workspace/notebooks -name "*.ipynb" 2>/dev/null | wc -l || echo "0")
-    if [ "$CURRENT_VERSION" != "$EXPECTED_VERSION" ] || [ -z "$(ls -A /workspace 2>/dev/null)" ] || [ "$NOTEBOOKS_COUNT" -lt 6 ]; then
+    EXPECTED_VERSION="5.0.0-$ACTIVE_CHAPTER"
+    NOTEBOOKS_COUNT=$(find /workspace -name "*.ipynb" 2>/dev/null | wc -l || echo "0")
+    if [ "$CURRENT_VERSION" != "$EXPECTED_VERSION" ] || [ -z "$(ls -A /workspace 2>/dev/null)" ] || [ "$NOTEBOOKS_COUNT" -lt 4 ]; then
         echo "[supervisor] Seeding workspace for $ACTIVE_CHAPTER from $TEMPLATE_DIR..."
         rm -rf /workspace/* /workspace/.[!.]* 2>/dev/null || true
         cp -a "$TEMPLATE_DIR/." /workspace/
+        [ ! -e /workspace/notebooks ] && ln -s src/notebooks /workspace/notebooks 2>/dev/null || true
         rm -rf /workspace/rag_course /workspace/rag_course.egg-info /workspace/setup.py /workspace/requirements.txt /workspace/solutions /workspace/results /workspace/__pycache__ 2>/dev/null || true
         echo "$EXPECTED_VERSION" > /workspace/.course_version
         echo "$ACTIVE_CHAPTER" > /workspace/.active_chapter

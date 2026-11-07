@@ -1,2019 +1,803 @@
 {
-  "": "./task-schema.json",
-  "version": "4.2.0",
+  "$schema": "https://rag-studio.local/schemas/task-manifest.json",
+  "version": "5.0.0",
   "course": "rag-mcp",
-  "title": "Foundations of RAG: Embeddings & Vector Search",
   "modules": [
     {
+      "id": "mod_bm25",
+      "title": "Module 1: BM25 Keyword Search & Term Saturation",
+      "badge": "BM25 & TF-IDF",
+      "tasks": [
+        {
+          "id": "Q01",
+          "exerciseId": "ex_bm25_q1",
+          "prerequisites": [],
+          "module": "mod_bm25",
+          "title": "Q1: Document Paragraph Count in Corpus",
+          "instructions": "Open notebook 'src/notebooks/01-bm25.ipynb' and run Step 1 (Load Dataset). Check the printed output: 'Loaded X document paragraphs.'",
+          "commands": [
+            "# In terminal or VS Code",
+            "cat data.txt | grep -E '^#' | wc -l"
+          ],
+          "tracks": {
+            "notebook": {
+              "path": "src/notebooks/01-bm25.ipynb",
+              "cellTag": "cell-01-load"
+            },
+            "script": {
+              "path": "src/notebooks/01-bm25.ipynb",
+              "args": []
+            }
+          },
+          "question": {
+            "type": "nat",
+            "prompt": "In Cell 1, when data.txt is loaded and sliced into paragraphs, how many total document paragraphs are loaded into memory?",
+            "hint": "Check the printed output in Cell 1: 'Loaded X document paragraphs.'",
+            "expected": 30,
+            "absoluteTolerance": 0,
+            "relativeTolerance": 0,
+            "integerOnly": true,
+            "explanation": "data.txt contains exactly 30 distinct paragraphs separated by double newlines (\n\n)."
+          },
+          "solution": "30"
+        },
+        {
+          "id": "Q02",
+          "exerciseId": "ex_bm25_q2",
+          "prerequisites": [
+            "Q01"
+          ],
+          "module": "mod_bm25",
+          "title": "Q2: Top Rank Document for Specific SKU Query",
+          "instructions": "In notebook 'src/notebooks/01-bm25.ipynb', run Step 3 (Exact Keyword Search). Look at the Rank 1 row for query 'Titan-X9 SKU-9921'. What is the Document Number (e.g. 23)?",
+          "commands": [
+            "# In terminal or VS Code",
+            "grep -n 'SKU-9921' data.txt"
+          ],
+          "tracks": {
+            "notebook": {
+              "path": "src/notebooks/01-bm25.ipynb",
+              "cellTag": "cell-03-search"
+            },
+            "script": {
+              "path": "src/notebooks/01-bm25.ipynb",
+              "args": []
+            }
+          },
+          "question": {
+            "type": "nat",
+            "prompt": "In Cell 3, when scoring the corpus for the query 'Titan-X9 SKU-9921', which Document Number (Doc #) achieves Rank 1?",
+            "hint": "Look at the printed leaderboard table in Cell 3 under Rank 1.",
+            "expected": 23,
+            "absoluteTolerance": 0,
+            "relativeTolerance": 0,
+            "integerOnly": true,
+            "explanation": "Document 23 explicitly announces commercial availability of SKU-9921, achieving Rank 1 with a BM25 score of 4.68."
+          },
+          "solution": "23"
+        },
+        {
+          "id": "Q03",
+          "exerciseId": "ex_bm25_q3",
+          "prerequisites": [
+            "Q02"
+          ],
+          "module": "mod_bm25",
+          "title": "Q3: Role of Term Saturation (k1) in BM25",
+          "instructions": "Study the BM25 formula and parameter explanations in Step 2 of 'src/notebooks/01-bm25.ipynb'.",
+          "commands": [],
+          "tracks": {
+            "notebook": {
+              "path": "src/notebooks/01-bm25.ipynb",
+              "cellTag": "cell-02-formula"
+            },
+            "script": {
+              "path": "src/notebooks/01-bm25.ipynb",
+              "args": []
+            }
+          },
+          "question": {
+            "type": "mcq",
+            "prompt": "In the BM25 formula, what is the role of parameter k1 \u2248 1.5 (Term Saturation)?",
+            "options": [
+              {
+                "id": "A",
+                "text": "A) It removes common English stop words like 'the' and 'is'."
+              },
+              {
+                "id": "B",
+                "text": "B) It caps the bonus of word repetitions so that keyword stuffing does not inflate scores infinitely."
+              },
+              {
+                "id": "C",
+                "text": "C) It calculates the straight-line geometric distance between vectors."
+              },
+              {
+                "id": "D",
+                "text": "D) It forces long documents to always receive higher scores than short documents."
+              }
+            ],
+            "correctOptionId": "B",
+            "explanation": "In BM25, (k1 + 1) * TF / (TF + k1 * (1 - b + b * len/avglen)) asymptotes as TF increases, preventing keyword stuffing from dominating retrieval."
+          },
+          "solution": "Option B"
+        },
+        {
+          "id": "Q04",
+          "exerciseId": "ex_bm25_q4",
+          "prerequisites": [
+            "Q03"
+          ],
+          "module": "mod_bm25",
+          "title": "Q4: Vocabulary Mismatch Limitation in BM25",
+          "instructions": "In Step 5 of 'src/notebooks/01-bm25.ipynb', examine why searching for 'power grid connectivity' fails to rank the GreenVolt document #1.",
+          "commands": [],
+          "tracks": {
+            "notebook": {
+              "path": "src/notebooks/01-bm25.ipynb",
+              "cellTag": "cell-05-limitation"
+            },
+            "script": {
+              "path": "src/notebooks/01-bm25.ipynb",
+              "args": []
+            }
+          },
+          "question": {
+            "type": "mcq",
+            "prompt": "When searching for 'What technology allows devices to run without power grid connectivity?' in Cell 5, why does Doc #11 (which describes GreenVolt) fail to achieve Rank 1?",
+            "options": [
+              {
+                "id": "A",
+                "text": "A) GreenVolt is not an edge hardware device."
+              },
+              {
+                "id": "B",
+                "text": "B) Doc #11 is over 100 words long and was penalized to zero."
+              },
+              {
+                "id": "C",
+                "text": "C) BM25 matches exact letter spelling; Doc #11 uses the terms 'energy-harvesting' and 'off-grid' rather than 'power grid'."
+              },
+              {
+                "id": "D",
+                "text": "D) The BM25 algorithm ignores documents published in October 2023."
+              }
+            ],
+            "correctOptionId": "C",
+            "explanation": "BM25 relies on exact lexical token matching. When queries use synonyms not present in the document text, the match score drops significantly."
+          },
+          "solution": "Option C"
+        },
+        {
+          "id": "Q05",
+          "exerciseId": "ex_bm25_q5",
+          "prerequisites": [
+            "Q04"
+          ],
+          "module": "mod_bm25",
+          "title": "Q5: Actual BM25 Rank of GreenVolt Document",
+          "instructions": "In Cell 5 of 'src/notebooks/01-bm25.ipynb', check the print statement: 'Notice: Doc #11 (GreenVolt) ranked #X out of 30!'. What is X?",
+          "commands": [],
+          "tracks": {
+            "notebook": {
+              "path": "src/notebooks/01-bm25.ipynb",
+              "cellTag": "cell-05-rank"
+            },
+            "script": {
+              "path": "src/notebooks/01-bm25.ipynb",
+              "args": []
+            }
+          },
+          "question": {
+            "type": "nat",
+            "prompt": "In Cell 5, what rank did Doc #11 (GreenVolt) actually achieve out of the 30 documents when searching for 'What technology allows devices to run without power grid connectivity?'",
+            "hint": "Check the print statement in Cell 5: 'Notice: Doc #11 (GreenVolt) ranked #X out of 30!'.",
+            "expected": 2,
+            "absoluteTolerance": 0,
+            "relativeTolerance": 0,
+            "integerOnly": true,
+            "explanation": "Doc #11 achieved Rank 2 with a score of 3.33, losing to Doc #6 (score: 3.92) because of incidental common word matches."
+          },
+          "solution": "2"
+        }
+      ]
+    },
+    {
+      "id": "mod_embeddings",
+      "title": "Module 2: Vector Embeddings & 3D PCA Visualization",
+      "badge": "Embeddings & PCA",
+      "tasks": [
+        {
+          "id": "Q06",
+          "exerciseId": "ex_emb_q6",
+          "prerequisites": [
+            "Q05"
+          ],
+          "module": "mod_embeddings",
+          "title": "Q6: Embedding Vector Dimensionality",
+          "instructions": "Open notebook 'src/notebooks/02-embeddings-visualization.ipynb' and run Step 2 and Step 3. What is the output dimensionality of each vector?",
+          "commands": [],
+          "tracks": {
+            "notebook": {
+              "path": "src/notebooks/02-embeddings-visualization.ipynb",
+              "cellTag": "cell-03-dim"
+            },
+            "script": {
+              "path": "src/notebooks/02-embeddings-visualization.ipynb",
+              "args": []
+            }
+          },
+          "question": {
+            "type": "nat",
+            "prompt": "What is the exact dimensionality (number of coordinates) of each vector produced by the embedding model in Cell 3?",
+            "hint": "Look at the printout in Cell 3: 'Output dimensionality: X' or vector length.",
+            "expected": 768,
+            "absoluteTolerance": 0,
+            "relativeTolerance": 0,
+            "integerOnly": true,
+            "explanation": "gemini-embedding-001 with standard text-embedding settings produces 768 floating-point coordinates per text."
+          },
+          "solution": "768"
+        },
+        {
+          "id": "Q07",
+          "exerciseId": "ex_emb_q7",
+          "prerequisites": [
+            "Q06"
+          ],
+          "module": "mod_embeddings",
+          "title": "Q7: Cosine Similarity Between Semantic Neighbors",
+          "instructions": "In 'src/notebooks/02-embeddings-visualization.ipynb', run Step 5 (Cosine Similarity Matrix). Find the calculated Cosine Similarity between 'puppy' and 'dog' (rounded to 2 decimal places).",
+          "commands": [],
+          "tracks": {
+            "notebook": {
+              "path": "src/notebooks/02-embeddings-visualization.ipynb",
+              "cellTag": "cell-05-cosine"
+            },
+            "script": {
+              "path": "src/notebooks/02-embeddings-visualization.ipynb",
+              "args": []
+            }
+          },
+          "question": {
+            "type": "nat",
+            "prompt": "In Cell 5, what is the calculated Cosine Similarity between 'playful golden retriever puppy' and 'friendly loyal domestic dog' (rounded to 2 decimal places)?",
+            "hint": "Inspect the output printed under 'Same Topic : puppy vs dog -> X.XXXX'.",
+            "expected": 0.65,
+            "absoluteTolerance": 0.02,
+            "relativeTolerance": 0,
+            "integerOnly": false,
+            "explanation": "Cosine similarity between the two pet sentences is approximately 0.65 (0.6495), reflecting strong semantic alignment."
+          },
+          "solution": "0.65"
+        },
+        {
+          "id": "Q08",
+          "exerciseId": "ex_emb_q8",
+          "prerequisites": [
+            "Q07"
+          ],
+          "module": "mod_embeddings",
+          "title": "Q8: Geometric Principle of Semantic Embeddings",
+          "instructions": "Reflect on how embedding vectors represent real-world concepts geometrically in latent space.",
+          "commands": [],
+          "tracks": {
+            "notebook": {
+              "path": "src/notebooks/02-embeddings-visualization.ipynb",
+              "cellTag": "cell-05-theory"
+            },
+            "script": {
+              "path": "src/notebooks/02-embeddings-visualization.ipynb",
+              "args": []
+            }
+          },
+          "question": {
+            "type": "mcq",
+            "prompt": "Why is the cosine similarity between 'puppy' and 'dog' (~0.65) significantly higher than between 'puppy' and 'neural network' (~0.48)?",
+            "options": [
+              {
+                "id": "A",
+                "text": "A) 'puppy' and 'dog' share more identical letters."
+              },
+              {
+                "id": "B",
+                "text": "B) The embedding model projects texts sharing similar real-world concepts into vectors that point in nearly the same geometric direction."
+              },
+              {
+                "id": "C",
+                "text": "C) The PCA algorithm altered their coordinates to force them together."
+              },
+              {
+                "id": "D",
+                "text": "D) BM25 gave them identical inverse document frequencies."
+              }
+            ],
+            "correctOptionId": "B",
+            "explanation": "Deep neural embedding models map semantic concepts to proximity and directional alignment in vector space."
+          },
+          "solution": "Option B"
+        },
+        {
+          "id": "Q09",
+          "exerciseId": "ex_emb_q9",
+          "prerequisites": [
+            "Q08"
+          ],
+          "module": "mod_embeddings",
+          "title": "Q9: Purpose of PCA Dimensionality Reduction",
+          "instructions": "In Step 6 of 'src/notebooks/02-embeddings-visualization.ipynb', examine why PCA is applied before calling Plotly.",
+          "commands": [],
+          "tracks": {
+            "notebook": {
+              "path": "src/notebooks/02-embeddings-visualization.ipynb",
+              "cellTag": "cell-06-pca"
+            },
+            "script": {
+              "path": "src/notebooks/02-embeddings-visualization.ipynb",
+              "args": []
+            }
+          },
+          "question": {
+            "type": "mcq",
+            "prompt": "Why do we apply PCA (Principal Component Analysis) to reduce the vectors from 768 dimensions down to 3 dimensions before plotting in Plotly?",
+            "options": [
+              {
+                "id": "A",
+                "text": "A) Because human visual perception is limited to 3 spatial dimensions (X, Y, Z)."
+              },
+              {
+                "id": "B",
+                "text": "B) Because Gemini vectors are inaccurate in 768 dimensions."
+              },
+              {
+                "id": "C",
+                "text": "C) Because Plotly can only accept positive numbers."
+              },
+              {
+                "id": "D",
+                "text": "D) To remove all numbers below zero."
+              }
+            ],
+            "correctOptionId": "A",
+            "explanation": "Humans can only visualize up to 3 spatial dimensions; PCA finds the top 3 orthogonal axes of maximum variance to preserve cluster structure."
+          },
+          "solution": "Option A"
+        },
+        {
+          "id": "Q10",
+          "exerciseId": "ex_emb_q10",
+          "prerequisites": [
+            "Q09"
+          ],
+          "module": "mod_embeddings",
+          "title": "Q10: Number of Reduced PCA Components",
+          "instructions": "In Cell 6 of 'src/notebooks/02-embeddings-visualization.ipynb', how many components (spatial dimensions) are in embeddings_3d?",
+          "commands": [],
+          "tracks": {
+            "notebook": {
+              "path": "src/notebooks/02-embeddings-visualization.ipynb",
+              "cellTag": "cell-06-shape"
+            },
+            "script": {
+              "path": "src/notebooks/02-embeddings-visualization.ipynb",
+              "args": []
+            }
+          },
+          "question": {
+            "type": "nat",
+            "prompt": "How many principal component dimensions (coordinates per vector) are in embeddings_3d after PCA projection in Cell 6?",
+            "hint": "Look at n_components=3 in the PCA initialization.",
+            "expected": 3,
+            "absoluteTolerance": 0,
+            "relativeTolerance": 0,
+            "integerOnly": true,
+            "explanation": "PCA with n_components=3 outputs 3 coordinates (PC1, PC2, PC3) per sample."
+          },
+          "solution": "3"
+        }
+      ]
+    },
+    {
       "id": "mod_chunking",
-      "title": "Module A: Markdown Chunking & Document Boundaries",
-      "badge": "Chunks & Source",
+      "title": "Module 3: Document Chunking, Overlap & L2 Distance Search",
+      "badge": "Chunking & Search",
       "tasks": [
         {
-          "id": "A1",
-          "exerciseId": "mod_chunking_a1",
-          "prerequisites": [],
-          "module": "mod_chunking",
-          "title": "A1: How many second-level Markdown headings (##) are in fie...",
-          "instructions": "Open notebook 'notebooks/00_markdown_chunking.ipynb' and navigate to cell '00 \u00b7 A1'. Run the cell, observe the outputs, and answer the question below.",
-          "commands": [
-            "# Refer to notebooks/00_markdown_chunking.ipynb cell 00 \u00b7 A1"
+          "id": "Q11",
+          "exerciseId": "ex_chunk_q11",
+          "prerequisites": [
+            "Q10"
           ],
+          "module": "mod_chunking",
+          "title": "Q11: Total Chunks Generated With Window Overlap",
+          "instructions": "Open 'src/notebooks/03-chunking-l2-search.ipynb' and run Step 2 (Sliding Window Chunking). Check: 'Total document words: 781 -> Created X overlapping chunks.'",
+          "commands": [],
           "tracks": {
             "notebook": {
-              "path": "notebooks/00_markdown_chunking.ipynb",
-              "cellTag": "A1"
+              "path": "src/notebooks/03-chunking-l2-search.ipynb",
+              "cellTag": "cell-02-chunks"
             },
             "script": {
-              "path": "notebooks/00_markdown_chunking.ipynb",
+              "path": "src/notebooks/03-chunking-l2-search.ipynb",
               "args": []
             }
           },
           "question": {
-            "type": "numeric",
-            "prompt": "How many second-level Markdown headings (##) are in field_notes.md?",
-            "expected": 5.0,
-            "answer": 5,
-            "absoluteTolerance": 0.0,
-            "tolerance": 0.0,
-            "relativeTolerance": 0.0,
+            "type": "nat",
+            "prompt": "In Cell 2, using chunk_size = 40 words and overlap = 10 words, how many total overlapping chunks are generated from the 781-word document?",
+            "hint": "Check the print statement in Cell 2: 'Total document words: 781 -> Created X overlapping chunks.'",
+            "expected": 27,
+            "absoluteTolerance": 0,
+            "relativeTolerance": 0,
             "integerOnly": true,
-            "explanation": "Regex ^## matches five subsection headings.",
-            "hint": "Count regex ^## matches in raw text."
+            "explanation": "781 words chunked with window 40 and step 30 yields ceil((781 - 40) / 30) + 1 = 27 chunks."
           },
-          "referenceSolution": "# Calculated answer for A1 (Cell 00 \u00b7 A1): 5\n# Regex ^## matches five subsection headings."
+          "solution": "27"
         },
         {
-          "id": "A2",
-          "exerciseId": "mod_chunking_a2",
+          "id": "Q12",
+          "exerciseId": "ex_chunk_q12",
           "prerequisites": [
-            "A1"
+            "Q11"
           ],
           "module": "mod_chunking",
-          "title": "A2: How many paragraphs are found by the blank-line splitte...",
-          "instructions": "Open notebook 'notebooks/00_markdown_chunking.ipynb' and navigate to cell '00 \u00b7 A1'. Run the cell, observe the outputs, and answer the question below.",
-          "commands": [
-            "# Refer to notebooks/00_markdown_chunking.ipynb cell 00 \u00b7 A1"
-          ],
+          "title": "Q12: Sliding Window Step Advance",
+          "instructions": "Look at the step formula in chunk_text: step = chunk_size - overlap. Calculate step when chunk_size = 40 and overlap = 10.",
+          "commands": [],
           "tracks": {
             "notebook": {
-              "path": "notebooks/00_markdown_chunking.ipynb",
-              "cellTag": "A2"
+              "path": "src/notebooks/03-chunking-l2-search.ipynb",
+              "cellTag": "cell-02-step"
             },
             "script": {
-              "path": "notebooks/00_markdown_chunking.ipynb",
+              "path": "src/notebooks/03-chunking-l2-search.ipynb",
               "args": []
             }
           },
           "question": {
-            "type": "numeric",
-            "prompt": "How many paragraphs are found by the blank-line splitter?",
-            "expected": 17.0,
-            "answer": 17,
-            "absoluteTolerance": 0.0,
-            "tolerance": 0.0,
-            "relativeTolerance": 0.0,
+            "type": "nat",
+            "prompt": "By how many words does the sliding chunk window advance forward on each step when chunk_size = 40 and overlap = 10?",
+            "hint": "step = chunk_size - overlap = 40 - 10.",
+            "expected": 30,
+            "absoluteTolerance": 0,
+            "relativeTolerance": 0,
             "integerOnly": true,
-            "explanation": "The teaching file contains 17 nonempty blank-line-separated blocks.",
-            "hint": "Empty strings do not count as paragraphs."
+            "explanation": "Step size equals chunk_size - overlap = 40 - 10 = 30 words."
           },
-          "referenceSolution": "# Calculated answer for A2 (Cell 00 \u00b7 A1): 17\n# The teaching file contains 17 nonempty blank-line-separated blocks."
+          "solution": "30"
         },
         {
-          "id": "A3",
-          "exerciseId": "mod_chunking_a3",
+          "id": "Q13",
+          "exerciseId": "ex_chunk_q13",
           "prerequisites": [
-            "A2"
+            "Q12"
           ],
           "module": "mod_chunking",
-          "title": "A3: How many whitespace-separated words are in the entire M...",
-          "instructions": "Open notebook 'notebooks/00_markdown_chunking.ipynb' and navigate to cell '00 \u00b7 A1'. Run the cell, observe the outputs, and answer the question below.",
-          "commands": [
-            "# Refer to notebooks/00_markdown_chunking.ipynb cell 00 \u00b7 A1"
-          ],
+          "title": "Q13: Primary Purpose of Chunk Overlap in RAG",
+          "instructions": "Read the explanation on boundary loss and seam preservation in Step 3 of 'src/notebooks/03-chunking-l2-search.ipynb'.",
+          "commands": [],
           "tracks": {
             "notebook": {
-              "path": "notebooks/00_markdown_chunking.ipynb",
-              "cellTag": "A3"
+              "path": "src/notebooks/03-chunking-l2-search.ipynb",
+              "cellTag": "cell-03-seam"
             },
             "script": {
-              "path": "notebooks/00_markdown_chunking.ipynb",
-              "args": []
-            }
-          },
-          "question": {
-            "type": "numeric",
-            "prompt": "How many whitespace-separated words are in the entire Markdown file?",
-            "expected": 281.0,
-            "answer": 281,
-            "absoluteTolerance": 0.0,
-            "tolerance": 0.0,
-            "relativeTolerance": 0.0,
-            "integerOnly": true,
-            "explanation": "The deterministic metric is len(raw.split()), not model tokens.",
-            "hint": "Split raw on whitespace and take len()."
-          },
-          "referenceSolution": "# Calculated answer for A3 (Cell 00 \u00b7 A1): 281\n# The deterministic metric is len(raw.split()), not model tokens."
-        },
-        {
-          "id": "A4",
-          "exerciseId": "mod_chunking_a4",
-          "prerequisites": [
-            "A3"
-          ],
-          "module": "mod_chunking",
-          "title": "A4: With CHUNK_WORDS=40 and OVERLAP_WORDS=10, how many chun...",
-          "instructions": "Open notebook 'notebooks/00_markdown_chunking.ipynb' and navigate to cell '00 \u00b7 A2'. Run the cell, observe the outputs, and answer the question below.",
-          "commands": [
-            "# Refer to notebooks/00_markdown_chunking.ipynb cell 00 \u00b7 A2"
-          ],
-          "tracks": {
-            "notebook": {
-              "path": "notebooks/00_markdown_chunking.ipynb",
-              "cellTag": "A4"
-            },
-            "script": {
-              "path": "notebooks/00_markdown_chunking.ipynb",
-              "args": []
-            }
-          },
-          "question": {
-            "type": "numeric",
-            "prompt": "With CHUNK_WORDS=40 and OVERLAP_WORDS=10, how many chunks?",
-            "expected": 10.0,
-            "answer": 10,
-            "absoluteTolerance": 0.0,
-            "tolerance": 0.0,
-            "relativeTolerance": 0.0,
-            "integerOnly": true,
-            "explanation": "Stride = 40-10 = 30; 281 words produce 10 start positions.",
-            "hint": "Calculate stride = CHUNK_WORDS - OVERLAP_WORDS and see how many windows fit."
-          },
-          "referenceSolution": "# Calculated answer for A4 (Cell 00 \u00b7 A2): 10\n# Stride = 40-10 = 30; 281 words produce 10 start positions."
-        },
-        {
-          "id": "A5",
-          "exerciseId": "mod_chunking_a5",
-          "prerequisites": [
-            "A4"
-          ],
-          "module": "mod_chunking",
-          "title": "A5: At the default setting, how many words are in the final...",
-          "instructions": "Open notebook 'notebooks/00_markdown_chunking.ipynb' and navigate to cell '00 \u00b7 A2'. Run the cell, observe the outputs, and answer the question below.",
-          "commands": [
-            "# Refer to notebooks/00_markdown_chunking.ipynb cell 00 \u00b7 A2"
-          ],
-          "tracks": {
-            "notebook": {
-              "path": "notebooks/00_markdown_chunking.ipynb",
-              "cellTag": "A5"
-            },
-            "script": {
-              "path": "notebooks/00_markdown_chunking.ipynb",
-              "args": []
-            }
-          },
-          "question": {
-            "type": "numeric",
-            "prompt": "At the default setting, how many words are in the final chunk?",
-            "expected": 11.0,
-            "answer": 11,
-            "absoluteTolerance": 0.0,
-            "tolerance": 0.0,
-            "relativeTolerance": 0.0,
-            "integerOnly": true,
-            "explanation": "Last window starts at word offset 270, leaving 11 words.",
-            "hint": "Find the starting word index of the last window and count to the end."
-          },
-          "referenceSolution": "# Calculated answer for A5 (Cell 00 \u00b7 A2): 11\n# Last window starts at word offset 270, leaving 11 words."
-        },
-        {
-          "id": "A6",
-          "exerciseId": "mod_chunking_a6",
-          "prerequisites": [
-            "A5"
-          ],
-          "module": "mod_chunking",
-          "title": "A6: After changing CHUNK_WORDS to 60, with overlap 10, how ...",
-          "instructions": "Open notebook 'notebooks/00_markdown_chunking.ipynb' and navigate to cell '00 \u00b7 A4 EDIT'. Run the cell, observe the outputs, and answer the question below.",
-          "commands": [
-            "# Refer to notebooks/00_markdown_chunking.ipynb cell 00 \u00b7 A4 EDIT"
-          ],
-          "tracks": {
-            "notebook": {
-              "path": "notebooks/00_markdown_chunking.ipynb",
-              "cellTag": "A6"
-            },
-            "script": {
-              "path": "notebooks/00_markdown_chunking.ipynb",
-              "args": []
-            }
-          },
-          "question": {
-            "type": "numeric",
-            "prompt": "After changing CHUNK_WORDS to 60, with overlap 10, how many chunks?",
-            "expected": 6.0,
-            "answer": 6,
-            "absoluteTolerance": 0.0,
-            "tolerance": 0.0,
-            "relativeTolerance": 0.0,
-            "integerOnly": true,
-            "explanation": "Stride 50. Starts: 0,50,100,150,200,250.",
-            "hint": "Run the exact loop in cell A2 after editing parameters."
-          },
-          "referenceSolution": "# Calculated answer for A6 (Cell 00 \u00b7 A4 EDIT): 6\n# Stride 50. Starts: 0,50,100,150,200,250."
-        },
-        {
-          "id": "A7",
-          "exerciseId": "mod_chunking_a7",
-          "prerequisites": [
-            "A6"
-          ],
-          "module": "mod_chunking",
-          "title": "A7: With CHUNK_WORDS=40 and OVERLAP_WORDS=0, how many chunk...",
-          "instructions": "Open notebook 'notebooks/00_markdown_chunking.ipynb' and navigate to cell '00 \u00b7 A4 EDIT'. Run the cell, observe the outputs, and answer the question below.",
-          "commands": [
-            "# Refer to notebooks/00_markdown_chunking.ipynb cell 00 \u00b7 A4 EDIT"
-          ],
-          "tracks": {
-            "notebook": {
-              "path": "notebooks/00_markdown_chunking.ipynb",
-              "cellTag": "A7"
-            },
-            "script": {
-              "path": "notebooks/00_markdown_chunking.ipynb",
-              "args": []
-            }
-          },
-          "question": {
-            "type": "numeric",
-            "prompt": "With CHUNK_WORDS=40 and OVERLAP_WORDS=0, how many chunks?",
-            "expected": 8.0,
-            "answer": 8,
-            "absoluteTolerance": 0.0,
-            "tolerance": 0.0,
-            "relativeTolerance": 0.0,
-            "integerOnly": true,
-            "explanation": "Stride 40. The last chunk contains only one word.",
-            "hint": "With 0 overlap, stride equals chunk size."
-          },
-          "referenceSolution": "# Calculated answer for A7 (Cell 00 \u00b7 A4 EDIT): 8\n# Stride 40. The last chunk contains only one word."
-        },
-        {
-          "id": "A8",
-          "exerciseId": "mod_chunking_a8",
-          "prerequisites": [
-            "A7"
-          ],
-          "module": "mod_chunking",
-          "title": "A8: Which statement about the word-window chunker is true?",
-          "instructions": "Open notebook 'notebooks/00_markdown_chunking.ipynb' and navigate to cell '00 \u00b7 A2'. Run the cell, observe the outputs, and answer the question below.",
-          "commands": [
-            "# Refer to notebooks/00_markdown_chunking.ipynb cell 00 \u00b7 A2"
-          ],
-          "tracks": {
-            "notebook": {
-              "path": "notebooks/00_markdown_chunking.ipynb",
-              "cellTag": "A8"
-            },
-            "script": {
-              "path": "notebooks/00_markdown_chunking.ipynb",
+              "path": "src/notebooks/03-chunking-l2-search.ipynb",
               "args": []
             }
           },
           "question": {
             "type": "mcq",
-            "prompt": "Which statement about the word-window chunker is true?",
+            "prompt": "What is the primary reason for including an overlap between adjacent text chunks in RAG?",
             "options": [
               {
-                "id": "opt_0",
-                "text": "It counts Gemini model tokens"
+                "id": "A",
+                "text": "A) To make the vector database store duplicate data so search becomes faster."
               },
               {
-                "id": "opt_1",
-                "text": "It uses whitespace-separated words"
+                "id": "B",
+                "text": "B) To ensure that critical facts and sentences split across chunk boundaries are not broken in half and lost."
               },
               {
-                "id": "opt_2",
-                "text": "It creates model embeddings"
+                "id": "C",
+                "text": "C) To double the number of dimensions in the vector space."
               },
               {
-                "id": "opt_3",
-                "text": "It guarantees sentences remain intact"
+                "id": "D",
+                "text": "D) To convert dense vectors into sparse matrices."
               }
             ],
-            "correctOptionId": "opt_1",
-            "correct_index": 1,
-            "answer": 1,
-            "explanation": "The simple example is intentionally word-window based, not a tokenizer or semantic splitter.",
-            "hint": "Think word boundaries vs token boundaries."
+            "correctOptionId": "B",
+            "explanation": "Overlap creates a buffer so sentences spanning the seam appear intact in at least one chunk, preventing retrieval failure."
           },
-          "referenceSolution": "# Correct choice: It uses whitespace-separated words\n# The simple example is intentionally word-window based, not a tokenizer or semantic splitter."
+          "solution": "Option B"
+        },
+        {
+          "id": "Q14",
+          "exerciseId": "ex_chunk_q14",
+          "prerequisites": [
+            "Q13"
+          ],
+          "module": "mod_chunking",
+          "title": "Q14: Semantic Meaning of Euclidean (L2) Distance",
+          "instructions": "Review how Euclidean distance ranks candidates in Step 5 of 'src/notebooks/03-chunking-l2-search.ipynb'.",
+          "commands": [],
+          "tracks": {
+            "notebook": {
+              "path": "src/notebooks/03-chunking-l2-search.ipynb",
+              "cellTag": "cell-05-l2"
+            },
+            "script": {
+              "path": "src/notebooks/03-chunking-l2-search.ipynb",
+              "args": []
+            }
+          },
+          "question": {
+            "type": "mcq",
+            "prompt": "When using Euclidean (L2) Distance to measure similarity between a query vector and chunk vectors, which chunk is the best semantic match?",
+            "options": [
+              {
+                "id": "A",
+                "text": "A) The chunk with the largest distance value."
+              },
+              {
+                "id": "B",
+                "text": "B) The chunk with distance closest to 1.0."
+              },
+              {
+                "id": "C",
+                "text": "C) The chunk with the smallest (lowest) distance value (d=0.0 being identical)."
+              },
+              {
+                "id": "D",
+                "text": "D) The chunk with a negative distance value."
+              }
+            ],
+            "correctOptionId": "C",
+            "explanation": "Euclidean distance measures geometric separation; distance 0.0 indicates identity, so smaller distances represent closer matches."
+          },
+          "solution": "Option C"
+        },
+        {
+          "id": "Q15",
+          "exerciseId": "ex_chunk_q15",
+          "prerequisites": [
+            "Q14"
+          ],
+          "module": "mod_chunking",
+          "title": "Q15: Top Ranked Chunk for Processor Revenue Query",
+          "instructions": "In Cell 6 of 'src/notebooks/03-chunking-l2-search.ipynb', check the Rank 1 chunk for Question 1 (Titan-X9 catalog part number and revenue). What is the Chunk #?",
+          "commands": [],
+          "tracks": {
+            "notebook": {
+              "path": "src/notebooks/03-chunking-l2-search.ipynb",
+              "cellTag": "cell-06-eval"
+            },
+            "script": {
+              "path": "src/notebooks/03-chunking-l2-search.ipynb",
+              "args": []
+            }
+          },
+          "question": {
+            "type": "nat",
+            "prompt": "In Cell 6, when querying 'What is the catalog part number for the Titan-X9 processor and how much revenue did it generate in its first month?', which Chunk # achieves Rank 1?",
+            "hint": "Check the output of Cell 6 under Rank 1 for Question 1.",
+            "expected": 20,
+            "absoluteTolerance": 0,
+            "relativeTolerance": 0,
+            "integerOnly": true,
+            "explanation": "Chunk #20 contains the text on SKU-9921 release and achieved the lowest Euclidean distance (~0.6036)."
+          },
+          "solution": "20"
         }
       ]
     },
     {
-      "id": "mod_vector_math",
-      "title": "Module B: Vector Similarity Mathematics (Cosine, Dot, L2)",
-      "badge": "Similarity Maths",
+      "id": "mod_chromadb_hybrid",
+      "title": "Module 4: ChromaDB & Hybrid Search (Dense + BM25 + RRF + LLM Judge)",
+      "badge": "ChromaDB & Hybrid",
       "tasks": [
         {
-          "id": "B1",
-          "exerciseId": "mod_vector_math_b1",
-          "prerequisites": [],
-          "module": "mod_vector_math",
-          "title": "B1: For q=[1,0] and a=[2,0], what is the dot product?",
-          "instructions": "Open notebook 'notebooks/01_vector_math.ipynb' and navigate to cell '01 \u00b7 B1'. Run the cell, observe the outputs, and answer the question below.",
-          "commands": [
-            "# Refer to notebooks/01_vector_math.ipynb cell 01 \u00b7 B1"
+          "id": "Q16",
+          "exerciseId": "ex_chroma_q16",
+          "prerequisites": [
+            "Q15"
           ],
+          "module": "mod_chromadb_hybrid",
+          "title": "Q16: Indexed Document Count in ChromaDB",
+          "instructions": "Open 'src/notebooks/04-chromadb-hybrid-retrieval.ipynb' and run Step 4 (Index Corpus in ChromaDB). How many items are stored in collection.count()?",
+          "commands": [],
           "tracks": {
             "notebook": {
-              "path": "notebooks/01_vector_math.ipynb",
-              "cellTag": "B1"
+              "path": "src/notebooks/04-chromadb-hybrid-retrieval.ipynb",
+              "cellTag": "cell-04-count"
             },
             "script": {
-              "path": "notebooks/01_vector_math.ipynb",
+              "path": "src/notebooks/04-chromadb-hybrid-retrieval.ipynb",
               "args": []
             }
           },
           "question": {
-            "type": "numeric",
-            "prompt": "For q=[1,0] and a=[2,0], what is the dot product?",
-            "expected": 2.0,
-            "answer": 2,
-            "absoluteTolerance": 0.0,
-            "tolerance": 0.0,
-            "relativeTolerance": 0.0,
+            "type": "nat",
+            "prompt": "In Step 4, after ingesting the corpus into ChromaDB, what is the return value of collection.count()?",
+            "hint": "Check the printed line: 'Collection item count: X'.",
+            "expected": 30,
+            "absoluteTolerance": 0,
+            "relativeTolerance": 0,
             "integerOnly": true,
-            "explanation": "1\u00d72 + 0\u00d70 = 2.",
-            "hint": "cos(theta) = dot(a, b) / (||a|| ||b||)."
+            "explanation": "All 30 paragraphs from data.txt were converted to 768D vectors and indexed in ChromaDB."
           },
-          "referenceSolution": "# Calculated answer for B1 (Cell 01 \u00b7 B1): 2\n# 1\u00d72 + 0\u00d70 = 2."
+          "solution": "30"
         },
         {
-          "id": "B2",
-          "exerciseId": "mod_vector_math_b2",
+          "id": "Q17",
+          "exerciseId": "ex_chroma_q17",
           "prerequisites": [
-            "B1"
+            "Q16"
           ],
-          "module": "mod_vector_math",
-          "title": "B2: For q=[1,0] and b=[1,1], what is the squared L2 distanc...",
-          "instructions": "Open notebook 'notebooks/01_vector_math.ipynb' and navigate to cell '01 \u00b7 B1'. Run the cell, observe the outputs, and answer the question below.",
-          "commands": [
-            "# Refer to notebooks/01_vector_math.ipynb cell 01 \u00b7 B1"
-          ],
+          "module": "mod_chromadb_hybrid",
+          "title": "Q17: Complexity Benefit of HNSW Indexing",
+          "instructions": "Study Step 4 in 'src/notebooks/04-chromadb-hybrid-retrieval.ipynb' explaining ChromaDB's default HNSW indexing engine.",
+          "commands": [],
           "tracks": {
             "notebook": {
-              "path": "notebooks/01_vector_math.ipynb",
-              "cellTag": "B2"
+              "path": "src/notebooks/04-chromadb-hybrid-retrieval.ipynb",
+              "cellTag": "cell-04-hnsw"
             },
             "script": {
-              "path": "notebooks/01_vector_math.ipynb",
-              "args": []
-            }
-          },
-          "question": {
-            "type": "numeric",
-            "prompt": "For q=[1,0] and b=[1,1], what is the squared L2 distance?",
-            "expected": 1.0,
-            "answer": 1,
-            "absoluteTolerance": 0.0,
-            "tolerance": 0.0,
-            "relativeTolerance": 0.0,
-            "integerOnly": true,
-            "explanation": "(1\u22121)^2 + (0\u22121)^2 = 1.",
-            "hint": "Sum of squared differences: sum((a_i - b_i)^2)."
-          },
-          "referenceSolution": "# Calculated answer for B2 (Cell 01 \u00b7 B1): 1\n# (1\u22121)^2 + (0\u22121)^2 = 1."
-        },
-        {
-          "id": "B3",
-          "exerciseId": "mod_vector_math_b3",
-          "prerequisites": [
-            "B2"
-          ],
-          "module": "mod_vector_math",
-          "title": "B3: What is cosine(q,a)?",
-          "instructions": "Open notebook 'notebooks/01_vector_math.ipynb' and navigate to cell '01 \u00b7 B1'. Run the cell, observe the outputs, and answer the question below.",
-          "commands": [
-            "# Refer to notebooks/01_vector_math.ipynb cell 01 \u00b7 B1"
-          ],
-          "tracks": {
-            "notebook": {
-              "path": "notebooks/01_vector_math.ipynb",
-              "cellTag": "B3"
-            },
-            "script": {
-              "path": "notebooks/01_vector_math.ipynb",
-              "args": []
-            }
-          },
-          "question": {
-            "type": "numeric",
-            "prompt": "What is cosine(q,a)?",
-            "expected": 1.0,
-            "answer": 1,
-            "absoluteTolerance": 0.0,
-            "tolerance": 0.0,
-            "relativeTolerance": 0.0,
-            "integerOnly": true,
-            "explanation": "The vectors point in the same direction.",
-            "hint": "Vectors pointing in the exact same direction have cos(theta) = 1."
-          },
-          "referenceSolution": "# Calculated answer for B3 (Cell 01 \u00b7 B1): 1\n# The vectors point in the same direction."
-        },
-        {
-          "id": "B4",
-          "exerciseId": "mod_vector_math_b4",
-          "prerequisites": [
-            "B3"
-          ],
-          "module": "mod_vector_math",
-          "title": "B4: What is cosine(q,b)? Round to 3 decimals.",
-          "instructions": "Open notebook 'notebooks/01_vector_math.ipynb' and navigate to cell '01 \u00b7 B1'. Run the cell, observe the outputs, and answer the question below.",
-          "commands": [
-            "# Refer to notebooks/01_vector_math.ipynb cell 01 \u00b7 B1"
-          ],
-          "tracks": {
-            "notebook": {
-              "path": "notebooks/01_vector_math.ipynb",
-              "cellTag": "B4"
-            },
-            "script": {
-              "path": "notebooks/01_vector_math.ipynb",
-              "args": []
-            }
-          },
-          "question": {
-            "type": "numeric",
-            "prompt": "What is cosine(q,b)? Round to 3 decimals.",
-            "expected": 0.707,
-            "answer": 0.707,
-            "absoluteTolerance": 0.0015,
-            "tolerance": 0.0015,
-            "relativeTolerance": 0.0,
-            "integerOnly": false,
-            "explanation": "1 / sqrt(2) \u2248 .7071.",
-            "hint": "1 / sqrt(2) \u2248 0.7071."
-          },
-          "referenceSolution": "# Calculated answer for B4 (Cell 01 \u00b7 B1): 0.707\n# 1 / sqrt(2) \u2248 .7071."
-        },
-        {
-          "id": "B5",
-          "exerciseId": "mod_vector_math_b5",
-          "prerequisites": [
-            "B4"
-          ],
-          "module": "mod_vector_math",
-          "title": "B5: Which candidate wins by dot product?",
-          "instructions": "Open notebook 'notebooks/01_vector_math.ipynb' and navigate to cell '01 \u00b7 B2'. Run the cell, observe the outputs, and answer the question below.",
-          "commands": [
-            "# Refer to notebooks/01_vector_math.ipynb cell 01 \u00b7 B2"
-          ],
-          "tracks": {
-            "notebook": {
-              "path": "notebooks/01_vector_math.ipynb",
-              "cellTag": "B5"
-            },
-            "script": {
-              "path": "notebooks/01_vector_math.ipynb",
+              "path": "src/notebooks/04-chromadb-hybrid-retrieval.ipynb",
               "args": []
             }
           },
           "question": {
             "type": "mcq",
-            "prompt": "Which candidate wins by dot product?",
+            "prompt": "Why does ChromaDB use HNSW indexing by default instead of a linear scan across all vectors in the collection?",
             "options": [
               {
-                "id": "opt_0",
-                "text": "a"
+                "id": "A",
+                "text": "A) HNSW traverses a multi-layer hierarchical graph in O(log N) time, bypassing 99%+ of vectors, whereas a linear scan computes distances against all N vectors in O(N) time."
               },
               {
-                "id": "opt_1",
-                "text": "b"
+                "id": "B",
+                "text": "B) ChromaDB deletes 90% of your documents during ingestion to save memory."
               },
               {
-                "id": "opt_2",
-                "text": "They tie"
+                "id": "C",
+                "text": "C) HNSW converts all vectors to 1-bit integers."
               },
               {
-                "id": "opt_3",
-                "text": "Neither"
+                "id": "D",
+                "text": "D) ChromaDB sends queries to external search engines."
               }
             ],
-            "correctOptionId": "opt_0",
-            "correct_index": 0,
-            "answer": 0,
-            "explanation": "Dot(q,a)=2 and dot(q,b)=1.",
-            "hint": "Dot(q, a) = 2 while dot(q, b) = 1."
+            "correctOptionId": "A",
+            "explanation": "HNSW (Hierarchical Navigable Small World) structures vectors in layered graphs, reducing search complexity from O(N) to O(log N)."
           },
-          "referenceSolution": "# Correct choice: a\n# Dot(q,a)=2 and dot(q,b)=1."
+          "solution": "Option A"
         },
         {
-          "id": "B6",
-          "exerciseId": "mod_vector_math_b6",
+          "id": "Q18",
+          "exerciseId": "ex_chroma_q18",
           "prerequisites": [
-            "B5"
+            "Q17"
           ],
-          "module": "mod_vector_math",
-          "title": "B6: Which candidate wins by squared L2 distance?",
-          "instructions": "Open notebook 'notebooks/01_vector_math.ipynb' and navigate to cell '01 \u00b7 B2'. Run the cell, observe the outputs, and answer the question below.",
-          "commands": [
-            "# Refer to notebooks/01_vector_math.ipynb cell 01 \u00b7 B2"
-          ],
+          "module": "mod_chromadb_hybrid",
+          "title": "Q18: Combined Reciprocal Rank Fusion (RRF) Calculation",
+          "instructions": "In Step 7 of 'src/notebooks/04-chromadb-hybrid-retrieval.ipynb', review the RRF formula: Score = 1 / (60 + rank_dense) + 1 / (60 + rank_bm25). Calculate for rank_dense=1 and rank_bm25=1.",
+          "commands": [],
           "tracks": {
             "notebook": {
-              "path": "notebooks/01_vector_math.ipynb",
-              "cellTag": "B6"
+              "path": "src/notebooks/04-chromadb-hybrid-retrieval.ipynb",
+              "cellTag": "cell-07-rrf"
             },
             "script": {
-              "path": "notebooks/01_vector_math.ipynb",
+              "path": "src/notebooks/04-chromadb-hybrid-retrieval.ipynb",
               "args": []
             }
           },
           "question": {
-            "type": "mcq",
-            "prompt": "Which candidate wins by squared L2 distance?",
-            "options": [
-              {
-                "id": "opt_0",
-                "text": "a"
-              },
-              {
-                "id": "opt_1",
-                "text": "b"
-              },
-              {
-                "id": "opt_2",
-                "text": "They tie"
-              },
-              {
-                "id": "opt_3",
-                "text": "Neither"
-              }
-            ],
-            "correctOptionId": "opt_2",
-            "correct_index": 2,
-            "answer": 2,
-            "explanation": "Both a and b are at squared distance 1 from q.",
-            "hint": "Both a and b are at squared distance 1 from q."
-          },
-          "referenceSolution": "# Correct choice: They tie\n# Both a and b are at squared distance 1 from q."
-        },
-        {
-          "id": "B7",
-          "exerciseId": "mod_vector_math_b7",
-          "prerequisites": [
-            "B6"
-          ],
-          "module": "mod_vector_math",
-          "title": "B7: With SCALE=3, what is dot(scaled_q,a)?",
-          "instructions": "Open notebook 'notebooks/01_vector_math.ipynb' and navigate to cell '01 \u00b7 B3'. Run the cell, observe the outputs, and answer the question below.",
-          "commands": [
-            "# Refer to notebooks/01_vector_math.ipynb cell 01 \u00b7 B3"
-          ],
-          "tracks": {
-            "notebook": {
-              "path": "notebooks/01_vector_math.ipynb",
-              "cellTag": "B7"
-            },
-            "script": {
-              "path": "notebooks/01_vector_math.ipynb",
-              "args": []
-            }
-          },
-          "question": {
-            "type": "numeric",
-            "prompt": "With SCALE=3, what is dot(scaled_q,a)?",
-            "expected": 6.0,
-            "answer": 6,
-            "absoluteTolerance": 0.0,
-            "tolerance": 0.0,
-            "relativeTolerance": 0.0,
-            "integerOnly": true,
-            "explanation": "[3,0]\u00b7[2,0] = 6.",
-            "hint": "Scaled dot product: [3, 0] \u00b7 [2, 0] = 6."
-          },
-          "referenceSolution": "# Calculated answer for B7 (Cell 01 \u00b7 B3): 6\n# [3,0]\u00b7[2,0] = 6."
-        },
-        {
-          "id": "B8",
-          "exerciseId": "mod_vector_math_b8",
-          "prerequisites": [
-            "B7"
-          ],
-          "module": "mod_vector_math",
-          "title": "B8: After editing SCALE to 5, what is dot(scaled_q,a)?",
-          "instructions": "Open notebook 'notebooks/01_vector_math.ipynb' and navigate to cell '01 \u00b7 B3 EDIT'. Run the cell, observe the outputs, and answer the question below.",
-          "commands": [
-            "# Refer to notebooks/01_vector_math.ipynb cell 01 \u00b7 B3 EDIT"
-          ],
-          "tracks": {
-            "notebook": {
-              "path": "notebooks/01_vector_math.ipynb",
-              "cellTag": "B8"
-            },
-            "script": {
-              "path": "notebooks/01_vector_math.ipynb",
-              "args": []
-            }
-          },
-          "question": {
-            "type": "numeric",
-            "prompt": "After editing SCALE to 5, what is dot(scaled_q,a)?",
-            "expected": 10.0,
-            "answer": 10,
-            "absoluteTolerance": 0.0,
-            "tolerance": 0.0,
-            "relativeTolerance": 0.0,
-            "integerOnly": true,
-            "explanation": "[5,0]\u00b7[2,0] = 10.",
-            "hint": "After editing SCALE to 5: [5, 0] \u00b7 [2, 0] = 10."
-          },
-          "referenceSolution": "# Calculated answer for B8 (Cell 01 \u00b7 B3 EDIT): 10\n# [5,0]\u00b7[2,0] = 10."
-        },
-        {
-          "id": "B9",
-          "exerciseId": "mod_vector_math_b9",
-          "prerequisites": [
-            "B8"
-          ],
-          "module": "mod_vector_math",
-          "title": "B9: For normalized q and b, squared L2 is 2\u22122cos. Approxima...",
-          "instructions": "Open notebook 'notebooks/01_vector_math.ipynb' and navigate to cell '01 \u00b7 B4'. Run the cell, observe the outputs, and answer the question below.",
-          "commands": [
-            "# Refer to notebooks/01_vector_math.ipynb cell 01 \u00b7 B4"
-          ],
-          "tracks": {
-            "notebook": {
-              "path": "notebooks/01_vector_math.ipynb",
-              "cellTag": "B9"
-            },
-            "script": {
-              "path": "notebooks/01_vector_math.ipynb",
-              "args": []
-            }
-          },
-          "question": {
-            "type": "numeric",
-            "prompt": "For normalized q and b, squared L2 is 2\u22122cos. Approximate to 3 decimals.",
-            "expected": 0.586,
-            "answer": 0.586,
-            "absoluteTolerance": 0.0015,
-            "tolerance": 0.0015,
-            "relativeTolerance": 0.0,
-            "integerOnly": false,
-            "explanation": "2\u22122\u00d70.70710678 \u2248 0.585786.",
-            "hint": "Normalized squared L2 formula: d^2 = 2 - 2*cos(theta)."
-          },
-          "referenceSolution": "# Calculated answer for B9 (Cell 01 \u00b7 B4): 0.586\n# 2\u22122\u00d70.70710678 \u2248 0.585786."
-        },
-        {
-          "id": "B10",
-          "exerciseId": "mod_vector_math_b10",
-          "prerequisites": [
-            "B9"
-          ],
-          "module": "mod_vector_math",
-          "title": "B10: Which metric does not change when q is multiplied by a ...",
-          "instructions": "Open notebook 'notebooks/01_vector_math.ipynb' and navigate to cell '01 \u00b7 B4'. Run the cell, observe the outputs, and answer the question below.",
-          "commands": [
-            "# Refer to notebooks/01_vector_math.ipynb cell 01 \u00b7 B4"
-          ],
-          "tracks": {
-            "notebook": {
-              "path": "notebooks/01_vector_math.ipynb",
-              "cellTag": "B10"
-            },
-            "script": {
-              "path": "notebooks/01_vector_math.ipynb",
-              "args": []
-            }
-          },
-          "question": {
-            "type": "mcq",
-            "prompt": "Which metric does not change when q is multiplied by a positive scalar?",
-            "options": [
-              {
-                "id": "opt_0",
-                "text": "Dot product"
-              },
-              {
-                "id": "opt_1",
-                "text": "Squared L2"
-              },
-              {
-                "id": "opt_2",
-                "text": "Cosine similarity"
-              },
-              {
-                "id": "opt_3",
-                "text": "Vector norm"
-              }
-            ],
-            "correctOptionId": "opt_2",
-            "correct_index": 2,
-            "answer": 2,
-            "explanation": "Cosine normalizes away positive scaling.",
-            "hint": "Cosine normalizes by vector lengths, removing scale dependence."
-          },
-          "referenceSolution": "# Correct choice: Cosine similarity\n# Cosine normalizes away positive scaling."
-        }
-      ]
-    },
-    {
-      "id": "mod_pca_embeddings",
-      "title": "Module C: Visual Embeddings & 3D PCA Latent Space",
-      "badge": "3D PCA & Latent Space",
-      "tasks": [
-        {
-          "id": "C1",
-          "exerciseId": "mod_pca_embeddings_c1",
-          "prerequisites": [],
-          "module": "mod_pca_embeddings",
-          "title": "C1: How many records are in the supplied toy vector corpus?",
-          "instructions": "Open notebook 'notebooks/02_pca_and_embeddings.ipynb' and navigate to cell '02 \u00b7 C1'. Run the cell, observe the outputs, and answer the question below.",
-          "commands": [
-            "# Refer to notebooks/02_pca_and_embeddings.ipynb cell 02 \u00b7 C1"
-          ],
-          "tracks": {
-            "notebook": {
-              "path": "notebooks/02_pca_and_embeddings.ipynb",
-              "cellTag": "C1"
-            },
-            "script": {
-              "path": "notebooks/02_pca_and_embeddings.ipynb",
-              "args": []
-            }
-          },
-          "question": {
-            "type": "numeric",
-            "prompt": "How many records are in the supplied toy vector corpus?",
-            "expected": 10.0,
-            "answer": 10,
-            "absoluteTolerance": 0.0,
-            "tolerance": 0.0,
-            "relativeTolerance": 0.0,
-            "integerOnly": true,
-            "explanation": "Ten records; each has a distinct id.",
-            "hint": "Print len(items) from toy_vectors.json."
-          },
-          "referenceSolution": "# Calculated answer for C1 (Cell 02 \u00b7 C1): 10\n# Ten records; each has a distinct id."
-        },
-        {
-          "id": "C2",
-          "exerciseId": "mod_pca_embeddings_c2",
-          "prerequisites": [
-            "C1"
-          ],
-          "module": "mod_pca_embeddings",
-          "title": "C2: How many dimensions does each toy input vector have?",
-          "instructions": "Open notebook 'notebooks/02_pca_and_embeddings.ipynb' and navigate to cell '02 \u00b7 C1'. Run the cell, observe the outputs, and answer the question below.",
-          "commands": [
-            "# Refer to notebooks/02_pca_and_embeddings.ipynb cell 02 \u00b7 C1"
-          ],
-          "tracks": {
-            "notebook": {
-              "path": "notebooks/02_pca_and_embeddings.ipynb",
-              "cellTag": "C2"
-            },
-            "script": {
-              "path": "notebooks/02_pca_and_embeddings.ipynb",
-              "args": []
-            }
-          },
-          "question": {
-            "type": "numeric",
-            "prompt": "How many dimensions does each toy input vector have?",
-            "expected": 6.0,
-            "answer": 6,
-            "absoluteTolerance": 0.0,
-            "tolerance": 0.0,
-            "relativeTolerance": 0.0,
-            "integerOnly": true,
-            "explanation": "Each vector has six authored coordinates.",
-            "hint": "Inspect the dimensionality of the raw vectors in items."
-          },
-          "referenceSolution": "# Calculated answer for C2 (Cell 02 \u00b7 C1): 6\n# Each vector has six authored coordinates."
-        },
-        {
-          "id": "C3",
-          "exerciseId": "mod_pca_embeddings_c3",
-          "prerequisites": [
-            "C2"
-          ],
-          "module": "mod_pca_embeddings",
-          "title": "C3: How many components does PCA create in the notebook?",
-          "instructions": "Open notebook 'notebooks/02_pca_and_embeddings.ipynb' and navigate to cell '02 \u00b7 C3'. Run the cell, observe the outputs, and answer the question below.",
-          "commands": [
-            "# Refer to notebooks/02_pca_and_embeddings.ipynb cell 02 \u00b7 C3"
-          ],
-          "tracks": {
-            "notebook": {
-              "path": "notebooks/02_pca_and_embeddings.ipynb",
-              "cellTag": "C3"
-            },
-            "script": {
-              "path": "notebooks/02_pca_and_embeddings.ipynb",
-              "args": []
-            }
-          },
-          "question": {
-            "type": "numeric",
-            "prompt": "How many components does PCA create in the notebook?",
-            "expected": 3.0,
-            "answer": 3,
-            "absoluteTolerance": 0.0,
-            "tolerance": 0.0,
-            "relativeTolerance": 0.0,
-            "integerOnly": true,
-            "explanation": "n_components=3.",
-            "hint": "PCA(n_components=3) projects vectors to 3 dimensions."
-          },
-          "referenceSolution": "# Calculated answer for C3 (Cell 02 \u00b7 C3): 3\n# n_components=3."
-        },
-        {
-          "id": "C4",
-          "exerciseId": "mod_pca_embeddings_c4",
-          "prerequisites": [
-            "C3"
-          ],
-          "module": "mod_pca_embeddings",
-          "title": "C4: How many rows will the PCA coordinate matrix contain?",
-          "instructions": "Open notebook 'notebooks/02_pca_and_embeddings.ipynb' and navigate to cell '02 \u00b7 C3'. Run the cell, observe the outputs, and answer the question below.",
-          "commands": [
-            "# Refer to notebooks/02_pca_and_embeddings.ipynb cell 02 \u00b7 C3"
-          ],
-          "tracks": {
-            "notebook": {
-              "path": "notebooks/02_pca_and_embeddings.ipynb",
-              "cellTag": "C4"
-            },
-            "script": {
-              "path": "notebooks/02_pca_and_embeddings.ipynb",
-              "args": []
-            }
-          },
-          "question": {
-            "type": "numeric",
-            "prompt": "How many rows will the PCA coordinate matrix contain?",
-            "expected": 10.0,
-            "answer": 10,
-            "absoluteTolerance": 0.0,
-            "tolerance": 0.0,
-            "relativeTolerance": 0.0,
-            "integerOnly": true,
-            "explanation": "PCA projects each of ten input vectors.",
-            "hint": "PCA preserves the number of data points while reducing dimensions."
-          },
-          "referenceSolution": "# Calculated answer for C4 (Cell 02 \u00b7 C3): 10\n# PCA projects each of ten input vectors."
-        },
-        {
-          "id": "C5",
-          "exerciseId": "mod_pca_embeddings_c5",
-          "prerequisites": [
-            "C4"
-          ],
-          "module": "mod_pca_embeddings",
-          "title": "C5: What does PCA choose?",
-          "instructions": "Open notebook 'notebooks/02_pca_and_embeddings.ipynb' and navigate to cell '02 \u00b7 C3'. Run the cell, observe the outputs, and answer the question below.",
-          "commands": [
-            "# Refer to notebooks/02_pca_and_embeddings.ipynb cell 02 \u00b7 C3"
-          ],
-          "tracks": {
-            "notebook": {
-              "path": "notebooks/02_pca_and_embeddings.ipynb",
-              "cellTag": "C5"
-            },
-            "script": {
-              "path": "notebooks/02_pca_and_embeddings.ipynb",
-              "args": []
-            }
-          },
-          "question": {
-            "type": "mcq",
-            "prompt": "What does PCA choose?",
-            "options": [
-              {
-                "id": "opt_0",
-                "text": "Three random original features"
-              },
-              {
-                "id": "opt_1",
-                "text": "Axes of greatest variance"
-              },
-              {
-                "id": "opt_2",
-                "text": "Three nearest neighbors"
-              },
-              {
-                "id": "opt_3",
-                "text": "New words generated by an LLM"
-              }
-            ],
-            "correctOptionId": "opt_1",
-            "correct_index": 1,
-            "answer": 1,
-            "explanation": "PCA finds orthogonal directions accounting for variance in the dataset.",
-            "hint": "PCA maximizes global variance, which does not guarantee nearest neighbor preservation."
-          },
-          "referenceSolution": "# Correct choice: Axes of greatest variance\n# PCA finds orthogonal directions accounting for variance in the dataset."
-        },
-        {
-          "id": "C6",
-          "exerciseId": "mod_pca_embeddings_c6",
-          "prerequisites": [
-            "C5"
-          ],
-          "module": "mod_pca_embeddings",
-          "title": "C6: Are distances always identical before and after 6D\u21923D P...",
-          "instructions": "Open notebook 'notebooks/02_pca_and_embeddings.ipynb' and navigate to cell '02 \u00b7 C5'. Run the cell, observe the outputs, and answer the question below.",
-          "commands": [
-            "# Refer to notebooks/02_pca_and_embeddings.ipynb cell 02 \u00b7 C5"
-          ],
-          "tracks": {
-            "notebook": {
-              "path": "notebooks/02_pca_and_embeddings.ipynb",
-              "cellTag": "C6"
-            },
-            "script": {
-              "path": "notebooks/02_pca_and_embeddings.ipynb",
-              "args": []
-            }
-          },
-          "question": {
-            "type": "mcq",
-            "prompt": "Are distances always identical before and after 6D\u21923D PCA?",
-            "options": [
-              {
-                "id": "opt_0",
-                "text": "Yes, PCA preserves every distance"
-              },
-              {
-                "id": "opt_1",
-                "text": "No, discarded dimensions can change distances"
-              },
-              {
-                "id": "opt_2",
-                "text": "Only if the labels are text"
-              },
-              {
-                "id": "opt_3",
-                "text": "Yes, when plotting in 3D"
-              }
-            ],
-            "correctOptionId": "opt_1",
-            "correct_index": 1,
-            "answer": 1,
-            "explanation": "3D is a lossy projection unless data lives entirely in 3 dimensions.",
-            "hint": "Compare d6 and d3 distances in original 6D vs projected 3D."
-          },
-          "referenceSolution": "# Correct choice: No, discarded dimensions can change distances\n# 3D is a lossy projection unless data lives entirely in 3 dimensions."
-        },
-        {
-          "id": "C7",
-          "exerciseId": "mod_pca_embeddings_c7",
-          "prerequisites": [
-            "C6"
-          ],
-          "module": "mod_pca_embeddings",
-          "title": "C7: What do the supplied image/video toy vectors demonstrat...",
-          "instructions": "Open notebook 'notebooks/02_pca_and_embeddings.ipynb' and navigate to cell '02 \u00b7 C1'. Run the cell, observe the outputs, and answer the question below.",
-          "commands": [
-            "# Refer to notebooks/02_pca_and_embeddings.ipynb cell 02 \u00b7 C1"
-          ],
-          "tracks": {
-            "notebook": {
-              "path": "notebooks/02_pca_and_embeddings.ipynb",
-              "cellTag": "C7"
-            },
-            "script": {
-              "path": "notebooks/02_pca_and_embeddings.ipynb",
-              "args": []
-            }
-          },
-          "question": {
-            "type": "mcq",
-            "prompt": "What do the supplied image/video toy vectors demonstrate?",
-            "options": [
-              {
-                "id": "opt_0",
-                "text": "Proven real multimodal embeddings"
-              },
-              {
-                "id": "opt_1",
-                "text": "A visually useful *illustration* of a shared space"
-              },
-              {
-                "id": "opt_2",
-                "text": "An image encoder trained on ImageNet"
-              },
-              {
-                "id": "opt_3",
-                "text": "Gemini embedding API output"
-              }
-            ],
-            "correctOptionId": "opt_1",
-            "correct_index": 1,
-            "answer": 1,
-            "explanation": "They were manually authored. Real cross-modal alignment requires a trained multimodal model.",
-            "hint": "toy_vectors.json contains hand-crafted classroom vectors for illustration."
-          },
-          "referenceSolution": "# Correct choice: A visually useful *illustration* of a shared space\n# They were manually authored. Real cross-modal alignment requires a trained multimodal model."
-        },
-        {
-          "id": "C8",
-          "exerciseId": "mod_pca_embeddings_c8",
-          "prerequisites": [
-            "C7"
-          ],
-          "module": "mod_pca_embeddings",
-          "title": "C8: The optional MiniLM text model normally outputs how man...",
-          "instructions": "Open notebook 'notebooks/02_pca_and_embeddings.ipynb' and navigate to cell '02 \u00b7 C6'. Run the cell, observe the outputs, and answer the question below.",
-          "commands": [
-            "# Refer to notebooks/02_pca_and_embeddings.ipynb cell 02 \u00b7 C6"
-          ],
-          "tracks": {
-            "notebook": {
-              "path": "notebooks/02_pca_and_embeddings.ipynb",
-              "cellTag": "C8"
-            },
-            "script": {
-              "path": "notebooks/02_pca_and_embeddings.ipynb",
-              "args": []
-            }
-          },
-          "question": {
-            "type": "mcq",
-            "prompt": "The optional MiniLM text model normally outputs how many dimensions?",
-            "options": [
-              {
-                "id": "opt_0",
-                "text": "3"
-              },
-              {
-                "id": "opt_1",
-                "text": "6"
-              },
-              {
-                "id": "opt_2",
-                "text": "384"
-              },
-              {
-                "id": "opt_3",
-                "text": "3072"
-              }
-            ],
-            "correctOptionId": "opt_2",
-            "correct_index": 2,
-            "answer": 2,
-            "explanation": "all-MiniLM-L6-v2 uses 384-dimensional sentence embeddings.",
-            "hint": "Check the all-MiniLM-L6-v2 model card for its hidden dimension size."
-          },
-          "referenceSolution": "# Correct choice: 384\n# all-MiniLM-L6-v2 uses 384-dimensional sentence embeddings."
-        }
-      ]
-    },
-    {
-      "id": "mod_chromadb",
-      "title": "Module D: ChromaDB Persistent Storage & Retrieval",
-      "badge": "ChromaDB Storage",
-      "tasks": [
-        {
-          "id": "D1",
-          "exerciseId": "mod_chromadb_d1",
-          "prerequisites": [],
-          "module": "mod_chromadb",
-          "title": "D1: After adding all toy items, what is collection.count()?",
-          "instructions": "Open notebook 'notebooks/03_chromadb_search.ipynb' and navigate to cell '03 \u00b7 D2'. Run the cell, observe the outputs, and answer the question below.",
-          "commands": [
-            "# Refer to notebooks/03_chromadb_search.ipynb cell 03 \u00b7 D2"
-          ],
-          "tracks": {
-            "notebook": {
-              "path": "notebooks/03_chromadb_search.ipynb",
-              "cellTag": "D1"
-            },
-            "script": {
-              "path": "notebooks/03_chromadb_search.ipynb",
-              "args": []
-            }
-          },
-          "question": {
-            "type": "numeric",
-            "prompt": "After adding all toy items, what is collection.count()?",
-            "expected": 10.0,
-            "answer": 10,
-            "absoluteTolerance": 0.0,
-            "tolerance": 0.0,
-            "relativeTolerance": 0.0,
-            "integerOnly": true,
-            "explanation": "Ten unique vectors added.",
-            "hint": "Read collection.count() after inserting 10 vectors."
-          },
-          "referenceSolution": "# Calculated answer for D1 (Cell 03 \u00b7 D2): 10\n# Ten unique vectors added."
-        },
-        {
-          "id": "D2",
-          "exerciseId": "mod_chromadb_d2",
-          "prerequisites": [
-            "D1"
-          ],
-          "module": "mod_chromadb",
-          "title": "D2: With K=3, how many IDs are in the first query result?",
-          "instructions": "Open notebook 'notebooks/03_chromadb_search.ipynb' and navigate to cell '03 \u00b7 D3'. Run the cell, observe the outputs, and answer the question below.",
-          "commands": [
-            "# Refer to notebooks/03_chromadb_search.ipynb cell 03 \u00b7 D3"
-          ],
-          "tracks": {
-            "notebook": {
-              "path": "notebooks/03_chromadb_search.ipynb",
-              "cellTag": "D2"
-            },
-            "script": {
-              "path": "notebooks/03_chromadb_search.ipynb",
-              "args": []
-            }
-          },
-          "question": {
-            "type": "numeric",
-            "prompt": "With K=3, how many IDs are in the first query result?",
-            "expected": 3.0,
-            "answer": 3,
-            "absoluteTolerance": 0.0,
-            "tolerance": 0.0,
-            "relativeTolerance": 0.0,
-            "integerOnly": true,
-            "explanation": "There are at least three stored items.",
-            "hint": "Inspect the length of results[\"ids\"][0]."
-          },
-          "referenceSolution": "# Calculated answer for D2 (Cell 03 \u00b7 D3): 3\n# There are at least three stored items."
-        },
-        {
-          "id": "D3",
-          "exerciseId": "mod_chromadb_d3",
-          "prerequisites": [
-            "D2"
-          ],
-          "module": "mod_chromadb",
-          "title": "D3: After setting K=5, how many IDs are returned?",
-          "instructions": "Open notebook 'notebooks/03_chromadb_search.ipynb' and navigate to cell '03 \u00b7 D3 EDIT'. Run the cell, observe the outputs, and answer the question below.",
-          "commands": [
-            "# Refer to notebooks/03_chromadb_search.ipynb cell 03 \u00b7 D3 EDIT"
-          ],
-          "tracks": {
-            "notebook": {
-              "path": "notebooks/03_chromadb_search.ipynb",
-              "cellTag": "D3"
-            },
-            "script": {
-              "path": "notebooks/03_chromadb_search.ipynb",
-              "args": []
-            }
-          },
-          "question": {
-            "type": "numeric",
-            "prompt": "After setting K=5, how many IDs are returned?",
-            "expected": 5.0,
-            "answer": 5,
-            "absoluteTolerance": 0.0,
-            "tolerance": 0.0,
-            "relativeTolerance": 0.0,
-            "integerOnly": true,
-            "explanation": "With n_results=5 and ten available vectors, five IDs return.",
-            "hint": "Change n_results = 5 then rerun query and count returned IDs."
-          },
-          "referenceSolution": "# Calculated answer for D3 (Cell 03 \u00b7 D3 EDIT): 5\n# With n_results=5 and ten available vectors, five IDs return."
-        },
-        {
-          "id": "D4",
-          "exerciseId": "mod_chromadb_d4",
-          "prerequisites": [
-            "D3"
-          ],
-          "module": "mod_chromadb",
-          "title": "D4: What is squared L2 distance from Cat to Cat?",
-          "instructions": "Open notebook 'notebooks/03_chromadb_search.ipynb' and navigate to cell '03 \u00b7 D4'. Run the cell, observe the outputs, and answer the question below.",
-          "commands": [
-            "# Refer to notebooks/03_chromadb_search.ipynb cell 03 \u00b7 D4"
-          ],
-          "tracks": {
-            "notebook": {
-              "path": "notebooks/03_chromadb_search.ipynb",
-              "cellTag": "D4"
-            },
-            "script": {
-              "path": "notebooks/03_chromadb_search.ipynb",
-              "args": []
-            }
-          },
-          "question": {
-            "type": "numeric",
-            "prompt": "What is squared L2 distance from Cat to Cat?",
-            "expected": 0.0,
-            "answer": 0,
-            "absoluteTolerance": 0.0,
-            "tolerance": 0.0,
-            "relativeTolerance": 0.0,
-            "integerOnly": true,
-            "explanation": "Identical vectors have zero squared distance.",
-            "hint": "Distance between a vector and itself is 0."
-          },
-          "referenceSolution": "# Calculated answer for D4 (Cell 03 \u00b7 D4): 0\n# Identical vectors have zero squared distance."
-        },
-        {
-          "id": "D5",
-          "exerciseId": "mod_chromadb_d5",
-          "prerequisites": [
-            "D4"
-          ],
-          "module": "mod_chromadb",
-          "title": "D5: What is the manually computed Cat\u2013Dog squared L2? Give ...",
-          "instructions": "Open notebook 'notebooks/03_chromadb_search.ipynb' and navigate to cell '03 \u00b7 D4'. Run the cell, observe the outputs, and answer the question below.",
-          "commands": [
-            "# Refer to notebooks/03_chromadb_search.ipynb cell 03 \u00b7 D4"
-          ],
-          "tracks": {
-            "notebook": {
-              "path": "notebooks/03_chromadb_search.ipynb",
-              "cellTag": "D5"
-            },
-            "script": {
-              "path": "notebooks/03_chromadb_search.ipynb",
-              "args": []
-            }
-          },
-          "question": {
-            "type": "numeric",
-            "prompt": "What is the manually computed Cat\u2013Dog squared L2? Give 4 decimal places.",
-            "expected": 0.0298,
-            "answer": 0.0298,
+            "type": "nat",
+            "prompt": "Under standard Reciprocal Rank Fusion (RRF) with k = 60, if a document ranks #1 in Dense Search and #1 in BM25 Search, what is its exact combined RRF score (rounded to 5 decimal places)?",
+            "hint": "Calculate: 1 / (60 + 1) + 1 / (60 + 1) = 2 / 61.",
+            "expected": 0.03279,
             "absoluteTolerance": 0.0001,
-            "tolerance": 0.0001,
-            "relativeTolerance": 0.0,
+            "relativeTolerance": 0,
             "integerOnly": false,
-            "explanation": "Sum of six coordinate-wise squared differences = 0.0298.",
-            "hint": "Squared Euclidean distance: sum((u_i - v_i)^2)."
+            "explanation": "1/(60 + 1) + 1/(60 + 1) = 2/61 \u2248 0.0327868 \u2248 0.03279."
           },
-          "referenceSolution": "# Calculated answer for D5 (Cell 03 \u00b7 D4): 0.0298\n# Sum of six coordinate-wise squared differences = 0.0298."
+          "solution": "0.03279"
         },
         {
-          "id": "D6",
-          "exerciseId": "mod_chromadb_d6",
+          "id": "Q19",
+          "exerciseId": "ex_chroma_q19",
           "prerequisites": [
-            "D5"
+            "Q18"
           ],
-          "module": "mod_chromadb",
-          "title": "D6: For Chroma\u2019s local default l2 metric, what does a *smal...",
-          "instructions": "Open notebook 'notebooks/03_chromadb_search.ipynb' and navigate to cell '03 \u00b7 D3'. Run the cell, observe the outputs, and answer the question below.",
-          "commands": [
-            "# Refer to notebooks/03_chromadb_search.ipynb cell 03 \u00b7 D3"
-          ],
+          "module": "mod_chromadb_hybrid",
+          "title": "Q19: Role of Augmented Context Injection",
+          "instructions": "Review Step 8 (Augmented Generation) in 'src/notebooks/04-chromadb-hybrid-retrieval.ipynb'.",
+          "commands": [],
           "tracks": {
             "notebook": {
-              "path": "notebooks/03_chromadb_search.ipynb",
-              "cellTag": "D6"
+              "path": "src/notebooks/04-chromadb-hybrid-retrieval.ipynb",
+              "cellTag": "cell-08-prompt"
             },
             "script": {
-              "path": "notebooks/03_chromadb_search.ipynb",
+              "path": "src/notebooks/04-chromadb-hybrid-retrieval.ipynb",
               "args": []
             }
           },
           "question": {
             "type": "mcq",
-            "prompt": "For Chroma\u2019s local default l2 metric, what does a *smaller* returned distance mean?",
+            "prompt": "In Step 8 (Augmented Generation), why do we inject the top-retrieved context chunks into the LLM prompt before calling generate_content instead of just asking the LLM the question directly?",
             "options": [
               {
-                "id": "opt_0",
-                "text": "Less similar"
+                "id": "A",
+                "text": "A) To force the LLM to output binary numbers."
               },
               {
-                "id": "opt_1",
-                "text": "Closer"
+                "id": "B",
+                "text": "B) Because LLMs hallucinate or lack private/recent company knowledge; grounding the prompt in retrieved facts ensures the generated answer is strictly factual and verifiable."
               },
               {
-                "id": "opt_2",
-                "text": "Higher dot product necessarily"
+                "id": "C",
+                "text": "C) To bypass the ChromaDB HNSW vector index."
               },
               {
-                "id": "opt_3",
-                "text": "More tokens"
+                "id": "D",
+                "text": "D) To decrease the GPU memory allocated to the embedding model."
               }
             ],
-            "correctOptionId": "opt_1",
-            "correct_index": 1,
-            "answer": 1,
-            "explanation": "Squared L2 is a distance, so smaller is nearer.",
-            "hint": "Chroma sorts L2 distances in ascending order (smallest distance first)."
+            "correctOptionId": "B",
+            "explanation": "Standard LLMs lack private internal knowledge and can produce hallucinations; injecting retrieved context grounds the answer in factual source material."
           },
-          "referenceSolution": "# Correct choice: Closer\n# Squared L2 is a distance, so smaller is nearer."
+          "solution": "Option B"
         },
         {
-          "id": "D7",
-          "exerciseId": "mod_chromadb_d7",
+          "id": "Q20",
+          "exerciseId": "ex_chroma_q20",
           "prerequisites": [
-            "D6"
+            "Q19"
           ],
-          "module": "mod_chromadb",
-          "title": "D7: What does the `where={\"kind\":\"text\"}` argument do?",
-          "instructions": "Open notebook 'notebooks/03_chromadb_search.ipynb' and navigate to cell '03 \u00b7 D5'. Run the cell, observe the outputs, and answer the question below.",
-          "commands": [
-            "# Refer to notebooks/03_chromadb_search.ipynb cell 03 \u00b7 D5"
-          ],
+          "module": "mod_chromadb_hybrid",
+          "title": "Q20: LLM-as-a-Judge Evaluation Methodology",
+          "instructions": "Review Step 9 (LLM-as-a-Judge) in 'src/notebooks/04-chromadb-hybrid-retrieval.ipynb'.",
+          "commands": [],
           "tracks": {
             "notebook": {
-              "path": "notebooks/03_chromadb_search.ipynb",
-              "cellTag": "D7"
+              "path": "src/notebooks/04-chromadb-hybrid-retrieval.ipynb",
+              "cellTag": "cell-09-judge"
             },
             "script": {
-              "path": "notebooks/03_chromadb_search.ipynb",
+              "path": "src/notebooks/04-chromadb-hybrid-retrieval.ipynb",
               "args": []
             }
           },
           "question": {
             "type": "mcq",
-            "prompt": "What does the `where={\"kind\":\"text\"}` argument do?",
+            "prompt": "In Step 9 (LLM-as-a-Judge), how does the evaluation judge determine whether the RAG system's generated response is correct?",
             "options": [
               {
-                "id": "opt_0",
-                "text": "Retrains the model"
+                "id": "A",
+                "text": "A) It compares character counts between prompt and response."
               },
               {
-                "id": "opt_1",
-                "text": "Applies a metadata filter"
+                "id": "B",
+                "text": "B) It evaluates semantic and factual agreement between the generated answer and the trusted reference ground truth in answer.txt, issuing a VERDICT: CORRECT or VERDICT: INCORRECT with an explanation."
               },
               {
-                "id": "opt_2",
-                "text": "Switches HNSW to IVF"
+                "id": "C",
+                "text": "C) It checks if the response contains more than 10 words."
               },
               {
-                "id": "opt_3",
-                "text": "Changes vector dimension"
+                "id": "D",
+                "text": "D) It re-runs BM25 on the query."
               }
             ],
-            "correctOptionId": "opt_1",
-            "correct_index": 1,
-            "answer": 1,
-            "explanation": "It filters eligible records via metadata.",
-            "hint": "Use where={\"kind\": \"image\"} metadata filter."
+            "correctOptionId": "B",
+            "explanation": "LLM-as-a-Judge compares the candidate answer against the trusted reference ground truth in answer.txt to grade factual correctness automatically with verifiable explanations."
           },
-          "referenceSolution": "# Correct choice: Applies a metadata filter\n# It filters eligible records via metadata."
-        },
-        {
-          "id": "D8",
-          "exerciseId": "mod_chromadb_d8",
-          "prerequisites": [
-            "D7"
-          ],
-          "module": "mod_chromadb",
-          "title": "D8: Which constructor persists local Chroma data to disk?",
-          "instructions": "Open notebook 'notebooks/03_chromadb_search.ipynb' and navigate to cell '03 \u00b7 D6'. Run the cell, observe the outputs, and answer the question below.",
-          "commands": [
-            "# Refer to notebooks/03_chromadb_search.ipynb cell 03 \u00b7 D6"
-          ],
-          "tracks": {
-            "notebook": {
-              "path": "notebooks/03_chromadb_search.ipynb",
-              "cellTag": "D8"
-            },
-            "script": {
-              "path": "notebooks/03_chromadb_search.ipynb",
-              "args": []
-            }
-          },
-          "question": {
-            "type": "mcq",
-            "prompt": "Which constructor persists local Chroma data to disk?",
-            "options": [
-              {
-                "id": "opt_0",
-                "text": "chromadb.Client(Settings(persist_directory=...))"
-              },
-              {
-                "id": "opt_1",
-                "text": "chromadb.PersistentClient(path=...)"
-              },
-              {
-                "id": "opt_2",
-                "text": "PCA(n_components=3)"
-              },
-              {
-                "id": "opt_3",
-                "text": "KMeans(n_clusters=3)"
-              }
-            ],
-            "correctOptionId": "opt_1",
-            "correct_index": 1,
-            "answer": 1,
-            "explanation": "Modern persistent local Chroma uses PersistentClient(path=...).",
-            "hint": "PersistentClient stores vectors on disk at the specified path."
-          },
-          "referenceSolution": "# Correct choice: chromadb.PersistentClient(path=...)\n# Modern persistent local Chroma uses PersistentClient(path=...)."
-        }
-      ]
-    },
-    {
-      "id": "mod_ann_indexes",
-      "title": "Module E: Approximate Nearest Neighbors (HNSW & IVF)",
-      "badge": "ANN Indexing",
-      "tasks": [
-        {
-          "id": "E1",
-          "exerciseId": "mod_ann_indexes_e1",
-          "prerequisites": [],
-          "module": "mod_ann_indexes",
-          "title": "E1: How many synthetic vectors does the index benchmark cre...",
-          "instructions": "Open notebook 'notebooks/04_ann_indexes.ipynb' and navigate to cell '04 \u00b7 E1'. Run the cell, observe the outputs, and answer the question below.",
-          "commands": [
-            "# Refer to notebooks/04_ann_indexes.ipynb cell 04 \u00b7 E1"
-          ],
-          "tracks": {
-            "notebook": {
-              "path": "notebooks/04_ann_indexes.ipynb",
-              "cellTag": "E1"
-            },
-            "script": {
-              "path": "notebooks/04_ann_indexes.ipynb",
-              "args": []
-            }
-          },
-          "question": {
-            "type": "numeric",
-            "prompt": "How many synthetic vectors does the index benchmark create?",
-            "expected": 480.0,
-            "answer": 480,
-            "absoluteTolerance": 0.0,
-            "tolerance": 0.0,
-            "relativeTolerance": 0.0,
-            "integerOnly": true,
-            "explanation": "N=480, divided across three seeded clusters.",
-            "hint": "Inspect the number of indexed vectors N in cell E1."
-          },
-          "referenceSolution": "# Calculated answer for E1 (Cell 04 \u00b7 E1): 480\n# N=480, divided across three seeded clusters."
-        },
-        {
-          "id": "E2",
-          "exerciseId": "mod_ann_indexes_e2",
-          "prerequisites": [
-            "E1"
-          ],
-          "module": "mod_ann_indexes",
-          "title": "E2: How many dimensions does each benchmark vector have?",
-          "instructions": "Open notebook 'notebooks/04_ann_indexes.ipynb' and navigate to cell '04 \u00b7 E1'. Run the cell, observe the outputs, and answer the question below.",
-          "commands": [
-            "# Refer to notebooks/04_ann_indexes.ipynb cell 04 \u00b7 E1"
-          ],
-          "tracks": {
-            "notebook": {
-              "path": "notebooks/04_ann_indexes.ipynb",
-              "cellTag": "E2"
-            },
-            "script": {
-              "path": "notebooks/04_ann_indexes.ipynb",
-              "args": []
-            }
-          },
-          "question": {
-            "type": "numeric",
-            "prompt": "How many dimensions does each benchmark vector have?",
-            "expected": 8.0,
-            "answer": 8,
-            "absoluteTolerance": 0.0,
-            "tolerance": 0.0,
-            "relativeTolerance": 0.0,
-            "integerOnly": true,
-            "explanation": "D=8.",
-            "hint": "Inspect the vector dimension D in cell E1."
-          },
-          "referenceSolution": "# Calculated answer for E2 (Cell 04 \u00b7 E1): 8\n# D=8."
-        },
-        {
-          "id": "E3",
-          "exerciseId": "mod_ann_indexes_e3",
-          "prerequisites": [
-            "E2"
-          ],
-          "module": "mod_ann_indexes",
-          "title": "E3: How many query vectors does the benchmark create?",
-          "instructions": "Open notebook 'notebooks/04_ann_indexes.ipynb' and navigate to cell '04 \u00b7 E1'. Run the cell, observe the outputs, and answer the question below.",
-          "commands": [
-            "# Refer to notebooks/04_ann_indexes.ipynb cell 04 \u00b7 E1"
-          ],
-          "tracks": {
-            "notebook": {
-              "path": "notebooks/04_ann_indexes.ipynb",
-              "cellTag": "E3"
-            },
-            "script": {
-              "path": "notebooks/04_ann_indexes.ipynb",
-              "args": []
-            }
-          },
-          "question": {
-            "type": "numeric",
-            "prompt": "How many query vectors does the benchmark create?",
-            "expected": 3.0,
-            "answer": 3,
-            "absoluteTolerance": 0.0,
-            "tolerance": 0.0,
-            "relativeTolerance": 0.0,
-            "integerOnly": true,
-            "explanation": "The code selects three records and offsets them.",
-            "hint": "Inspect the number of test queries evaluated."
-          },
-          "referenceSolution": "# Calculated answer for E3 (Cell 04 \u00b7 E1): 3\n# The code selects three records and offsets them."
-        },
-        {
-          "id": "E4",
-          "exerciseId": "mod_ann_indexes_e4",
-          "prerequisites": [
-            "E3"
-          ],
-          "module": "mod_ann_indexes",
-          "title": "E4: How many IVF lists are built in the KMeans example?",
-          "instructions": "Open notebook 'notebooks/04_ann_indexes.ipynb' and navigate to cell '04 \u00b7 E3'. Run the cell, observe the outputs, and answer the question below.",
-          "commands": [
-            "# Refer to notebooks/04_ann_indexes.ipynb cell 04 \u00b7 E3"
-          ],
-          "tracks": {
-            "notebook": {
-              "path": "notebooks/04_ann_indexes.ipynb",
-              "cellTag": "E4"
-            },
-            "script": {
-              "path": "notebooks/04_ann_indexes.ipynb",
-              "args": []
-            }
-          },
-          "question": {
-            "type": "numeric",
-            "prompt": "How many IVF lists are built in the KMeans example?",
-            "expected": 12.0,
-            "answer": 12,
-            "absoluteTolerance": 0.0,
-            "tolerance": 0.0,
-            "relativeTolerance": 0.0,
-            "integerOnly": true,
-            "explanation": "N_LISTS=12.",
-            "hint": "N_LISTS controls the number of Voronoi centroids in IVF."
-          },
-          "referenceSolution": "# Calculated answer for E4 (Cell 04 \u00b7 E3): 12\n# N_LISTS=12."
-        },
-        {
-          "id": "E5",
-          "exerciseId": "mod_ann_indexes_e5",
-          "prerequisites": [
-            "E4"
-          ],
-          "module": "mod_ann_indexes",
-          "title": "E5: In the tiny fixed IVF example, how many candidates when...",
-          "instructions": "Open notebook 'notebooks/04_ann_indexes.ipynb' and navigate to cell '04 \u00b7 E5'. Run the cell, observe the outputs, and answer the question below.",
-          "commands": [
-            "# Refer to notebooks/04_ann_indexes.ipynb cell 04 \u00b7 E5"
-          ],
-          "tracks": {
-            "notebook": {
-              "path": "notebooks/04_ann_indexes.ipynb",
-              "cellTag": "E5"
-            },
-            "script": {
-              "path": "notebooks/04_ann_indexes.ipynb",
-              "args": []
-            }
-          },
-          "question": {
-            "type": "numeric",
-            "prompt": "In the tiny fixed IVF example, how many candidates when n_probe=1?",
-            "expected": 3.0,
-            "answer": 3,
-            "absoluteTolerance": 0.0,
-            "tolerance": 0.0,
-            "relativeTolerance": 0.0,
-            "integerOnly": true,
-            "explanation": "The first centroid has points [0,1,2].",
-            "hint": "Find which records are assigned to the nearest cluster centroid."
-          },
-          "referenceSolution": "# Calculated answer for E5 (Cell 04 \u00b7 E5): 3\n# The first centroid has points [0,1,2]."
-        },
-        {
-          "id": "E6",
-          "exerciseId": "mod_ann_indexes_e6",
-          "prerequisites": [
-            "E5"
-          ],
-          "module": "mod_ann_indexes",
-          "title": "E6: In the tiny fixed IVF example, how many candidates when...",
-          "instructions": "Open notebook 'notebooks/04_ann_indexes.ipynb' and navigate to cell '04 \u00b7 E5'. Run the cell, observe the outputs, and answer the question below.",
-          "commands": [
-            "# Refer to notebooks/04_ann_indexes.ipynb cell 04 \u00b7 E5"
-          ],
-          "tracks": {
-            "notebook": {
-              "path": "notebooks/04_ann_indexes.ipynb",
-              "cellTag": "E6"
-            },
-            "script": {
-              "path": "notebooks/04_ann_indexes.ipynb",
-              "args": []
-            }
-          },
-          "question": {
-            "type": "numeric",
-            "prompt": "In the tiny fixed IVF example, how many candidates when n_probe=2?",
-            "expected": 5.0,
-            "answer": 5,
-            "absoluteTolerance": 0.0,
-            "tolerance": 0.0,
-            "relativeTolerance": 0.0,
-            "integerOnly": true,
-            "explanation": "Two closest centroids collectively own 3+2 points.",
-            "hint": "Count total candidate vectors in the 2 closest probed clusters."
-          },
-          "referenceSolution": "# Calculated answer for E6 (Cell 04 \u00b7 E5): 5\n# Two closest centroids collectively own 3+2 points."
-        },
-        {
-          "id": "E7",
-          "exerciseId": "mod_ann_indexes_e7",
-          "prerequisites": [
-            "E6"
-          ],
-          "module": "mod_ann_indexes",
-          "title": "E7: In the tiny fixed IVF example, how many candidates when...",
-          "instructions": "Open notebook 'notebooks/04_ann_indexes.ipynb' and navigate to cell '04 \u00b7 E5'. Run the cell, observe the outputs, and answer the question below.",
-          "commands": [
-            "# Refer to notebooks/04_ann_indexes.ipynb cell 04 \u00b7 E5"
-          ],
-          "tracks": {
-            "notebook": {
-              "path": "notebooks/04_ann_indexes.ipynb",
-              "cellTag": "E7"
-            },
-            "script": {
-              "path": "notebooks/04_ann_indexes.ipynb",
-              "args": []
-            }
-          },
-          "question": {
-            "type": "numeric",
-            "prompt": "In the tiny fixed IVF example, how many candidates when n_probe=3?",
-            "expected": 6.0,
-            "answer": 6,
-            "absoluteTolerance": 0.0,
-            "tolerance": 0.0,
-            "relativeTolerance": 0.0,
-            "integerOnly": true,
-            "explanation": "Every list is selected.",
-            "hint": "Probing all clusters scans every vector in the dataset."
-          },
-          "referenceSolution": "# Calculated answer for E7 (Cell 04 \u00b7 E5): 6\n# Every list is selected."
-        },
-        {
-          "id": "E8",
-          "exerciseId": "mod_ann_indexes_e8",
-          "prerequisites": [
-            "E7"
-          ],
-          "module": "mod_ann_indexes",
-          "title": "E8: Which setting controls how broadly HNSW searches at que...",
-          "instructions": "Open notebook 'notebooks/04_ann_indexes.ipynb' and navigate to cell '04 \u00b7 E2'. Run the cell, observe the outputs, and answer the question below.",
-          "commands": [
-            "# Refer to notebooks/04_ann_indexes.ipynb cell 04 \u00b7 E2"
-          ],
-          "tracks": {
-            "notebook": {
-              "path": "notebooks/04_ann_indexes.ipynb",
-              "cellTag": "E8"
-            },
-            "script": {
-              "path": "notebooks/04_ann_indexes.ipynb",
-              "args": []
-            }
-          },
-          "question": {
-            "type": "mcq",
-            "prompt": "Which setting controls how broadly HNSW searches at query time?",
-            "options": [
-              {
-                "id": "opt_0",
-                "text": "n_probe"
-              },
-              {
-                "id": "opt_1",
-                "text": "ef_search"
-              },
-              {
-                "id": "opt_2",
-                "text": "PCA components"
-              },
-              {
-                "id": "opt_3",
-                "text": "temperature"
-              }
-            ],
-            "correctOptionId": "opt_1",
-            "correct_index": 1,
-            "answer": 1,
-            "explanation": "ef_search is a query-time HNSW search-width control.",
-            "hint": "ef_search controls candidate queue size during HNSW search."
-          },
-          "referenceSolution": "# Correct choice: ef_search\n# ef_search is a query-time HNSW search-width control."
-        }
-      ]
-    },
-    {
-      "id": "mod_gemini_multimodal",
-      "title": "Module F: Gemini Multimodal Embeddings (Extension)",
-      "badge": "Multimodal Embeddings",
-      "tasks": [
-        {
-          "id": "F1",
-          "exerciseId": "mod_gemini_multimodal_f1",
-          "prerequisites": [],
-          "module": "mod_gemini_multimodal",
-          "title": "F1: Which Gemini model from the original uploaded notebooks...",
-          "instructions": "Open notebook 'notebooks/05_gemini_multimodal_optional.ipynb' and navigate to cell '05 \u00b7 F1'. Run the cell, observe the outputs, and answer the question below.",
-          "commands": [
-            "# Refer to notebooks/05_gemini_multimodal_optional.ipynb cell 05 \u00b7 F1"
-          ],
-          "tracks": {
-            "notebook": {
-              "path": "notebooks/05_gemini_multimodal_optional.ipynb",
-              "cellTag": "F1"
-            },
-            "script": {
-              "path": "notebooks/05_gemini_multimodal_optional.ipynb",
-              "args": []
-            }
-          },
-          "question": {
-            "type": "mcq",
-            "prompt": "Which Gemini model from the original uploaded notebooks is text-only?",
-            "options": [
-              {
-                "id": "opt_0",
-                "text": "gemini-embedding-001"
-              },
-              {
-                "id": "opt_1",
-                "text": "gemini-embedding-2"
-              },
-              {
-                "id": "opt_2",
-                "text": "both text-only"
-              },
-              {
-                "id": "opt_3",
-                "text": "neither"
-              }
-            ],
-            "correctOptionId": "opt_0",
-            "correct_index": 0,
-            "answer": 0,
-            "explanation": "Gemini Embedding 001 supports text input, while Embedding 2 extends to multimodal.",
-            "hint": "Compare input types accepted by Gemini Embedding 001 vs Embedding 2."
-          },
-          "referenceSolution": "# Correct choice: gemini-embedding-001\n# Gemini Embedding 001 supports text input, while Embedding 2 extends to multimodal."
-        },
-        {
-          "id": "F2",
-          "exerciseId": "mod_gemini_multimodal_f2",
-          "prerequisites": [
-            "F1"
-          ],
-          "module": "mod_gemini_multimodal",
-          "title": "F2: Which requested dimensionality does the Gemini 001 opti...",
-          "instructions": "Open notebook 'notebooks/05_gemini_multimodal_optional.ipynb' and navigate to cell '05 \u00b7 F1'. Run the cell, observe the outputs, and answer the question below.",
-          "commands": [
-            "# Refer to notebooks/05_gemini_multimodal_optional.ipynb cell 05 \u00b7 F1"
-          ],
-          "tracks": {
-            "notebook": {
-              "path": "notebooks/05_gemini_multimodal_optional.ipynb",
-              "cellTag": "F2"
-            },
-            "script": {
-              "path": "notebooks/05_gemini_multimodal_optional.ipynb",
-              "args": []
-            }
-          },
-          "question": {
-            "type": "numeric",
-            "prompt": "Which requested dimensionality does the Gemini 001 optional cell set?",
-            "expected": 768.0,
-            "answer": 768,
-            "absoluteTolerance": 0.0,
-            "tolerance": 0.0,
-            "relativeTolerance": 0.0,
-            "integerOnly": true,
-            "explanation": "The EmbedContentConfig sets output_dimensionality=768.",
-            "hint": "Gemini text embedding models output 768 dimensions by default."
-          },
-          "referenceSolution": "# Calculated answer for F2 (Cell 05 \u00b7 F1): 768\n# The EmbedContentConfig sets output_dimensionality=768."
-        },
-        {
-          "id": "F3",
-          "exerciseId": "mod_gemini_multimodal_f3",
-          "prerequisites": [
-            "F2"
-          ],
-          "module": "mod_gemini_multimodal",
-          "title": "F3: For retrieval with Gemini 001, which task types should ...",
-          "instructions": "Open notebook 'notebooks/05_gemini_multimodal_optional.ipynb' and navigate to cell '05 \u00b7 F1'. Run the cell, observe the outputs, and answer the question below.",
-          "commands": [
-            "# Refer to notebooks/05_gemini_multimodal_optional.ipynb cell 05 \u00b7 F1"
-          ],
-          "tracks": {
-            "notebook": {
-              "path": "notebooks/05_gemini_multimodal_optional.ipynb",
-              "cellTag": "F3"
-            },
-            "script": {
-              "path": "notebooks/05_gemini_multimodal_optional.ipynb",
-              "args": []
-            }
-          },
-          "question": {
-            "type": "mcq",
-            "prompt": "For retrieval with Gemini 001, which task types should you pair?",
-            "options": [
-              {
-                "id": "opt_0",
-                "text": "CLUSTERING for both"
-              },
-              {
-                "id": "opt_1",
-                "text": "RETRIEVAL_DOCUMENT and RETRIEVAL_QUERY"
-              },
-              {
-                "id": "opt_2",
-                "text": "SEMANTIC_SIMILARITY and CODE_EXECUTION"
-              },
-              {
-                "id": "opt_3",
-                "text": "No model/task choice matters"
-              }
-            ],
-            "correctOptionId": "opt_1",
-            "correct_index": 1,
-            "answer": 1,
-            "explanation": "The asymmetric document/query task pair is designed for retrieval.",
-            "hint": "Use RETRIEVAL_DOCUMENT and RETRIEVAL_QUERY task types for search."
-          },
-          "referenceSolution": "# Correct choice: RETRIEVAL_DOCUMENT and RETRIEVAL_QUERY\n# The asymmetric document/query task pair is designed for retrieval."
-        },
-        {
-          "id": "F4",
-          "exerciseId": "mod_gemini_multimodal_f4",
-          "prerequisites": [
-            "F3"
-          ],
-          "module": "mod_gemini_multimodal",
-          "title": "F4: Can you directly compare Gemini 001 vectors with Gemini...",
-          "instructions": "Open notebook 'notebooks/05_gemini_multimodal_optional.ipynb' and navigate to cell '05 \u00b7 F3'. Run the cell, observe the outputs, and answer the question below.",
-          "commands": [
-            "# Refer to notebooks/05_gemini_multimodal_optional.ipynb cell 05 \u00b7 F3"
-          ],
-          "tracks": {
-            "notebook": {
-              "path": "notebooks/05_gemini_multimodal_optional.ipynb",
-              "cellTag": "F4"
-            },
-            "script": {
-              "path": "notebooks/05_gemini_multimodal_optional.ipynb",
-              "args": []
-            }
-          },
-          "question": {
-            "type": "mcq",
-            "prompt": "Can you directly compare Gemini 001 vectors with Gemini Embedding 2 vectors?",
-            "options": [
-              {
-                "id": "opt_0",
-                "text": "Yes if both have 768 dimensions"
-              },
-              {
-                "id": "opt_1",
-                "text": "Yes after PCA"
-              },
-              {
-                "id": "opt_2",
-                "text": "No, their learned spaces are incompatible"
-              },
-              {
-                "id": "opt_3",
-                "text": "Only for cats"
-              }
-            ],
-            "correctOptionId": "opt_2",
-            "correct_index": 2,
-            "answer": 2,
-            "explanation": "Same dimensionality does not make two learned spaces compatible; re-embed on migration.",
-            "hint": "Different model families map to incompatible latent spaces."
-          },
-          "referenceSolution": "# Correct choice: No, their learned spaces are incompatible\n# Same dimensionality does not make two learned spaces compatible; re-embed on migration."
-        },
-        {
-          "id": "F5",
-          "exerciseId": "mod_gemini_multimodal_f5",
-          "prerequisites": [
-            "F4"
-          ],
-          "module": "mod_gemini_multimodal",
-          "title": "F5: Which statement about Gemini Embedding 2 is correct?",
-          "instructions": "Open notebook 'notebooks/05_gemini_multimodal_optional.ipynb' and navigate to cell '05 \u00b7 F3'. Run the cell, observe the outputs, and answer the question below.",
-          "commands": [
-            "# Refer to notebooks/05_gemini_multimodal_optional.ipynb cell 05 \u00b7 F3"
-          ],
-          "tracks": {
-            "notebook": {
-              "path": "notebooks/05_gemini_multimodal_optional.ipynb",
-              "cellTag": "F5"
-            },
-            "script": {
-              "path": "notebooks/05_gemini_multimodal_optional.ipynb",
-              "args": []
-            }
-          },
-          "question": {
-            "type": "mcq",
-            "prompt": "Which statement about Gemini Embedding 2 is correct?",
-            "options": [
-              {
-                "id": "opt_0",
-                "text": "It is text-only"
-              },
-              {
-                "id": "opt_1",
-                "text": "It always preserves audio in video files"
-              },
-              {
-                "id": "opt_2",
-                "text": "It can embed text and images in a shared learned space"
-              },
-              {
-                "id": "opt_3",
-                "text": "It is the same as PCA"
-              }
-            ],
-            "correctOptionId": "opt_2",
-            "correct_index": 2,
-            "answer": 2,
-            "explanation": "Gemini Embedding 2 is a multimodal embedding model.",
-            "hint": "Gemini Embedding 2 supports both text and image modalities."
-          },
-          "referenceSolution": "# Correct choice: It can embed text and images in a shared learned space\n# Gemini Embedding 2 is a multimodal embedding model."
-        },
-        {
-          "id": "F6",
-          "exerciseId": "mod_gemini_multimodal_f6",
-          "prerequisites": [
-            "F5"
-          ],
-          "module": "mod_gemini_multimodal",
-          "title": "F6: Which practice protects the API key?",
-          "instructions": "Open notebook 'notebooks/05_gemini_multimodal_optional.ipynb' and navigate to cell '05 \u00b7 F0'. Run the cell, observe the outputs, and answer the question below.",
-          "commands": [
-            "# Refer to notebooks/05_gemini_multimodal_optional.ipynb cell 05 \u00b7 F0"
-          ],
-          "tracks": {
-            "notebook": {
-              "path": "notebooks/05_gemini_multimodal_optional.ipynb",
-              "cellTag": "F6"
-            },
-            "script": {
-              "path": "notebooks/05_gemini_multimodal_optional.ipynb",
-              "args": []
-            }
-          },
-          "question": {
-            "type": "mcq",
-            "prompt": "Which practice protects the API key?",
-            "options": [
-              {
-                "id": "opt_0",
-                "text": "Paste it into a committed notebook"
-              },
-              {
-                "id": "opt_1",
-                "text": "Save in Colab Secrets or a local environment variable"
-              },
-              {
-                "id": "opt_2",
-                "text": "Include it in submitted screenshots"
-              },
-              {
-                "id": "opt_3",
-                "text": "Log it to show the TA"
-              }
-            ],
-            "correctOptionId": "opt_1",
-            "correct_index": 1,
-            "answer": 1,
-            "explanation": "Keys should be supplied securely and not committed or printed.",
-            "hint": "Store API keys in environment variables or secrets, never hard-coded."
-          },
-          "referenceSolution": "# Correct choice: Save in Colab Secrets or a local environment variable\n# Keys should be supplied securely and not committed or printed."
+          "solution": "Option B"
         }
       ]
     }

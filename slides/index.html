@@ -3,435 +3,597 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>RAG Studio — Foundations of RAG: Embeddings & Vector Search</title>
-  
-  <!-- Local Bundled Reveal.js CSS -->
-  <link rel="stylesheet" href="./dist/reset.css">
-  <link rel="stylesheet" href="./dist/reveal.css">
-  
-  <!-- Local Offline Plotly for 3D PCA -->
-  <script src="./vendor/plotly.min.js"></script>
-  
+  <title>RAG Studio — Slide Presentation (slide.pdf)</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+
   <style>
-  /* Base deck & typography enforcement */
-  .reveal { color: var(--ink); }
-  .reveal h1, .reveal h2, .reveal h3, .reveal h4, .reveal h5, .reveal h6 { color: var(--ink); }
-  .reveal a { color: var(--teal); }
-  /* Base deck & theme overrides */
-  *{box-sizing:border-box} :root{--ink:#182b35;--muted:#596b70;--teal:#147d7d;--red:#d86b48;--purple:#6554ae;--line:#d5dcda;--bg:#f6f5ee;--white:#fff;--soft:#eaf1ee}html,body{width:100%;height:100%;margin:0;background:var(--bg);color:var(--ink);font-family:Arial,Helvetica,sans-serif} .reveal{position:relative;width:100vw;height:100vh;overflow:hidden} .reveal .slides{position:relative;width:100%;height:100%}.reveal .slides>section{width:100%;height:100%;display:none;position:absolute;top:0;left:0;background:var(--bg);overflow:hidden}.reveal .slides>section.fallback-active{display:block}.slide-shell{width:100%;height:100%;display:flex;flex-direction:column;padding:2.6% 5.5% 2.4%}.slide-head{display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid var(--line);padding-bottom:12px;margin-bottom:19px}.eyebrow,.slide-number{font-size:17px;letter-spacing:2.5px;font-weight:700;text-transform:uppercase;color:var(--teal)}.slide-number{color:#859492}.slide-shell h2{font-size:clamp(28px,3.1vw,55px);line-height:1.09;letter-spacing:-1.6px;margin:0 0 23px;max-width:1100px}.slide-body{flex:1;min-height:0;display:flex;flex-direction:column;justify-content:center;gap:17px}.slide-foot{font-size:12px;letter-spacing:1.35px;color:#80908f;border-top:1px solid var(--line);padding-top:11px;margin-top:18px}.slide-body p{font-size:clamp(17px,1.48vw,26px);line-height:1.4;margin:0 0 9px}.slide-body h3{font-size:clamp(19px,1.75vw,30px);letter-spacing:-.4px;margin:0 0 10px}.lede{font-size:clamp(22px,2.05vw,35px)!important;line-height:1.28!important}.quiet{color:var(--muted)}.tiny{font-size:clamp(13px,1.03vw,18px)!important;color:#677774}.center{text-align:center}.hero-grid,.split{display:grid;grid-template-columns:1.05fr .95fr;align-items:center;gap:6%}.poster{background:#fff;border:1px solid #d3dcda;box-shadow:14px 16px 0 #dce9e4;padding:34px;border-radius:5px;min-height:285px}.poster-row{display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid #d5dfdb;padding:19px 0;font-weight:800;letter-spacing:1px;font-size:23px}.poster-row span{color:var(--red)}.poster-row b{font-size:18px;color:var(--teal);font-weight:500}.poster-ruler{font-size:16px;color:var(--red);padding-top:15px}.hero-call{padding:20px 24px;border-left:5px solid var(--red);font-size:clamp(20px,1.75vw,30px);line-height:1.3;background:#f9ede3;margin:22px 0}.process{display:flex;gap:12px;align-items:stretch}.step{background:white;border:1px solid var(--line);border-top:5px solid var(--teal);padding:25px 20px;flex:1;min-width:0;position:relative}.step>span{display:inline-block;font-size:15px;color:var(--red);font-weight:900;margin-bottom:14px;letter-spacing:1px}.step p{font-size:clamp(15px,1.2vw,21px)}.bottom-insight{font-size:clamp(18px,1.42vw,24px);padding:21px 25px;border-left:5px solid var(--red);background:#f8efe7;line-height:1.34}.module-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:15px}.module-tile{background:white;border:1px solid var(--line);padding:20px 23px;min-height:155px}.module-tile>span{display:inline-flex;background:#e5f1ec;color:#117777;font-size:14px;font-weight:900;min-width:35px;min-height:35px;align-items:center;justify-content:center;border-radius:50%;margin-bottom:8px}.module-tile h3{font-size:22px;margin:4px 0 7px}.module-tile p{font-size:17px;color:var(--muted)}.paper{background:white;border:1px solid #ced5d2;box-shadow:8px 8px 0 #e1e7de;padding:24px 29px;max-width:540px}.paper b{color:var(--teal)}.paper p{font-size:19px;margin:12px 0}.paper hr{border:0;border-top:1px solid #ddd}.stack-flow{display:flex;flex-direction:column;gap:14px}.pill{padding:21px 25px;border-left:6px solid var(--teal);background:white;font-size:22px}.pill.secondary{border-color:var(--red);margin-left:30px}.small-note{color:var(--muted);font-size:clamp(16px,1.16vw,21px);margin-top:10px}.control-row{display:flex;gap:20px;align-items:center}.control-row label,.live-slider{font-size:21px;font-weight:700;display:flex;flex-direction:column;gap:14px;flex:1}.control-row input,.live-slider input{width:100%;accent-color:var(--teal);height:9px;cursor:pointer}.control-row strong,.live-slider b{color:var(--red)}.stat-panel{padding:32px;border:1px solid var(--line);background:white;text-align:center}.big-num{font-size:clamp(70px,8vw,124px);font-weight:800;letter-spacing:-6px;color:var(--teal);line-height:1.08}.stat-caption{font-size:21px;color:var(--muted)}.work-note{padding:18px 21px;background:#e5f1ee;color:#225557;font-size:19px!important;border-left:5px solid var(--teal)}.comparison{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px}.comparison.two{grid-template-columns:repeat(2,minmax(0,1fr))}.metric-card{background:white;border:1px solid var(--line);padding:24px 27px;min-width:0;overflow-wrap:anywhere}.metric-card p{font-size:19px}.stamp{color:var(--red);font-size:15px;text-transform:uppercase;letter-spacing:2px;font-weight:800;margin-bottom:17px}.math-hero{font-size:clamp(27px,2.7vw,49px);line-height:1.25;font-family:Georgia,serif;letter-spacing:-1px;margin:18px 0 22px;color:#147d7d}.vector-well{background:white;border:1px solid var(--line);padding:26px 40px;box-shadow:9px 9px 0 #dceae4}.vector-well>b{display:block;font-size:20px;margin-bottom:15px}.vector-well>small{font-size:16px;color:var(--muted)}.vector-bar{height:20px;margin:10px 0;background:#eff2ee;border:1px solid #e3e7e4}.vector-bar span{display:block;background:var(--teal);height:100%}.flow-embed{display:grid;grid-template-columns:1.4fr 40px 1fr 40px 1.3fr;align-items:center;gap:10px}.input-cards,.output-cards{display:flex;flex-direction:column;gap:7px}.input-cards>div,.output-cards>div{border:1px solid var(--line);background:white;padding:10px 14px;display:flex;justify-content:space-between;align-items:center;font-size:17px}.input-cards span{font-size:10px;letter-spacing:1px;color:var(--red)}.output-cards code{font-size:15px;color:var(--teal)}.encoder-node{background:#dbeae6;border:2px solid var(--teal);padding:35px 16px;text-align:center;font-size:21px;line-height:1.3}.arrow-middle{font-size:45px;color:var(--red);text-align:center}.mono,code{font-family:Consolas,Monaco,monospace;color:var(--teal);font-size:.84em}.fill-bar{height:13px;background:#eef2ef;margin:22px 0 14px}.fill-bar i{height:100%;display:block;background:var(--teal)}.plot-box{height:480px;width:100%;border:1px solid var(--line);background:white}.mini-table{background:white;border:1px solid var(--line);width:100%;font-size:clamp(17px,1.35vw,23px);overflow:hidden}.tr{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;padding:16px 23px;border-bottom:1px solid #e7e9e4;align-items:center}.tr.header{background:#e8efed;font-weight:800;color:#1c4544}.tr:last-child{border:none}.tr:has(> :nth-child(2):last-child){grid-template-columns:repeat(2,minmax(0,1fr))}.checkpoint{display:flex;align-items:center;gap:35px;background:white;border:1px solid var(--line);padding:40px}.check-icon{width:120px;height:120px;background:#dceae6;border-radius:50%;display:grid;place-items:center;color:var(--teal);font-size:65px;font-weight:800;flex-shrink:0}.task-line{background:#f7eee6;color:#b45a38;padding:14px 20px;font-size:21px;margin-top:17px}.diagram-svg{width:100%;height:auto}.live-slider{max-width:450px}.centered-formula{text-align:center}.code-pane{background:#172d37;color:#edf9f7;border-radius:4px;padding:28px 33px;margin:0;white-space:pre-wrap;overflow-wrap:anywhere;font-size:clamp(17px,1.25vw,22px);line-height:1.62}.code-pane code{color:#e5f0eb;font-size:inherit}.hnsw-svg{width:100%;max-height:410px}.layer-line{stroke:#d2dad7;stroke-width:2;stroke-dasharray:5 8}.node-0,.node-1,.node-2,.node-3,.node-4,.node-5,.node-6,.node-7,.node-8,.node-9{fill:#d8e9e5;stroke:#147d7d;stroke-width:3}.svg-label{fill:#193843;font-size:18px;font-weight:700}.svg-note{font-size:20px;fill:#c36145}.hnsw-demo{background:white;padding:28px;border:1px solid var(--line)}.demo-path{display:flex;gap:8px;margin-bottom:25px;flex-wrap:wrap}.hop{border:1px solid #c9d8d3;padding:12px 13px;font-size:17px;color:#7c8984}.hop.active{color:#fff;background:var(--teal);border-color:var(--teal)}.action{background:var(--teal);color:white;border:0;padding:14px 23px;font-size:19px;cursor:pointer}.action:hover{background:#075e61}.ivf-map{height:360px;border:1px solid var(--line);background:radial-gradient(#e4eae6 1px,transparent 2px);background-size:26px 26px;position:relative}.cluster{position:absolute;border:3px solid #c2cfca;padding:24px 27px;border-radius:52px;background:#f2f3ef;font-size:20px;transition:.2s}.cluster.selected{border-color:var(--teal);background:#d8efeb;color:#116466;box-shadow:0 0 0 6px #e7f3ef}.qpin{position:absolute;top:38%;left:18%;font-size:30px;font-weight:900;color:var(--red)}.media-art{display:flex;align-items:center;flex-direction:column;gap:10px}.media-art img{width:75%;max-height:310px;object-fit:contain;border:8px solid white;box-shadow:9px 10px 0 #dceae4}.media-art span{font-size:17px;color:var(--muted)}.final-points{line-height:1.85!important}.endmark{font-size:clamp(55px,7vw,110px);line-height:1;font-weight:900;color:var(--teal);letter-spacing:-5px}.poster .external{font-size:19px;color:var(--red);font-weight:800}#offline-controls{position:fixed;right:22px;bottom:17px;z-index:30;display:flex;gap:9px;opacity:.85}#offline-controls button{background:#122c33;border:0;color:white;border-radius:40px;width:40px;height:40px;font-size:20px;cursor:pointer}body.reveal-ready #offline-controls{display:none}.reveal-ready .reveal .slides>section{display:block}
-@media(max-width:900px){.slide-shell{padding:3% 4% 2%}.slide-body p{font-size:18px}.module-tile{padding:12px;min-height:120px}.module-tile h3{font-size:17px}.module-tile p{font-size:14px}.metric-card{padding:13px}.metric-card p{font-size:15px}.step{padding:15px 11px}.input-cards>div,.output-cards>div{font-size:12px}.output-cards code{font-size:10px}.plot-box{height:350px}.slide-shell h2{margin-bottom:12px}}
+    :root {
+      --bg: #090d16;
+      --card-bg: #111827;
+      --border: #1f2937;
+      --text-main: #f3f4f6;
+      --text-muted: #9ca3af;
+      --accent-blue: #38bdf8;
+      --accent-emerald: #10b981;
+      --accent-rose: #f43f5e;
+      --header-h: 48px;
+    }
 
-.interview-ribbon{display:grid;grid-template-columns:minmax(0,1fr) 200px;gap:24px;align-items:center;background:#ebf2ee;border-left:4px solid #d86b48;padding:10px 18px;margin-top:11px;min-height:68px;flex-shrink:0}
-.interview-prompt{min-width:0}.interview-prompt span,.interview-source span{display:block;color:#677d7c;font-size:10px;font-weight:900;letter-spacing:1.5px;margin-bottom:4px}
-.interview-prompt strong{display:block;font-size:clamp(15px,1.2vw,20px);line-height:1.25;font-weight:750;color:#223e43}
-.interview-source{border-left:1px solid #cbded6;padding-left:20px;min-width:0}.interview-source a{color:#126c6c;text-decoration:underline;text-underline-offset:3px;font-size:15px;font-weight:700}
-.plot-box{height:395px}.slide-body{gap:12px}.slide-shell h2{margin-bottom:16px}.slide-head{margin-bottom:13px;padding-bottom:8px}
-@media(max-width:900px){.interview-ribbon{grid-template-columns:1fr 150px;gap:10px;padding:8px}.interview-prompt strong{font-size:14px}.interview-source a{font-size:12px}.interview-prompt span,.interview-source span{font-size:9px}}
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
 
-  
-  /* Studio Universal Sticky Header Integration */
-  :root {
-    --header-height: 48px;
-    --brand-blue: #0284c7;
-    --brand-indigo: #4f46e5;
-  }
-  
-  body {
-    margin: 0;
-    padding: 0;
-    overflow: hidden;
-    background: #0f172a;
-    color: #e2e8f0;
-    display: flex;
-    flex-direction: column;
-    height: 100vh;
-    width: 100vw;
-  }
-  
-  .deck-header {
-    height: var(--header-height);
-    background: rgba(15, 23, 42, 0.95);
-    border-bottom: 1px solid rgba(51, 65, 85, 0.8);
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 0 16px;
-    z-index: 1000;
-    flex-shrink: 0;
-    backdrop-filter: blur(8px);
-    user-select: none;
-  }
-  
-  .deck-branding {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-  }
-  
-  .hub-logo {
-    font-size: 13px;
-    font-weight: 800;
-    letter-spacing: 0.5px;
-    color: #38bdf8;
-    text-transform: uppercase;
-  }
-  
-  .hub-badge {
-    font-size: 10px;
-    font-weight: 600;
-    padding: 2px 6px;
-    border-radius: 9999px;
-    background: rgba(2, 132, 199, 0.15);
-    color: #38bdf8;
-    border: 1px solid rgba(2, 132, 199, 0.3);
-  }
-  
-  .deck-title-center {
-    font-size: 12px;
-    font-weight: 500;
-    color: #94a3b8;
-    max-width: 50%;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    text-align: center;
-  }
-  
-  .deck-header-actions {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-  }
-  
-  .deck-navigation {
-    display: flex;
-    align-items: center;
-    background: #1e293b;
-    border: 1px solid #334155;
-    border-radius: 6px;
-    padding: 2px;
-    gap: 2px;
-  }
-  
-  .deck-nav-btn {
-    background: transparent;
-    border: none;
-    color: #cbd5e1;
-    font-size: 11px;
-    font-weight: 600;
-    padding: 4px 10px;
-    border-radius: 4px;
-    cursor: pointer;
-    transition: all 0.15s ease;
-    display: inline-flex;
-    align-items: center;
-    gap: 4px;
-  }
-  
-  .deck-nav-btn:hover:not(:disabled) {
-    background: #334155;
-    color: #f8fafc;
-  }
-  
-  .deck-nav-btn:disabled {
-    opacity: 0.4;
-    cursor: not-allowed;
-  }
-  
-  .deck-slide-indicator {
-    font-size: 11px;
-    font-weight: 600;
-    color: #94a3b8;
-    padding: 0 8px;
-    min-width: 80px;
-    text-align: center;
-    font-variant-numeric: tabular-nums;
-  }
-  
-  .deck-tool-btn {
-    background: #1e293b;
-    border: 1px solid #334155;
-    color: #e2e8f0;
-    border-radius: 6px;
-    padding: 5px 10px;
-  }
-  
-  .deck-tool-btn.active {
-    background: rgba(244, 63, 94, 0.15);
-    border-color: #f43f5e;
-    color: #f43f5e;
-  }
-  
-  .deck-close-btn {
-    background: #991b1b;
-    border: 1px solid #dc2626;
-    color: #fef2f2;
-    border-radius: 6px;
-    padding: 5px 12px;
-    font-weight: 700;
-  }
-  
-  .deck-close-btn:hover {
-    background: #b91c1c;
-  }
-  
-  .hidden {
-    display: none !important;
-  }
-  
-  /* Reveal container fills remaining height */
-  .reveal-wrapper {
-    flex: 1;
-    min-height: 0;
-    position: relative;
-    width: 100%;
-    background: var(--bg);
-  }
-  
-  .reveal {
-    width: 100% !important;
-    height: 100% !important;
-  }
-  
-  .reveal .slides {
-    text-align: left;
-  }
-  
-  .reveal .slides > section {
-    padding: 0 !important;
-  }
-  
-  /* Ensure interview ribbon links are clickable and contrast well */
-  .interview-ribbon {
-    border-top: 1px solid #d5dcda;
-    background: #fbf9f4;
-  }
-  
-  .interview-source a {
-    color: var(--teal) !important;
-    text-decoration: underline !important;
-    font-weight: 700 !important;
-  }
+    html, body {
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      background-color: var(--bg);
+      color: var(--text-main);
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      display: flex;
+      flex-direction: column;
+      user-select: none;
+    }
+
+    /* Top Sticky Control Header */
+    .slide-deck-header {
+      height: var(--header-h);
+      background: rgba(17, 24, 39, 0.96);
+      backdrop-filter: blur(8px);
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 16px;
+      z-index: 100;
+      flex-shrink: 0;
+    }
+
+    .header-left {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .brand-title {
+      font-weight: 700;
+      font-size: 13.5px;
+      letter-spacing: 0.5px;
+      color: var(--text-main);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .brand-title span {
+      background: linear-gradient(135deg, #38bdf8, #818cf8);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .badge-pill {
+      font-size: 11px;
+      padding: 2px 7px;
+      border-radius: 9999px;
+      background: rgba(56, 189, 248, 0.15);
+      border: 1px solid rgba(56, 189, 248, 0.35);
+      color: var(--accent-blue);
+      font-weight: 600;
+      text-decoration: none;
+    }
+
+    .header-center {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 13px;
+      color: var(--text-muted);
+      max-width: 45%;
+      overflow: hidden;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+    }
+
+    .slide-current-title {
+      font-weight: 600;
+      color: #e2e8f0;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .header-right {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .nav-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      background: #1f2937;
+      color: #f3f4f6;
+      border: 1px solid #374151;
+      border-radius: 6px;
+      padding: 5px 11px;
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+
+    .nav-btn:hover:not(:disabled) {
+      background: #374151;
+      border-color: #4b5563;
+      color: #fff;
+    }
+
+    .nav-btn:disabled {
+      opacity: 0.4;
+      cursor: not-allowed;
+    }
+
+    .slide-counter {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 12px;
+      color: #94a3b8;
+      min-width: 86px;
+      text-align: center;
+      font-weight: 600;
+    }
+
+    .laser-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      background: #1f2937;
+      color: #e2e8f0;
+      border: 1px solid #374151;
+      border-radius: 6px;
+      padding: 5px 10px;
+      font-size: 12px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+
+    .laser-btn.active {
+      background: rgba(244, 63, 94, 0.2);
+      border-color: var(--accent-rose);
+      color: #fda4af;
+    }
+
+    .laser-dot-icon {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--accent-rose);
+      display: inline-block;
+    }
+
+    .close-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      background: rgba(244, 63, 94, 0.15);
+      border: 1px solid rgba(244, 63, 94, 0.4);
+      color: #fda4af;
+      border-radius: 6px;
+      padding: 5px 12px;
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+
+    .close-btn:hover {
+      background: rgba(244, 63, 94, 0.25);
+    }
+
+    .close-btn.hidden {
+      display: none;
+    }
+
+    /* Presentation Viewport */
+    .viewport {
+      flex: 1;
+      min-height: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      background: radial-gradient(circle at center, #111827 0%, #090d16 100%);
+      padding: 16px;
+      overflow: hidden;
+    }
+
+    /* Slide Stage */
+    .slide-stage {
+      width: 100%;
+      height: 100%;
+      max-width: 1600px;
+      max-height: 900px;
+      aspect-ratio: 16 / 9;
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 8px;
+      box-shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.7), 0 0 0 1px rgba(255, 255, 255, 0.08);
+      background: #000;
+      overflow: hidden;
+    }
+
+    .slide-item {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity 0.25s ease-in-out;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: #000;
+    }
+
+    .slide-item.active {
+      opacity: 1;
+      visibility: visible;
+      z-index: 10;
+    }
+
+    .slide-item img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      display: block;
+      pointer-events: none;
+    }
+
+    /* Embedded PDF Frame View */
+    .pdf-frame-container {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: #1e293b;
+      display: none;
+      z-index: 20;
+    }
+
+    .pdf-frame-container.active {
+      display: block;
+    }
+
+    .pdf-frame-container iframe {
+      width: 100%;
+      height: 100%;
+      border: 0;
+    }
+
+    /* Laser Pointer Simulation */
+    #laser-pointer {
+      position: fixed;
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(255, 50, 80, 1) 0%, rgba(255, 0, 40, 0.7) 40%, rgba(255, 0, 0, 0) 80%);
+      box-shadow: 0 0 12px 3px rgba(255, 20, 50, 0.9);
+      pointer-events: none;
+      transform: translate(-50%, -50%);
+      z-index: 9999;
+      display: none;
+      mix-blend-mode: screen;
+    }
+
+    /* Bottom Quick Action Bar */
+    .quick-bar {
+      position: absolute;
+      bottom: 24px;
+      background: rgba(17, 24, 39, 0.85);
+      backdrop-filter: blur(8px);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      border-radius: 30px;
+      padding: 6px 14px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      z-index: 30;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
+    }
+
+    .quick-dot {
+      width: 9px;
+      height: 9px;
+      border-radius: 50%;
+      background: #4b5563;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .quick-dot.active {
+      background: var(--accent-blue);
+      transform: scale(1.3);
+      box-shadow: 0 0 8px rgba(56, 189, 248, 0.6);
+    }
+
+    .quick-btn {
+      background: transparent;
+      border: 0;
+      color: #94a3b8;
+      font-size: 11px;
+      font-weight: 600;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      padding: 2px 6px;
+      border-radius: 4px;
+      transition: color 0.15s;
+    }
+
+    .quick-btn:hover {
+      color: #fff;
+    }
+
+    .quick-btn a {
+      color: inherit;
+      text-decoration: none;
+    }
   </style>
 </head>
 <body>
 
-  <!-- Top Sticky Header -->
-  <header class="deck-header" role="banner">
-    <div class="deck-branding">
-      <span class="hub-logo">RAG Studio</span>
-      <span class="hub-badge">Universal Hub</span>
+  <!-- Top Sticky Presentation Controls -->
+  <header class="slide-deck-header" id="slide-header">
+    <div class="header-left">
+      <div class="brand-title">
+        <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="#38bdf8" stroke-width="2"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon></svg>
+        <span>RAG Studio</span>
+      </div>
+      <span class="badge-pill">Slide Deck (PDF)</span>
     </div>
-    <div id="deck-title-center" class="deck-title-center" aria-live="polite">
-      01 · BEGIN — From a Markdown file to the right answer
+
+    <div class="header-center">
+      <span class="slide-current-title" id="slide-title">1. RAG Architecture: Ingestion & Retrieval Phases</span>
     </div>
-    <div class="deck-header-actions">
-      <nav class="deck-navigation" tabindex="0" aria-label="Deck Navigation" role="navigation">
-        <button id="btn-slide-prev" class="deck-nav-btn" aria-label="Previous Slide">Prev</button>
-        <span id="deck-slide-indicator" class="deck-slide-indicator" aria-live="polite">Slide 1 of 43</span>
-        <button id="btn-slide-next" class="deck-nav-btn" aria-label="Next Slide">Next</button>
-      </nav>
-      <button id="btn-slide-laser" class="deck-nav-btn deck-tool-btn" title="Toggle Laser Pointer">
-        <svg viewBox="0 0 24 24" width="14" height="14" fill="#f43f5e" stroke="none" style="vertical-align: middle; margin-right: 4px;"><circle cx="12" cy="12" r="6"></circle></svg><span>Laser</span>
+
+    <div class="header-right">
+      <button class="nav-btn" id="btn-prev" title="Previous Slide (← / Up / PgUp)" disabled>
+        <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"></polyline></svg>
+        <span>Prev</span>
       </button>
-      <button id="btn-slide-close" class="deck-nav-btn deck-close-btn hidden" title="Exit Fullscreen Presentation (Esc)">
-        <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align: middle; margin-right: 4px;"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+
+      <span class="slide-counter" id="slide-counter">Slide 1 of 3</span>
+
+      <button class="nav-btn" id="btn-next" title="Next Slide (→ / Down / Space / PgDn)">
+        <span>Next</span>
+        <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"></polyline></svg>
+      </button>
+
+      <button class="laser-btn" id="btn-laser" title="Toggle Laser Pointer">
+        <span class="laser-dot-icon"></span>
+        <span>Laser</span>
+      </button>
+
+      <button class="nav-btn" id="btn-toggle-view" title="Toggle Raw PDF / Slide Mode">
+        <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
+        <span id="btn-toggle-view-text">PDF View</span>
+      </button>
+
+      <button class="close-btn hidden" id="btn-close" title="Close Focus View (Esc)">
+        <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
         <span>Close (Esc)</span>
       </button>
     </div>
   </header>
 
-  <!-- Reveal.js Presentation Deck -->
-  <div class="reveal-wrapper">
-    <div class="reveal">
-      <div class="slides">
-<section data-slide="1" id="slide_01" data-slide-id="slide_01"><div class="slide-shell"><div class="slide-head"><span class="eyebrow">01 · BEGIN</span><span class="slide-number">01 / 43</span></div><h2>From a Markdown file to the right answer</h2><div class="slide-body"><div class="hero-grid"><div><p class="lede">Embeddings are not magic coordinates. They are <strong>learned representations</strong> that make certain kinds of similarity measurable.</p><div class="hero-call">How does a system know “kitten” may be closer to “cat” than “car”?</div><p class="quiet">Visual theory → edit a notebook → measure output → answer MCQ/NAT.</p></div><div class="poster"><div class="poster-row">CAT <span>→</span> <b>[0.95, 0.08, …]</b></div><div class="poster-row">DOG <span>→</span> <b>[0.85, 0.20, …]</b></div><div class="poster-row">CAR <span>→</span> <b>[0.04, 0.07, …]</b></div><div class="poster-ruler">→ distance / ranking / retrieval</div></div></div></div><div class="interview-ribbon"><div class="interview-prompt"><span>INTERVIEW · THINK BEFORE REVEALING THE NEXT SLIDE</span><strong>If a search engine understands “kitten”, why does it still sometimes retrieve “car”?</strong></div><div class="interview-source"><span>OFFICIAL READING</span><a href="https://ai.google.dev/gemini-api/docs/embeddings" target="_blank" rel="noopener noreferrer">Gemini embeddings ↗</a></div></div></div></section>
-<section data-slide="2" id="slide_02" data-slide-id="slide_02"><div class="slide-shell"><div class="slide-head"><span class="eyebrow">01 · THE BIG IDEA</span><span class="slide-number">02 / 43</span></div><h2>Retrieval begins before any model call</h2><div class="slide-body"><div class="process five"><div class="step"><span>01</span><h3>Source</h3><p>Markdown, PDFs, images, video</p></div><div class="step"><span>02</span><h3>Chunk</h3><p>Split while keeping source IDs</p></div><div class="step"><span>03</span><h3>Embed</h3><p>Transform each chunk into a vector</p></div><div class="step"><span>04</span><h3>Index</h3><p>Organize vectors for fast lookup</p></div><div class="step"><span>05</span><h3>Search</h3><p>Rank candidate chunks</p></div></div><div class="bottom-insight">Embedding ≠ chunking ≠ vector search ≠ answering. Every stage can fail independently.</div></div><div class="interview-ribbon"><div class="interview-prompt"><span>INTERVIEW · THINK BEFORE REVEALING THE NEXT SLIDE</span><strong>A perfect embedding model, but terrible chunking: can retrieval still fail?</strong></div><div class="interview-source"><span>OFFICIAL READING</span><a href="https://docs.llamaindex.ai/en/stable/" target="_blank" rel="noopener noreferrer">LlamaIndex concepts ↗</a></div></div></div></section>
-<section data-slide="3" id="slide_03" data-slide-id="slide_03"><div class="slide-shell"><div class="slide-head"><span class="eyebrow">01 · LEARNING PATH</span><span class="slide-number">03 / 43</span></div><h2>Six labs. One continuous project.</h2><div class="slide-body"><div class="module-grid"><div class="module-tile"><span>A</span><h3>Markdown chunks</h3><p>Count, windows, overlap</p></div><div class="module-tile"><span>B</span><h3>Similarity metrics</h3><p>Cosine · dot · squared L2</p></div><div class="module-tile"><span>C</span><h3>3D PCA</h3><p>Toy space + real embeddings</p></div><div class="module-tile"><span>D</span><h3>ChromaDB</h3><p>Store, filter, persist, query</p></div><div class="module-tile"><span>E</span><h3>Indexes</h3><p>HNSW · IVF · recall@k</p></div><div class="module-tile"><span>F</span><h3>Gemini extension</h3><p>Real text + multimodal (optional)</p></div></div><p class="quiet center">Open <code>index.html</code> in the parent folder to see quiz gates and notebook links.</p></div><div class="interview-ribbon"><div class="interview-prompt"><span>INTERVIEW · THINK BEFORE REVEALING THE NEXT SLIDE</span><strong>Which of these six labs would expose a metric-vs-index misunderstanding?</strong></div><div class="interview-source"><span>OFFICIAL READING</span><a href="https://revealjs.com/" target="_blank" rel="noopener noreferrer">Reveal.js official ↗</a></div></div></div></section>
-<section data-slide="4" id="slide_04" data-slide-id="slide_04"><div class="slide-shell"><div class="slide-head"><span class="eyebrow">02 · CHUNKING</span><span class="slide-number">04 / 43</span></div><h2>A document is rarely one useful retrieval unit</h2><div class="slide-body"><div class="split"><div class="paper"><b>field_notes.md</b><hr><p>## Chunking</p><p>A word window cuts the document into segments…</p><p>Too-small chunks can lose connections…</p><p>## Embeddings</p><p>An embedding model maps a chunk…</p><p>For retrieval use compatible query and doc…</p></div><div class="stack-flow"><div class="pill">Chunk 0 · words 0–39</div><div class="pill secondary">Chunk 1 · words 30–69</div><div class="pill">Chunk 2 · words 60–99</div><div class="small-note">10-word overlap repeats context between windows.</div></div></div></div><div class="interview-ribbon"><div class="interview-prompt"><span>INTERVIEW · THINK BEFORE REVEALING THE NEXT SLIDE</span><strong>Would embedding the entire textbook as ONE vector improve or harm precise lookup?</strong></div><div class="interview-source"><span>OFFICIAL READING</span><a href="https://docs.langchain.com/oss/python/integrations/splitters/index" target="_blank" rel="noopener noreferrer">LangChain text splitters ↗</a></div></div></div></section>
-<section data-slide="5" id="slide_05" data-slide-id="slide_05"><div class="slide-shell"><div class="slide-head"><span class="eyebrow">02 · CHUNKING INTERACTIVE</span><span class="slide-number">05 / 43</span></div><h2>Tune the chunk size. Watch the count.</h2><div class="slide-body"><div class="split"><div><div class="control-row"><label>Chunk size <strong id="chunk-size-out">40</strong> words<input id="chunk-size" type="range" min="20" max="80" value="40" step="10"/></label><label>Overlap <strong id="chunk-overlap-out">10</strong> words<input id="chunk-overlap" type="range" min="0" max="15" value="10" step="5"/></label></div><p class="quiet">Our file has <b>281 whitespace-separated words.</b> The count is deterministic for this simple splitter.</p></div><div class="stat-panel"><div class="big-num" id="chunk-count-out">10</div><div class="stat-caption">chunks</div><div class="small-note" id="chunk-stride-out">stride = 30 words</div></div></div><p class="work-note">Lab 00: change CHUNK_WORDS and OVERLAP_WORDS, rerun, and enter the measured values into the NAT quiz.</p></div><div class="interview-ribbon"><div class="interview-prompt"><span>INTERVIEW · THINK BEFORE REVEALING THE NEXT SLIDE</span><strong>Why can raising overlap improve context yet decrease efficiency?</strong></div><div class="interview-source"><span>OFFICIAL READING</span><a href="https://docs.langchain.com/oss/python/integrations/splitters/index" target="_blank" rel="noopener noreferrer">LangChain text splitters ↗</a></div></div></div></section>
-<section data-slide="6" id="slide_06" data-slide-id="slide_06"><div class="slide-shell"><div class="slide-head"><span class="eyebrow">02 · CHUNKING</span><span class="slide-number">06 / 43</span></div><h2>Overlapping windows have a trade-off</h2><div class="slide-body"><div class="comparison"><div class="metric-card"><div class="stamp">Too small</div><h3>Fragmented evidence</h3><p>“The dose is …” and “… 20 mg” may land in different chunks.</p></div><div class="metric-card"><div class="stamp">Too large</div><h3>Mixed subjects</h3><p>One vector represents many unrelated ideas; useful detail becomes less discriminative.</p></div><div class="metric-card"><div class="stamp">With overlap</div><h3>Repeated evidence</h3><p>Helps preserve boundaries but increases indexing work and duplicates.</p></div></div><div class="bottom-insight">No universal chunk size. Evaluate retrieval quality against your real tasks.</div></div><div class="interview-ribbon"><div class="interview-prompt"><span>INTERVIEW · THINK BEFORE REVEALING THE NEXT SLIDE</span><strong>Can two chunks with 90% overlapping text crowd out other useful evidence?</strong></div><div class="interview-source"><span>OFFICIAL READING</span><a href="https://docs.langchain.com/oss/python/integrations/splitters/index" target="_blank" rel="noopener noreferrer">LangChain text splitters ↗</a></div></div></div></section>
-<section data-slide="7" id="slide_07" data-slide-id="slide_07"><div class="slide-shell"><div class="slide-head"><span class="eyebrow">03 · REPRESENTATION</span><span class="slide-number">07 / 43</span></div><h2>An embedding is a point in an n-dimensional space</h2><div class="slide-body"><div class="split"><div><p class="lede">A vector is an ordered list of numbers:</p><div class="math-hero">e(x) = [v₁, v₂, …, v<sub>d</sub>]</div><p>The model learns how to place content so proximity is useful for its training objective.</p><p class="quiet">Example: MiniLM often produces 384D; Gemini Embedding 001 supports a default 3072D or selected smaller sizes.</p></div><div class="vector-well"><b>Illustrative 6D vector</b><div class="vector-bar"><span style="width:95%"></span></div><div class="vector-bar"><span style="width:8%"></span></div><div class="vector-bar"><span style="width:6%"></span></div><div class="vector-bar"><span style="width:5%"></span></div><div class="vector-bar"><span style="width:2%"></span></div><div class="vector-bar"><span style="width:2%"></span></div><small>Dimension values are not human-readable labels.</small></div></div></div><div class="interview-ribbon"><div class="interview-prompt"><span>INTERVIEW · THINK BEFORE REVEALING THE NEXT SLIDE</span><strong>Why does “cat” become hundreds of strange decimals instead of one simple label?</strong></div><div class="interview-source"><span>OFFICIAL READING</span><a href="https://ai.google.dev/gemini-api/docs/embeddings" target="_blank" rel="noopener noreferrer">Gemini embeddings ↗</a></div></div></div></section>
-<section data-slide="8" id="slide_08" data-slide-id="slide_08"><div class="slide-shell"><div class="slide-head"><span class="eyebrow">03 · INTERVIEW DEEP DIVE</span><span class="slide-number">08 / 43</span></div>
-<h2>Why not simply store “cat = 1, dog = 2”?</h2>
-<div class="slide-body">
-<div class="comparison two"><div class="metric-card"><div class="stamp">Hand-made single label</div><h3>cat → 1 &nbsp; dog → 2 &nbsp; car → 3</h3><p>Numeric gaps here are <strong>arbitrary</strong>: car may be as near to dog as dog is to cat, despite no learned meaning.</p><p class="quiet">One scalar also struggles to represent several relationships at once.</p></div>
-<div class="metric-card"><div class="stamp">Learned representation</div><h3>cat → [0.18, −0.44, …]</h3><p>Training makes <strong>many continuous coordinates</strong> jointly encode features useful to the objective: meaning, usage, structure and context.</p><p class="quiet">No single axis has to mean “catness”. The *whole pattern* matters.</p></div></div>
-<div class="bottom-insight">Dimensionality is a capacity / efficiency choice, not a magic quality score. Test a model and its dimension on real retrieval questions.</div>
-</div><div class="interview-ribbon"><div class="interview-prompt"><span>INTERVIEW · THINK BEFORE REVEALING THE NEXT SLIDE</span><strong>Why not encode “cat = 1”, “dog = 2” and calculate numerical distance?</strong></div><div class="interview-source"><span>OFFICIAL READING</span><a href="https://ai.google.dev/gemini-api/docs/embeddings" target="_blank" rel="noopener noreferrer">Gemini embeddings ↗</a></div></div></div></section>
-<section data-slide="9" id="slide_09" data-slide-id="slide_09"><div class="slide-shell"><div class="slide-head"><span class="eyebrow">03 · INPUTS</span><span class="slide-number">09 / 43</span></div><h2>What the original sketch is really asking</h2><div class="slide-body"><div class="flow-embed"><div class="input-cards"><div>“Cat” <span>TEXT</span></div><div>“Dog” <span>TEXT</span></div><div>“The cat is on the table.” <span>TEXT</span></div><div>🐈 Illustration <span>IMAGE</span></div><div>▶ Cat jumping clip <span>VIDEO</span></div></div><div class="arrow-middle">→</div><div class="encoder-node">Compatible<br><strong>multimodal</strong><br>embedding model</div><div class="arrow-middle">→</div><div class="output-cards"><div><b>Cat</b><code>[0.95, 0.08, …]</code></div><div><b>Dog</b><code>[0.85, 0.20, …]</code></div><div><b>Cat on table</b><code>[0.92, 0.07, …]</code></div><div><b>Cat image</b><code>[0.93, 0.08, …]</code></div><div><b>Cat video</b><code>[0.89, 0.11, …]</code></div></div></div><p class="tiny">All numeric values shown are intentionally authored TOY vectors. Real aligned multimedia embeddings require an actual multimodal model.</p></div><div class="interview-ribbon"><div class="interview-prompt"><span>INTERVIEW · THINK BEFORE REVEALING THE NEXT SLIDE</span><strong>How can one embedding space represent a cat photo and the sentence “a cat”?</strong></div><div class="interview-source"><span>OFFICIAL READING</span><a href="https://ai.google.dev/gemini-api/docs/models/gemini-embedding-2" target="_blank" rel="noopener noreferrer">Gemini Embedding 2 ↗</a></div></div></div></section>
-<section data-slide="10" id="slide_10" data-slide-id="slide_10"><div class="slide-shell"><div class="slide-head"><span class="eyebrow">03 · INPUTS</span><span class="slide-number">10 / 43</span></div><h2>Text-only and multimodal encoders are different</h2><div class="slide-body"><div class="comparison two"><div class="metric-card"><div class="stamp">Text-only encoder</div><h3>Gemini Embedding 001</h3><p>Text → vector. Do not feed it raw audio, images or video as though that is supported.</p><p class="mono">“a cat” → [ … 768 values … ]</p></div><div class="metric-card"><div class="stamp">Multimodal encoder</div><h3>Gemini Embedding 2</h3><p>Text / image / audio / video / PDF → vectors in a trained shared embedding space.</p><p class="mono">Image(cat) ↔ Text(“cat”)</p></div></div><div class="bottom-insight">Different model families have incompatible embedding spaces, even if dimensions match.</div></div><div class="interview-ribbon"><div class="interview-prompt"><span>INTERVIEW · THINK BEFORE REVEALING THE NEXT SLIDE</span><strong>If two models both output 768 numbers, can we mix their vectors?</strong></div><div class="interview-source"><span>OFFICIAL READING</span><a href="https://ai.google.dev/gemini-api/docs/embeddings" target="_blank" rel="noopener noreferrer">Gemini embeddings ↗</a></div></div></div></section>
-<section data-slide="11" id="slide_11" data-slide-id="slide_11"><div class="slide-shell"><div class="slide-head"><span class="eyebrow">03 · EMBEDDINGS</span><span class="slide-number">11 / 43</span></div><h2>The toy vectors explain geometry, not model quality</h2><div class="slide-body"><div class="split"><div><p class="lede">We hand-set ten 6D vectors for predictable, repeatable calculations.</p><p>Cat, dog, cat sentence, cat image and cat video intentionally cluster.</p><p>This is ideal for teaching <b>math</b>, but not a valid benchmark of semantic understanding.</p></div><div class="metric-card"><h3>Two separate experiments</h3><p><b>Core:</b> authored vectors, no downloads.</p><p><b>Optional:</b> MiniLM or Gemini produces learned real vectors; results and rankings can differ.</p></div></div></div><div class="interview-ribbon"><div class="interview-prompt"><span>INTERVIEW · THINK BEFORE REVEALING THE NEXT SLIDE</span><strong>How do you tell a hand-crafted illustration from a trained embedding model?</strong></div><div class="interview-source"><span>OFFICIAL READING</span><a href="https://huggingface.co/sentence-transformers/all-MiniLM-L6-v2" target="_blank" rel="noopener noreferrer">MiniLM model card ↗</a></div></div></div></section>
-<section data-slide="12" id="slide_12" data-slide-id="slide_12"><div class="slide-shell"><div class="slide-head"><span class="eyebrow">03 · DIMENSION</span><span class="slide-number">12 / 43</span></div><h2>Why do embedding sizes matter?</h2><div class="slide-body"><div class="comparison"><div class="metric-card"><h3>6D</h3><p>Toy classroom geometry</p><div class="fill-bar"><i style="width:5%"></i></div><span class="quiet">Simple calculations</span></div><div class="metric-card"><h3>384D</h3><p>all-MiniLM-L6-v2</p><div class="fill-bar"><i style="width:12%"></i></div><span class="quiet">Small text vectors</span></div><div class="metric-card"><h3>3072D</h3><p>Gemini embedding default</p><div class="fill-bar"><i style="width:100%"></i></div><span class="quiet">Larger storage/query work</span></div></div><div class="bottom-insight">Raw float32 storage: N × dimensions × 4 bytes, before indexing and metadata overhead.</div></div><div class="interview-ribbon"><div class="interview-prompt"><span>INTERVIEW · THINK BEFORE REVEALING THE NEXT SLIDE</span><strong>Does 3072D always retrieve better than 384D? What should you measure?</strong></div><div class="interview-source"><span>OFFICIAL READING</span><a href="https://ai.google.dev/gemini-api/docs/embeddings" target="_blank" rel="noopener noreferrer">Gemini embeddings ↗</a></div></div></div></section>
-<section data-slide="13" id="slide_13" data-slide-id="slide_13"><div class="slide-shell"><div class="slide-head"><span class="eyebrow">03 · PCA</span><span class="slide-number">13 / 43</span></div><h2>How do we show a 6D or 768D cloud?</h2><div class="slide-body"><div class="split"><div><div class="math-hero">Xₙ×d → PCA → Zₙ×3</div><p>PCA rotates the centered data toward directions of maximum variance, then keeps only three axes.</p><p>Three coordinates now represent each record <b>for visualization</b>.</p></div><div class="metric-card"><h3>What PCA does <em>not</em> do</h3><p>It does not decode the meaning of each model dimension.</p><p>It does not guarantee all pairwise distances are preserved.</p><p>It does not train a new multimodal model.</p></div></div></div><div class="interview-ribbon"><div class="interview-prompt"><span>INTERVIEW · THINK BEFORE REVEALING THE NEXT SLIDE</span><strong>If PCA compresses 768D to 3D, where does the discarded information go?</strong></div><div class="interview-source"><span>OFFICIAL READING</span><a href="https://scikit-learn.org/stable/modules/generated/sklearn.decomposition.PCA.html" target="_blank" rel="noopener noreferrer">scikit-learn PCA ↗</a></div></div></div></section>
-<section data-slide="14" id="slide_14" data-slide-id="slide_14"><div class="slide-shell"><div class="slide-head"><span class="eyebrow">03 · PCA · LIVE</span><span class="slide-number">14 / 43</span></div><h2>Explore the original sketch in a real 3D scatter</h2><div class="slide-body"><div id="pca-plot" class="plot-box" aria-label="Interactive 3D PCA plot"></div><p class="tiny">Rotate and hover to inspect Cat / Dog / Cat sentence / Cat image / Cat video. Projection derived from the exact toy_vectors.json in Lab 02. 3D axes are PC1, PC2, PC3, not “animal”, “image”, “video”.</p></div><div class="interview-ribbon"><div class="interview-prompt"><span>INTERVIEW · THINK BEFORE REVEALING THE NEXT SLIDE</span><strong>Two points look close in 3D. Does this prove they are close in original 768D?</strong></div><div class="interview-source"><span>OFFICIAL READING</span><a href="https://scikit-learn.org/stable/modules/generated/sklearn.decomposition.PCA.html" target="_blank" rel="noopener noreferrer">scikit-learn PCA ↗</a></div></div></div></section>
-<section data-slide="15" id="slide_15" data-slide-id="slide_15"><div class="slide-shell"><div class="slide-head"><span class="eyebrow">03 · PCA</span><span class="slide-number">15 / 43</span></div><h2>Three comparisons from slide one</h2><div class="slide-body"><div class="mini-table"><div class="tr header"><b>Pair (illustrative vectors)</b><b>Cosine (↑)</b><b>Dot (↑)</b><b>Squared L2 (↓)</b></div><div class="tr"><span>Cat ↔ Dog</span><span>0.9856</span><span>0.8333</span><span>0.0298</span></div><div class="tr"><span>Cat ↔ Cat sentence</span><span>0.9890</span><span>0.8960</span><span>0.0200</span></div><div class="tr"><span>Cat ↔ Cat image</span><span>0.9916</span><span>0.9042</span><span>0.0153</span></div><div class="tr"><span>Cat ↔ Cat video</span><span>0.9841</span><span>0.8717</span><span>0.0291</span></div></div><div class="bottom-insight">These numbers are comparable because we used ONE illustrative coordinate system. Never mix unrelated model embeddings.</div></div><div class="interview-ribbon"><div class="interview-prompt"><span>INTERVIEW · THINK BEFORE REVEALING THE NEXT SLIDE</span><strong>Can cosine and L2 disagree about the closest neighbor, even on the same data?</strong></div><div class="interview-source"><span>OFFICIAL READING</span><a href="https://scikit-learn.org/stable/modules/generated/sklearn.metrics.pairwise.cosine_similarity.html" target="_blank" rel="noopener noreferrer">scikit-learn cosine ↗</a></div></div></div></section>
-<section data-slide="16" id="slide_16" data-slide-id="slide_16"><div class="slide-shell"><div class="slide-head"><span class="eyebrow">03 · CHECKPOINT</span><span class="slide-number">16 / 43</span></div><h2>Your first lab gate</h2><div class="slide-body"><div class="checkpoint"><div class="check-icon">A</div><div><h3>Open Lab 00 → run A1–A4</h3><p>Count headings and paragraphs. Change window size. Verify overlap using actual words. Then submit 8 questions.</p><div class="task-line">Required edits: 40/10 → 60/10 → 40/0 → restore</div></div></div></div><div class="interview-ribbon"><div class="interview-prompt"><span>INTERVIEW · THINK BEFORE REVEALING THE NEXT SLIDE</span><strong>Would you trust an embedding pipeline without running its smallest lab?</strong></div><div class="interview-source"><span>OFFICIAL READING</span><a href="https://revealjs.com/" target="_blank" rel="noopener noreferrer">Reveal.js official ↗</a></div></div></div></section>
-<section data-slide="17" id="slide_17" data-slide-id="slide_17"><div class="slide-shell"><div class="slide-head"><span class="eyebrow">04 · SIMILARITY</span><span class="slide-number">17 / 43</span></div><h2>Distance metrics are not indexes</h2><div class="slide-body"><div class="comparison"><div class="metric-card"><div class="stamp">Metric</div><h3>How close are two vectors?</h3><p>Cosine similarity, dot product, squared Euclidean distance.</p></div><div class="metric-card"><div class="stamp">Index</div><h3>Which vectors should we evaluate?</h3><p>Exact scan, HNSW, IVF.</p></div><div class="metric-card"><div class="stamp">Database</div><h3>How is the data managed?</h3><p>IDs, metadata, filtering, persistence, updates, access.</p></div></div><div class="bottom-insight">Choosing L2 does not choose HNSW. Choosing HNSW does not choose cosine.</div></div><div class="interview-ribbon"><div class="interview-prompt"><span>INTERVIEW · THINK BEFORE REVEALING THE NEXT SLIDE</span><strong>Can a fast HNSW index rescue the wrong similarity metric?</strong></div><div class="interview-source"><span>OFFICIAL READING</span><a href="https://cookbook.chromadb.dev/core/collections/" target="_blank" rel="noopener noreferrer">Chroma collections ↗</a></div></div></div></section>
-<section data-slide="18" id="slide_18" data-slide-id="slide_18"><div class="slide-shell"><div class="slide-head"><span class="eyebrow">04 · FORMULA</span><span class="slide-number">18 / 43</span></div><h2>Cosine similarity measures direction</h2><div class="slide-body"><div class="split"><div><div class="math-hero">cos(q,x) = (q·x) / (‖q‖‖x‖)</div><p>Values lie in [−1, 1] for real, nonzero vectors. <b>Larger = more aligned.</b></p><p>q = [1,0], a = [2,0] → cos = <b>1</b>.</p><p>q = [1,0], b = [1,1] → cos ≈ <b>0.707</b>.</p></div><div class="metric-card"><h3>Watch out</h3><p>Cosine is undefined for zero vectors.</p><p>Multiplying one vector by a positive constant keeps cosine unchanged.</p></div></div></div><div class="interview-ribbon"><div class="interview-prompt"><span>INTERVIEW · THINK BEFORE REVEALING THE NEXT SLIDE</span><strong>Why can cosine call two very different-length vectors identical in direction?</strong></div><div class="interview-source"><span>OFFICIAL READING</span><a href="https://scikit-learn.org/stable/modules/generated/sklearn.metrics.pairwise.cosine_similarity.html" target="_blank" rel="noopener noreferrer">scikit-learn cosine ↗</a></div></div></div></section>
-<section data-slide="19" id="slide_19" data-slide-id="slide_19"><div class="slide-shell"><div class="slide-head"><span class="eyebrow">04 · FORMULA</span><span class="slide-number">19 / 43</span></div><h2>Dot product rewards alignment and length</h2><div class="slide-body"><div class="split"><div><div class="math-hero">q · x = Σᵢ qᵢ × xᵢ</div><p><b>Larger = stronger inner product.</b></p><p>q = [1,0], a = [2,0] → <b>2</b>.</p><p>q = [1,0], b = [1,1] → <b>1</b>.</p></div><div class="metric-card"><h3>Scale changes ranking</h3><p>Large-norm vectors can outrank equally aligned short vectors.</p><p>For unit vectors, dot product = cosine similarity.</p></div></div></div><div class="interview-ribbon"><div class="interview-prompt"><span>INTERVIEW · THINK BEFORE REVEALING THE NEXT SLIDE</span><strong>Could a document win dot-product ranking mainly because its norm is larger?</strong></div><div class="interview-source"><span>OFFICIAL READING</span><a href="https://numpy.org/doc/stable/reference/generated/numpy.dot.html" target="_blank" rel="noopener noreferrer">NumPy dot ↗</a></div></div></div></section>
-<section data-slide="20" id="slide_20" data-slide-id="slide_20"><div class="slide-shell"><div class="slide-head"><span class="eyebrow">04 · FORMULA</span><span class="slide-number">20 / 43</span></div><h2>Squared Euclidean (L2) measures separation</h2><div class="slide-body"><div class="split"><div><div class="math-hero">d²(q,x) = Σᵢ (qᵢ − xᵢ)²</div><p><b>Smaller = closer.</b></p><p>q = [1,0], a = [2,0] → <b>1</b>.</p><p>q = [1,0], b = [1,1] → <b>1</b>.</p></div><div class="metric-card"><h3>Chroma names</h3><p>Chroma <code>l2</code> means <b>squared</b> Euclidean distance, not √(sum of squares).</p><p>Cosine configuration returns <b>cosine distance</b>: 1 − cosine similarity.</p></div></div></div><div class="interview-ribbon"><div class="interview-prompt"><span>INTERVIEW · THINK BEFORE REVEALING THE NEXT SLIDE</span><strong>Why does Chroma’s l2 report a squared distance instead of its square root?</strong></div><div class="interview-source"><span>OFFICIAL READING</span><a href="https://cookbook.chromadb.dev/core/collections/" target="_blank" rel="noopener noreferrer">Chroma collections ↗</a></div></div></div></section>
-<section data-slide="21" id="slide_21" data-slide-id="slide_21"><div class="slide-shell"><div class="slide-head"><span class="eyebrow">04 · VECTOR GEOMETRY</span><span class="slide-number">21 / 43</span></div><h2>Same geometry, different “closest” answer</h2><div class="slide-body"><div class="split"><div><svg viewBox="0 0 470 300" class="diagram-svg" aria-label="2 dimensional vectors"><g stroke="#b1b9be"><path d="M50 250H445M50 250V24"/></g><g stroke-width="4" fill="none" stroke-linecap="round"><path d="M50 250L210 250" stroke="#117d80"/><path d="M50 250L370 250" stroke="#d96745"/><path d="M50 250L210 90" stroke="#6b5cb1"/></g><g fill="#162c3a" font-size="16" font-weight="600"><text x="200" y="240">q [1,0]</text><text x="350" y="239">a [2,0]</text><text x="220" y="86">b [1,1]</text></g><g fill="#9aa3a6" font-size="14"><text x="430" y="271">X</text><text x="33" y="28">Y</text></g></svg></div><div class="mini-table"><div class="tr header"><b>Method</b><b>a</b><b>b</b><b>Winner</b></div><div class="tr"><span>Cosine ↑</span><span>1.000</span><span>.707</span><b>a</b></div><div class="tr"><span>Dot ↑</span><span>2</span><span>1</span><b>a</b></div><div class="tr"><span>Squared L2 ↓</span><span>1</span><span>1</span><b>tie</b></div></div></div></div><div class="interview-ribbon"><div class="interview-prompt"><span>INTERVIEW · THINK BEFORE REVEALING THE NEXT SLIDE</span><strong>When will cosine, dot, and L2 give the same ranking—and when not?</strong></div><div class="interview-source"><span>OFFICIAL READING</span><a href="https://scikit-learn.org/stable/modules/generated/sklearn.metrics.pairwise.cosine_similarity.html" target="_blank" rel="noopener noreferrer">scikit-learn cosine ↗</a></div></div></div></section>
-<section data-slide="22" id="slide_22" data-slide-id="slide_22"><div class="slide-shell"><div class="slide-head"><span class="eyebrow">04 · PLAYGROUND</span><span class="slide-number">22 / 43</span></div><h2>Try scaling without changing the angle</h2><div class="slide-body"><div class="split"><div><p class="lede">Scale the query q = [s, 0]. Candidate a stays [2,0].</p><label class="live-slider">Scale <span id="scale-num">1</span><input id="scale" type="range" min="1" max="5" step="1" value="1"></label><div class="math-hero">q = [<span id="scale-q">1</span>, 0]</div></div><div class="mini-table"><div class="tr header"><b>Metric</b><b>q vs a</b></div><div class="tr"><span>Cosine</span><span id="res-cos">1.000</span></div><div class="tr"><span>Dot</span><span id="res-dot">2</span></div><div class="tr"><span>Squared L2</span><span id="res-l2">1</span></div></div></div><p class="work-note">Lab 01: test SCALE=3 then 5. Predict each result before running the notebook.</p></div><div class="interview-ribbon"><div class="interview-prompt"><span>INTERVIEW · THINK BEFORE REVEALING THE NEXT SLIDE</span><strong>If I multiply the query by 10, which scores change while cosine stays fixed?</strong></div><div class="interview-source"><span>OFFICIAL READING</span><a href="https://numpy.org/doc/stable/reference/generated/numpy.dot.html" target="_blank" rel="noopener noreferrer">NumPy dot ↗</a></div></div></div></section>
-<section data-slide="23" id="slide_23" data-slide-id="slide_23"><div class="slide-shell"><div class="slide-head"><span class="eyebrow">04 · NORMALIZATION</span><span class="slide-number">23 / 43</span></div><h2>A useful identity for normalized vectors</h2><div class="slide-body"><div class="centered-formula"><div class="math-hero">‖q̂ − x̂‖² = 2 − 2 cos(q, x)</div><p>If both vectors have norm 1, cosine ranking and squared L2 ranking agree.</p><p class="quiet">Not a blanket claim for unnormalized embeddings.</p></div><div class="comparison two"><div class="metric-card"><h3>Unit vectors</h3><p>cos(q,x) ↑ ⇔ squared L2(q,x) ↓</p></div><div class="metric-card"><h3>Non-unit vectors</h3><p>Magnitudes affect dot and squared distance.</p></div></div></div><div class="interview-ribbon"><div class="interview-prompt"><span>INTERVIEW · THINK BEFORE REVEALING THE NEXT SLIDE</span><strong>Why does normalized squared L2 equal 2 − 2×cosine similarity?</strong></div><div class="interview-source"><span>OFFICIAL READING</span><a href="https://scikit-learn.org/stable/modules/generated/sklearn.metrics.pairwise.cosine_similarity.html" target="_blank" rel="noopener noreferrer">scikit-learn cosine ↗</a></div></div></div></section>
-<section data-slide="24" id="slide_24" data-slide-id="slide_24"><div class="slide-shell"><div class="slide-head"><span class="eyebrow">04 · CHECKPOINT</span><span class="slide-number">24 / 43</span></div><h2>The math checkpoint</h2><div class="slide-body"><div class="checkpoint"><div class="check-icon">B</div><div><h3>Open Lab 01 → run B1–B5</h3><p>Compute all three metrics manually. Scale q to 5. Verify the cosine/distance identity on normalized vectors.</p><div class="task-line">10 questions · Show your own calculations, not guesses</div></div></div></div><div class="interview-ribbon"><div class="interview-prompt"><span>INTERVIEW · THINK BEFORE REVEALING THE NEXT SLIDE</span><strong>Which distance score should you sort ascending, and which similarity descending?</strong></div><div class="interview-source"><span>OFFICIAL READING</span><a href="https://cookbook.chromadb.dev/core/collections/" target="_blank" rel="noopener noreferrer">Chroma collections ↗</a></div></div></div></section>
-<section data-slide="25" id="slide_25" data-slide-id="slide_25"><div class="slide-shell"><div class="slide-head"><span class="eyebrow">05 · VECTOR DB</span><span class="slide-number">25 / 43</span></div><h2>What is stored in a vector collection?</h2><div class="slide-body"><div class="mini-table"><div class="tr header"><b>ID</b><b>Document / content</b><b>Embedding</b><b>Metadata</b></div><div class="tr"><span>cat</span><span>“Cat”</span><span>[.95, .08, …]</span><span>kind=text</span></div><div class="tr"><span>cat_image</span><span>image description</span><span>[.93, .08, …]</span><span>kind=image</span></div><div class="tr"><span>car</span><span>“fast red car”</span><span>[.04, .07, …]</span><span>kind=text</span></div></div><div class="bottom-insight">Chroma can store embeddings supplied by you. It need not call an embedding API during every query.</div></div><div class="interview-ribbon"><div class="interview-prompt"><span>INTERVIEW · THINK BEFORE REVEALING THE NEXT SLIDE</span><strong>Why keep the source ID if the vector already encodes the entire chunk?</strong></div><div class="interview-source"><span>OFFICIAL READING</span><a href="https://cookbook.chromadb.dev/core/collections/" target="_blank" rel="noopener noreferrer">Chroma collections ↗</a></div></div></div></section>
-<section data-slide="26" id="slide_26" data-slide-id="slide_26"><div class="slide-shell"><div class="slide-head"><span class="eyebrow">05 · SEARCH</span><span class="slide-number">26 / 43</span></div><h2>Exact search is the reference baseline</h2><div class="slide-body"><div class="process"><div class="step"><span>1</span><h3>Query vector</h3><p>q = embed(question)</p></div><div class="step"><span>2</span><h3>Score every vector</h3><p>d(q, xᵢ) for i=1…N</p></div><div class="step"><span>3</span><h3>Sort / top-k</h3><p>return best candidates</p></div></div><div class="comparison two"><div class="metric-card"><h3>Strength</h3><p>Exact neighbors for the chosen metric and values.</p></div><div class="metric-card"><h3>Weakness</h3><p>Reads/scores every point for each query: O(Nd) arithmetic before top-k.</p></div></div></div><div class="interview-ribbon"><div class="interview-prompt"><span>INTERVIEW · THINK BEFORE REVEALING THE NEXT SLIDE</span><strong>For 200 vectors, is approximate search necessarily faster than brute force?</strong></div><div class="interview-source"><span>OFFICIAL READING</span><a href="https://github.com/facebookresearch/faiss/wiki/Guidelines-to-choose-an-index" target="_blank" rel="noopener noreferrer">Faiss: index choice ↗</a></div></div></div></section>
-<section data-slide="27" id="slide_27" data-slide-id="slide_27"><div class="slide-shell"><div class="slide-head"><span class="eyebrow">05 · HNSW</span><span class="slide-number">27 / 43</span></div><h2>HNSW uses navigable layers, not a full scan</h2><div class="slide-body"><svg class="hnsw-svg" viewBox="0 0 930 380" aria-label="HNSW graph layers"><defs><marker id="tri" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="4" markerHeight="4" orient="auto-start-reverse"><path d="M0,0L10,5L0,10z" fill="#cf6545"/></marker></defs><g><text x="52" y="78" class="svg-label">Sparse / long-range</text><line x1="200" y1="94" x2="865" y2="94" class="layer-line"/><circle cx="236" cy="94" r="11" class="node-0" /><circle cx="495" cy="94" r="11" class="node-1" /><circle cx="810" cy="94" r="11" class="node-2" /></g><g><text x="52" y="186" class="svg-label">Mid / local hops</text><line x1="200" y1="202" x2="865" y2="202" class="layer-line"/><circle cx="236" cy="202" r="11" class="node-0" /><circle cx="345" cy="202" r="11" class="node-1" /><circle cx="495" cy="202" r="11" class="node-2" /><circle cx="620" cy="202" r="11" class="node-3" /><circle cx="810" cy="202" r="11" class="node-4" /></g><g><text x="52" y="298" class="svg-label">Dense / all points</text><line x1="200" y1="314" x2="865" y2="314" class="layer-line"/><circle cx="236" cy="314" r="11" class="node-0" /><circle cx="292" cy="314" r="11" class="node-1" /><circle cx="345" cy="314" r="11" class="node-2" /><circle cx="402" cy="314" r="11" class="node-3" /><circle cx="495" cy="314" r="11" class="node-4" /><circle cx="555" cy="314" r="11" class="node-5" /><circle cx="620" cy="314" r="11" class="node-6" /><circle cx="685" cy="314" r="11" class="node-7" /><circle cx="740" cy="314" r="11" class="node-8" /><circle cx="810" cy="314" r="11" class="node-9" /></g><path d="M810 94L620 202L555 314" stroke="#cf6545" stroke-width="4" fill="none" marker-end="url(#tri)"/><text x="683" y="45" class="svg-note">navigate → descend → refine</text></svg><p class="tiny">Conceptual architecture, not an exact graph built from the classroom dataset. HNSW is approximate; results depend on construction/search parameters.</p></div><div class="interview-ribbon"><div class="interview-prompt"><span>INTERVIEW · THINK BEFORE REVEALING THE NEXT SLIDE</span><strong>Why can multilayer short paths beat comparing the query to every vector?</strong></div><div class="interview-source"><span>OFFICIAL READING</span><a href="https://github.com/nmslib/hnswlib" target="_blank" rel="noopener noreferrer">hnswlib official ↗</a></div></div></div></section>
-<section data-slide="28" id="slide_28" data-slide-id="slide_28"><div class="slide-shell"><div class="slide-head"><span class="eyebrow">05 · HNSW · INTERACTIVE</span><span class="slide-number">28 / 43</span></div><h2>Follow a conceptual HNSW search</h2><div class="slide-body"><div class="split"><div class="hnsw-demo"><div class="demo-path"><span class="hop active" id="hop-0">entry</span><span class="hop" id="hop-1">sparse hop</span><span class="hop" id="hop-2">descend</span><span class="hop" id="hop-3">local refine</span><span class="hop" id="hop-4">top-k</span></div><button class="action" id="hnsw-next" type="button">Advance search step →</button></div><div><h3 id="hnsw-step-title">01 · Enter top layer</h3><p id="hnsw-step-desc">Start from a high-level entry node. Do not compare with every point in the base graph.</p><div class="small-note">HNSW controls: M / max_neighbors, ef_construction, ef_search.</div></div></div></div><div class="interview-ribbon"><div class="interview-prompt"><span>INTERVIEW · THINK BEFORE REVEALING THE NEXT SLIDE</span><strong>Can the greedy HNSW route miss the truly closest vector?</strong></div><div class="interview-source"><span>OFFICIAL READING</span><a href="https://github.com/nmslib/hnswlib/blob/master/ALGO_PARAMS.md" target="_blank" rel="noopener noreferrer">HNSW parameters ↗</a></div></div></div></section>
-<section data-slide="29" id="slide_29" data-slide-id="slide_29"><div class="slide-shell"><div class="slide-head"><span class="eyebrow">05 · HNSW</span><span class="slide-number">29 / 43</span></div><h2>Two knobs change the speed–recall trade-off</h2><div class="slide-body"><div class="comparison"><div class="metric-card"><h3>M</h3><p>Graph connectivity: number of neighbor links targeted at construction.</p></div><div class="metric-card"><h3>ef_construction</h3><p>Construction search breadth. More work may improve graph quality.</p></div><div class="metric-card"><h3>ef_search</h3><p>Search-time candidate breadth. Usually higher recall vs more work.</p></div></div><div class="bottom-insight">HNSW is an approximate-neighbor index. Never promise exact recall or a universal speedup.</div></div><div class="interview-ribbon"><div class="interview-prompt"><span>INTERVIEW · THINK BEFORE REVEALING THE NEXT SLIDE</span><strong>How much memory should you sacrifice to raise HNSW recall?</strong></div><div class="interview-source"><span>OFFICIAL READING</span><a href="https://github.com/nmslib/hnswlib/blob/master/ALGO_PARAMS.md" target="_blank" rel="noopener noreferrer">HNSW parameters ↗</a></div></div></div></section>
-<section data-slide="30" id="slide_30" data-slide-id="slide_30"><div class="slide-shell"><div class="slide-head"><span class="eyebrow">05 · IVF</span><span class="slide-number">30 / 43</span></div><h2>IVF groups points into coarse partitions</h2><div class="slide-body"><div class="process"><div class="step"><span>1</span><h3>Train centroids</h3><p>Cluster vectors into n_lists</p></div><div class="step"><span>2</span><h3>Assign to lists</h3><p>Every vector lives in a list</p></div><div class="step"><span>3</span><h3>Probe lists</h3><p>Find closest n_probe centroids</p></div><div class="step"><span>4</span><h3>Rank candidates</h3><p>Score vectors inside lists</p></div></div><div class="bottom-insight">IVF is not the default local Chroma index in this workshop. We implement it separately with KMeans.</div></div><div class="interview-ribbon"><div class="interview-prompt"><span>INTERVIEW · THINK BEFORE REVEALING THE NEXT SLIDE</span><strong>Why does IVF need a training stage while graph search can be incremental?</strong></div><div class="interview-source"><span>OFFICIAL READING</span><a href="https://github.com/facebookresearch/faiss/wiki/Faster-search" target="_blank" rel="noopener noreferrer">Faiss: faster search ↗</a></div></div></div></section>
-<section data-slide="31" id="slide_31" data-slide-id="slide_31"><div class="slide-shell"><div class="slide-head"><span class="eyebrow">05 · IVF · INTERACTIVE</span><span class="slide-number">31 / 43</span></div><h2>Increase n_probe, expand the candidate set</h2><div class="slide-body"><div class="split"><div id="ivf-map" class="ivf-map"><div class="cluster" data-cluster="0" style="left:6%;top:20%">A · 3 points</div><div class="cluster" data-cluster="1" style="left:57%;top:10%">B · 2 points</div><div class="cluster" data-cluster="2" style="left:43%;top:58%">C · 1 point</div><div class="qpin">Q</div></div><div><p class="lede">Fixed classroom IVF example</p><label class="live-slider">n_probe = <b id="nprobe-val">1</b><input type="range" min="1" max="3" step="1" id="nprobe" value="1"/></label><div class="big-num" id="ivf-candidates">3</div><div class="stat-caption">candidate vectors inspected</div><p class="quiet">Full probe (3) scans all 6 records; the list restriction then disappears.</p></div></div></div><div class="interview-ribbon"><div class="interview-prompt"><span>INTERVIEW · THINK BEFORE REVEALING THE NEXT SLIDE</span><strong>When does probing every IVF cluster stop being an approximate search?</strong></div><div class="interview-source"><span>OFFICIAL READING</span><a href="https://github.com/facebookresearch/faiss/wiki/Faster-search" target="_blank" rel="noopener noreferrer">Faiss: faster search ↗</a></div></div></div></section>
-<section data-slide="32" id="slide_32" data-slide-id="slide_32"><div class="slide-shell"><div class="slide-head"><span class="eyebrow">05 · EVALUATION</span><span class="slide-number">32 / 43</span></div><h2>Approximate indexes need a quality metric</h2><div class="slide-body"><div class="centered-formula"><div class="math-hero">recall@k = |ExactTopK ∩ ANNTopK| / k</div><p>Suppose exact top-5 = {A,B,C,D,E}; HNSW returns {A,B,D,E,F}. Recall@5 = <b>4/5 = 0.8</b>.</p></div><div class="comparison two"><div class="metric-card"><h3>Quality</h3><p>Recall@k against exact ground truth.</p></div><div class="metric-card"><h3>Operational cost</h3><p>Build time, query latency, index RAM, storage.</p></div></div></div><div class="interview-ribbon"><div class="interview-prompt"><span>INTERVIEW · THINK BEFORE REVEALING THE NEXT SLIDE</span><strong>If two indexes have similar speed, which one retrieves the exact top-k more often?</strong></div><div class="interview-source"><span>OFFICIAL READING</span><a href="https://github.com/facebookresearch/faiss/wiki/Guidelines-to-choose-an-index" target="_blank" rel="noopener noreferrer">Faiss: index choice ↗</a></div></div></div></section>
-<section data-slide="33" id="slide_33" data-slide-id="slide_33"><div class="slide-shell"><div class="slide-head"><span class="eyebrow">05 · CHROMA</span><span class="slide-number">33 / 43</span></div><h2>The important Chroma defaults</h2><div class="slide-body"><div class="comparison two"><div class="metric-card"><div class="stamp">Single-node / local</div><h3>HNSW</h3><p>Default approximate vector index. A buffer may serve recent writes before indexing.</p><p><code>configuration={"hnsw":{"space":"l2"}}</code></p></div><div class="metric-card"><div class="stamp">Metric</div><h3>Squared L2</h3><p>Local default distance. Query returns a <b>distance</b>, not a cosine similarity.</p><p><code>PersistentClient(path="...")</code></p></div></div><p class="tiny">Chroma Cloud/distributed deployments can differ. Defaults verified against current Chroma cookbook; version matters.</p></div><div class="interview-ribbon"><div class="interview-prompt"><span>INTERVIEW · THINK BEFORE REVEALING THE NEXT SLIDE</span><strong>Is “HNSW + L2” one algorithm, or an index plus a metric?</strong></div><div class="interview-source"><span>OFFICIAL READING</span><a href="https://cookbook.chromadb.dev/core/configuration/" target="_blank" rel="noopener noreferrer">Chroma HNSW config ↗</a></div></div></div></section>
-<section data-slide="34" id="slide_34" data-slide-id="slide_34"><div class="slide-shell"><div class="slide-head"><span class="eyebrow">05 · CHROMA CODE</span><span class="slide-number">34 / 43</span></div><h2>Insert and query the exact same vector space</h2><div class="slide-body"><pre class="code-pane"><code>client = chromadb.PersistentClient(path="./chroma_lab")
-col = client.create_collection(
-    "students", configuration={"hnsw": {"space": "l2"}},
-    embedding_function=None
-)
-col.add(ids=["cat"], documents=["Cat"], embeddings=[[.95, .08, ...]])
-answer = col.query(query_embeddings=[[.95, .08, ...]], n_results=1)</code></pre><div class="bottom-insight">The <code>...</code> shown above is slide pseudocode; Lab 03 contains complete valid 6D vectors and runnable code.</div></div><div class="interview-ribbon"><div class="interview-prompt"><span>INTERVIEW · THINK BEFORE REVEALING THE NEXT SLIDE</span><strong>What happens if stored vectors are 6D but the query is 384D?</strong></div><div class="interview-source"><span>OFFICIAL READING</span><a href="https://cookbook.chromadb.dev/core/collections/" target="_blank" rel="noopener noreferrer">Chroma collections ↗</a></div></div></div></section>
-<section data-slide="35" id="slide_35" data-slide-id="slide_35"><div class="slide-shell"><div class="slide-head"><span class="eyebrow">05 · CHROMA</span><span class="slide-number">35 / 43</span></div><h2>What happens during search?</h2><div class="slide-body"><div class="process"><div class="step"><span>①</span><h3>Query</h3><p>6D vector, n_results=3</p></div><div class="step"><span>②</span><h3>Candidate search</h3><p>HNSW graph + applicable recent-vector buffer</p></div><div class="step"><span>③</span><h3>Measure & rank</h3><p>Default squared L2</p></div><div class="step"><span>④</span><h3>Return</h3><p>IDs, content, distances, metadata</p></div></div><p class="quiet center">Metadata <code>where</code> can restrict eligible records; it does not change the embedding function.</p></div><div class="interview-ribbon"><div class="interview-prompt"><span>INTERVIEW · THINK BEFORE REVEALING THE NEXT SLIDE</span><strong>If Chroma returns ID, distance and metadata, which field proves provenance?</strong></div><div class="interview-source"><span>OFFICIAL READING</span><a href="https://cookbook.chromadb.dev/core/collections/" target="_blank" rel="noopener noreferrer">Chroma collections ↗</a></div></div></div></section>
-<section data-slide="36" id="slide_36" data-slide-id="slide_36"><div class="slide-shell"><div class="slide-head"><span class="eyebrow">05 · CHROMA LAB</span><span class="slide-number">36 / 43</span></div><h2>Persist, filter, then re-open</h2><div class="slide-body"><div class="checkpoint"><div class="check-icon">D</div><div><h3>Lab 03: inspect what was actually saved</h3><p>Insert 10 toy vectors, run Cat top-k, calculate Cat–Dog squared L2 yourself, filter to text records, reopen the on-disk collection.</p><div class="task-line">Change K=3 → 5. Compare result counts. Submit D1–D8.</div></div></div></div><div class="interview-ribbon"><div class="interview-prompt"><span>INTERVIEW · THINK BEFORE REVEALING THE NEXT SLIDE</span><strong>Does re-opening PersistentClient reload actual records, or recompute embeddings?</strong></div><div class="interview-source"><span>OFFICIAL READING</span><a href="https://cookbook.chromadb.dev/core/storage-layout/" target="_blank" rel="noopener noreferrer">Chroma storage ↗</a></div></div></div></section>
-<section data-slide="37" id="slide_37" data-slide-id="slide_37"><div class="slide-shell"><div class="slide-head"><span class="eyebrow">05 · INDEXES LAB</span><span class="slide-number">37 / 43</span></div><h2>Train an IVF, build a real HNSW</h2><div class="slide-body"><div class="checkpoint"><div class="check-icon">E</div><div><h3>Lab 04: compare exact and approximate neighbors</h3><p>480×8 synthetic vectors; hnswlib with ef_search=10 vs 100; IVF with 12 lists and n_probe=1,3,12.</p><div class="task-line">Use exact top-k as ground truth. Report recall and candidates. Submit E1–E8.</div></div></div></div><div class="interview-ribbon"><div class="interview-prompt"><span>INTERVIEW · THINK BEFORE REVEALING THE NEXT SLIDE</span><strong>If you double ef_search, is recall guaranteed to double?</strong></div><div class="interview-source"><span>OFFICIAL READING</span><a href="https://github.com/nmslib/hnswlib/blob/master/ALGO_PARAMS.md" target="_blank" rel="noopener noreferrer">HNSW parameters ↗</a></div></div></div></section>
-<section data-slide="38" id="slide_38" data-slide-id="slide_38"><div class="slide-shell"><div class="slide-head"><span class="eyebrow">06 · GEMINI</span><span class="slide-number">38 / 43</span></div><h2>Do not use identical APIs for incompatible tasks</h2><div class="slide-body"><div class="comparison two"><div class="metric-card"><h3>Gemini Embedding 001</h3><p>Text-only. For retrieval, use document/query task types and the same output dimensionality.</p><p class="mono">RETRIEVAL_DOCUMENT ↔ RETRIEVAL_QUERY</p></div><div class="metric-card"><h3>Gemini Embedding 2</h3><p>Text, image, video, audio and PDFs. A trained shared cross-modal space.</p><p class="mono">output_dimensionality=768</p></div></div><div class="bottom-insight">001 → 2 migration requires re-embedding the stored corpus; 768 dimensions alone are not enough.</div></div><div class="interview-ribbon"><div class="interview-prompt"><span>INTERVIEW · THINK BEFORE REVEALING THE NEXT SLIDE</span><strong>Why must you re-embed a corpus when upgrading Gemini Embedding 001 → 2?</strong></div><div class="interview-source"><span>OFFICIAL READING</span><a href="https://ai.google.dev/gemini-api/docs/embeddings" target="_blank" rel="noopener noreferrer">Gemini embeddings ↗</a></div></div></div></section>
-<section data-slide="39" id="slide_39" data-slide-id="slide_39"><div class="slide-shell"><div class="slide-head"><span class="eyebrow">06 · GEMINI</span><span class="slide-number">39 / 43</span></div><h2>API calls are optional, not a barrier</h2><div class="slide-body"><div class="split"><div><p class="lede">The core course works without a model API key.</p><p>Lab 05 safely loads <code>GEMINI_API_KEY</code> from Secrets or environment, or skips online cells.</p><p>A tiny original cat illustration is included to test cross-modal similarity.</p></div><div class="media-art"><img src="./data/cat_illustration.png" alt="Simple orange cat illustration used for embedding experiment"/><span>Real image input · Optional lab</span></div></div></div><div class="interview-ribbon"><div class="interview-prompt"><span>INTERVIEW · THINK BEFORE REVEALING THE NEXT SLIDE</span><strong>How can a student finish the theory without a paid API key?</strong></div><div class="interview-source"><span>OFFICIAL READING</span><a href="https://ai.google.dev/gemini-api/docs/embeddings" target="_blank" rel="noopener noreferrer">Gemini embeddings ↗</a></div></div></div></section>
-<section data-slide="40" id="slide_40" data-slide-id="slide_40"><div class="slide-shell"><div class="slide-head"><span class="eyebrow">07 · RAG</span><span class="slide-number">40 / 43</span></div><h2>Where embeddings end and an agent begins</h2><div class="slide-body"><div class="process"><div class="step"><span>ASK</span><h3>Question</h3><p>“Which metric does our store use?”</p></div><div class="step"><span>RETRIEVE</span><h3>Search chunks</h3><p>top-k passages + source IDs</p></div><div class="step"><span>CONTEXT</span><h3>Ground evidence</h3><p>Pass relevant sources to LLM</p></div><div class="step"><span>ANSWER</span><h3>Generate</h3><p>Cite the retrieved passages</p></div></div><div class="bottom-insight">Vector search picks evidence. An LLM/agent may then use that evidence. Retrieval quality and answer quality are distinct.</div></div><div class="interview-ribbon"><div class="interview-prompt"><span>INTERVIEW · THINK BEFORE REVEALING THE NEXT SLIDE</span><strong>Why is a top-k nearest chunk not yet a grounded final answer?</strong></div><div class="interview-source"><span>OFFICIAL READING</span><a href="https://docs.llamaindex.ai/en/stable/" target="_blank" rel="noopener noreferrer">LlamaIndex concepts ↗</a></div></div></div></section>
-<section data-slide="41" id="slide_41" data-slide-id="slide_41"><div class="slide-shell"><div class="slide-head"><span class="eyebrow">07 · BEST PRACTICES</span><span class="slide-number">41 / 43</span></div><h2>Six failure modes you should recognize</h2><div class="slide-body"><div class="module-grid"><div class="module-tile"><span>01</span><h3>Mixed spaces</h3><p>Model A documents vs model B queries</p></div><div class="module-tile"><span>02</span><h3>Wrong score sign</h3><p>Sort distance descending</p></div><div class="module-tile"><span>03</span><h3>Unverified PCA</h3><p>Treat 3D projection as original embedding</p></div><div class="module-tile"><span>04</span><h3>Weak chunking</h3><p>Answer split from its citation</p></div><div class="module-tile"><span>05</span><h3>Missing metadata</h3><p>No stable source ID or provenance</p></div><div class="module-tile"><span>06</span><h3>Unchecked ANN</h3><p>No recall@k vs exact baseline</p></div></div></div><div class="interview-ribbon"><div class="interview-prompt"><span>INTERVIEW · THINK BEFORE REVEALING THE NEXT SLIDE</span><strong>Which silent bug is worse: mixed embedding spaces or missing citations?</strong></div><div class="interview-source"><span>OFFICIAL READING</span><a href="https://cookbook.chromadb.dev/core/collections/" target="_blank" rel="noopener noreferrer">Chroma collections ↗</a></div></div></div></section>
-<section data-slide="42" id="slide_42" data-slide-id="slide_42"><div class="slide-shell"><div class="slide-head"><span class="eyebrow">07 · QUIZ MAP</span><span class="slide-number">42 / 43</span></div><h2>Every checkpoint depends on a notebook experiment</h2><div class="slide-body"><div class="module-grid"><div class="module-tile"><span>A</span><h3>8 questions</h3><p>Chunks + edits</p></div><div class="module-tile"><span>B</span><h3>10 questions</h3><p>Cosine, dot, squared L2</p></div><div class="module-tile"><span>C</span><h3>8 questions</h3><p>PCA + toy vs learned</p></div><div class="module-tile"><span>D</span><h3>8 questions</h3><p>Chroma counts + distances</p></div><div class="module-tile"><span>E</span><h3>8 questions</h3><p>ANN / IVF candidate counts</p></div><div class="module-tile"><span>F</span><h3>6 questions</h3><p>Gemini model/secret safety</p></div></div><p class="quiet center">70% or higher unlocks the next module. Open worked answers and hints at the end of each notebook.</p></div><div class="interview-ribbon"><div class="interview-prompt"><span>INTERVIEW · THINK BEFORE REVEALING THE NEXT SLIDE</span><strong>Would scoring 100% on a quiz without running the notebook prove understanding?</strong></div><div class="interview-source"><span>OFFICIAL READING</span><a href="https://revealjs.com/" target="_blank" rel="noopener noreferrer">Reveal.js official ↗</a></div></div></div></section>
-<section data-slide="43" id="slide_43" data-slide-id="slide_43"><div class="slide-shell"><div class="slide-head"><span class="eyebrow">07 · FINISH</span><span class="slide-number">43 / 43</span></div><h2>What a student should now be able to explain</h2><div class="slide-body"><div class="hero-grid"><div><p class="lede">You can build a retrieval system and know what happens underneath:</p><p class="final-points">1. Chunk a source without losing provenance.<br>2. Embed compatible content into a vector space.<br>3. Calculate and select the right distance metric.<br>4. Visualize PCA without confusing it with semantics.<br>5. Explain HNSW, IVF and Chroma’s local defaults.<br>6. Test retrieval recall, not only demo output.</p></div><div class="poster"><div class="endmark">GO BUILD</div><p>Open <code>../index.html</code>, start Lab A, and work forward.</p><a class="external" href="../index.html">← Workshop portal</a></div></div></div><div class="interview-ribbon"><div class="interview-prompt"><span>INTERVIEW · THINK BEFORE REVEALING THE NEXT SLIDE</span><strong>How would you prove your own semantic search actually works beyond a demo?</strong></div><div class="interview-source"><span>OFFICIAL READING</span><a href="https://github.com/facebookresearch/faiss/wiki/Guidelines-to-choose-an-index" target="_blank" rel="noopener noreferrer">Faiss: index choice ↗</a></div></div></div></section>
+  <!-- Presentation Viewport -->
+  <main class="viewport" id="viewport">
+    <div class="slide-stage" id="slide-stage">
+      <!-- Slide 1 -->
+      <div class="slide-item active" id="slide-1" data-index="0" data-title="1. RAG Architecture: Ingestion & Retrieval Phases">
+        <img src="images/slide-1.png" alt="Slide 1: Ingestion and Retrieval Architecture">
+      </div>
+
+      <!-- Slide 2 -->
+      <div class="slide-item" id="slide-2" data-index="1" data-title="2. Keyword Search: TF-IDF & BM25 Foundations">
+        <img src="images/slide-2.png" alt="Slide 2: Keyword Search TF-IDF and BM25">
+      </div>
+
+      <!-- Slide 3 -->
+      <div class="slide-item" id="slide-3" data-index="2" data-title="3. Vector Databases: Structured vs Semantic Search">
+        <img src="images/slide-3.png" alt="Slide 3: Need for Vector Databases">
+      </div>
+
+      <!-- Raw PDF Embed Frame -->
+      <div class="pdf-frame-container" id="pdf-container">
+        <iframe src="slide.pdf#toolbar=1&navpanes=1" id="pdf-frame" title="slide.pdf"></iframe>
       </div>
     </div>
-  </div>
 
-  <div id="offline-controls">
-    <button id="prev" aria-label="Previous slide">‹</button>
-    <button id="next" aria-label="Next slide">›</button>
-  </div>
+    <!-- Laser Pointer Simulator -->
+    <div id="laser-pointer"></div>
 
-  <!-- Local Reveal.js Engine -->
-  <script src="./dist/reveal.js"></script>
+    <!-- Quick Navigation Dots & Download -->
+    <div class="quick-bar">
+      <div class="quick-dot active" data-target="0" title="Slide 1: Ingestion & Retrieval Architecture"></div>
+      <div class="quick-dot" data-target="1" title="Slide 2: Keyword Search (BM25 & TF-IDF)"></div>
+      <div class="quick-dot" data-target="2" title="Slide 3: Vector Databases & Semantic Search"></div>
+      <span style="width: 1px; height: 14px; background: rgba(255,255,255,0.2);"></span>
+      <button class="quick-btn" title="Download slide.pdf">
+        <a href="slide.pdf" download="slide.pdf" target="_blank" rel="noopener">
+          <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+          <span>PDF</span>
+        </a>
+      </button>
+    </div>
+  </main>
 
   <script>
-  const SLIDE_TITLES = ["01 \u00b7 BEGIN \u2014 From a Markdown file to the right answer", "01 \u00b7 THE BIG IDEA \u2014 Retrieval begins before any model call", "01 \u00b7 LEARNING PATH \u2014 Six labs. One continuous project.", "02 \u00b7 CHUNKING \u2014 A document is rarely one useful retrieval unit", "02 \u00b7 CHUNKING INTERACTIVE \u2014 Tune the chunk size. Watch the count.", "02 \u00b7 CHUNKING \u2014 Overlapping windows have a trade-off", "03 \u00b7 REPRESENTATION \u2014 An embedding is a point in an n-dimensional space", "03 \u00b7 INTERVIEW DEEP DIVE \u2014 Why not simply store \u201ccat = 1, dog = 2\u201d?", "03 \u00b7 INPUTS \u2014 What the original sketch is really asking", "03 \u00b7 INPUTS \u2014 Text-only and multimodal encoders are different", "03 \u00b7 EMBEDDINGS \u2014 The toy vectors explain geometry, not model quality", "03 \u00b7 DIMENSION \u2014 Why do embedding sizes matter?", "03 \u00b7 PCA \u2014 How do we show a 6D or 768D cloud?", "03 \u00b7 PCA \u00b7 LIVE \u2014 Explore the original sketch in a real 3D scatter", "03 \u00b7 PCA \u2014 Three comparisons from slide one", "03 \u00b7 CHECKPOINT \u2014 Your first lab gate", "04 \u00b7 SIMILARITY \u2014 Distance metrics are not indexes", "04 \u00b7 FORMULA \u2014 Cosine similarity measures direction", "04 \u00b7 FORMULA \u2014 Dot product rewards alignment and length", "04 \u00b7 FORMULA \u2014 Squared Euclidean (L2) measures separation", "04 \u00b7 VECTOR GEOMETRY \u2014 Same geometry, different \u201cclosest\u201d answer", "04 \u00b7 PLAYGROUND \u2014 Try scaling without changing the angle", "04 \u00b7 NORMALIZATION \u2014 A useful identity for normalized vectors", "04 \u00b7 CHECKPOINT \u2014 The math checkpoint", "05 \u00b7 VECTOR DB \u2014 What is stored in a vector collection?", "05 \u00b7 SEARCH \u2014 Exact search is the reference baseline", "05 \u00b7 HNSW \u2014 HNSW uses navigable layers, not a full scan", "05 \u00b7 HNSW \u00b7 INTERACTIVE \u2014 Follow a conceptual HNSW search", "05 \u00b7 HNSW \u2014 Two knobs change the speed\u2013recall trade-off", "05 \u00b7 IVF \u2014 IVF groups points into coarse partitions", "05 \u00b7 IVF \u00b7 INTERACTIVE \u2014 Increase n_probe, expand the candidate set", "05 \u00b7 EVALUATION \u2014 Approximate indexes need a quality metric", "05 \u00b7 CHROMA \u2014 The important Chroma defaults", "05 \u00b7 CHROMA CODE \u2014 Insert and query the exact same vector space", "05 \u00b7 CHROMA \u2014 What happens during search?", "05 \u00b7 CHROMA LAB \u2014 Persist, filter, then re-open", "05 \u00b7 INDEXES LAB \u2014 Train an IVF, build a real HNSW", "06 \u00b7 GEMINI \u2014 Do not use identical APIs for incompatible tasks", "06 \u00b7 GEMINI \u2014 API calls are optional, not a barrier", "07 \u00b7 RAG \u2014 Where embeddings end and an agent begins", "07 \u00b7 BEST PRACTICES \u2014 Six failure modes you should recognize", "07 \u00b7 QUIZ MAP \u2014 Every checkpoint depends on a notebook experiment", "07 \u00b7 FINISH \u2014 What a student should now be able to explain"];
-  const TOTAL_SLIDES = SLIDE_TITLES.length;
-  
-  // Elements
-  const domTitle = document.getElementById('deck-title-center');
-  const domIndicator = document.getElementById('deck-slide-indicator');
-  const btnPrev = document.getElementById('btn-slide-prev');
-  const btnNext = document.getElementById('btn-slide-next');
-  const btnLaser = document.getElementById('btn-slide-laser');
-  const btnClose = document.getElementById('btn-slide-close');
+  (() => {
+    'use strict';
 
-  function updateHeader(index) {
-    const idx = Math.max(0, Math.min(index, TOTAL_SLIDES - 1));
-    if (domIndicator) domIndicator.textContent = "Slide " + (idx + 1) + " of " + TOTAL_SLIDES;
-    if (domTitle) domTitle.textContent = SLIDE_TITLES[idx] || '';
-    if (btnPrev) btnPrev.disabled = (idx === 0);
-    if (btnNext) btnNext.disabled = (idx === TOTAL_SLIDES - 1);
-  }
+    const SLIDE_TITLES = [
+      '1. RAG Architecture: Ingestion & Retrieval Phases',
+      '2. Keyword Search: TF-IDF & BM25 Foundations',
+      '3. Vector Databases: Structured vs Semantic Search'
+    ];
+    const TOTAL_SLIDES = 3;
+    let currentIndex = 0;
+    let isLaserActive = false;
+    let isPdfMode = false;
 
-  const points=[{"name": "Cat", "kind": "text", "x": 0.541124, "y": -0.039437, "z": -0.090444}, {"name": "Dog", "kind": "text", "x": 0.449741, "y": -0.00192, "z": 0.039255}, {"name": "Cat on table", "kind": "text", "x": 0.506508, "y": -0.010639, "z": -0.113578}, {"name": "Cat image", "kind": "image", "x": 0.525709, "y": -0.020971, "z": -0.099399}, {"name": "Cat video", "kind": "video", "x": 0.479487, "y": -0.014081, "z": -0.076252}, {"name": "Car", "kind": "text", "x": -0.500961, "y": 0.668911, "z": -0.068943}, {"name": "Phone", "kind": "text", "x": -0.584206, "y": 0.470559, "z": -0.091469}, {"name": "Apple fruit", "kind": "text", "x": -0.106694, "y": -0.062507, "z": 0.761352}, {"name": "Java class", "kind": "text", "x": -0.663074, "y": -0.492113, "z": -0.140279}, {"name": "Python function", "kind": "text", "x": -0.647634, "y": -0.497802, "z": -0.120243}];
-function setChunk(){const size=+document.getElementById('chunk-size')?.value,ov=+document.getElementById('chunk-overlap')?.value;if(!size&&size!==0)return;const n=281,count=Math.ceil(n/(size-ov));document.getElementById('chunk-size-out').textContent=size;document.getElementById('chunk-overlap-out').textContent=ov;document.getElementById('chunk-count-out').textContent=count;document.getElementById('chunk-stride-out').textContent='stride = '+(size-ov)+' words'}
-['chunk-size','chunk-overlap'].forEach(id=>document.getElementById(id)?.addEventListener('input',setChunk));setChunk();
-function setScale(){const s=+document.getElementById('scale')?.value;if(!s)return;document.getElementById('scale-num').textContent=s;document.getElementById('scale-q').textContent=s;document.getElementById('res-cos').textContent='1.000';document.getElementById('res-dot').textContent=String(2*s);document.getElementById('res-l2').textContent=String((s-2)**2)}document.getElementById('scale')?.addEventListener('input',setScale);setScale();
-let hstep=0;const steps=[['01 · Enter top layer','Start at a sparse high-level entry node. Do not check every point.'],['02 · Make a long-range hop','Follow a promising high-layer neighbor that looks closer to the query.'],['03 · Descend a level','From the best coarse node, enter a denser layer.'],['04 · Refine locally','Explore a broader candidate frontier at the bottom layer (controlled by ef_search).'],['05 · Return approximate top-k','Rank candidates by the chosen metric. Compare against exact top-k to measure recall.']];function hnext(){hstep=(hstep+1)%steps.length;document.querySelectorAll('.hop').forEach((h,i)=>h.classList.toggle('active',i===hstep));document.getElementById('hnsw-step-title').textContent=steps[hstep][0];document.getElementById('hnsw-step-desc').textContent=steps[hstep][1]}document.getElementById('hnsw-next')?.addEventListener('click',hnext);
-function updateIVF(){const p=+document.getElementById('nprobe')?.value;if(!p)return;document.getElementById('nprobe-val').textContent=p;document.getElementById('ivf-candidates').textContent=[0,3,5,6][p];document.querySelectorAll('.cluster').forEach((el,i)=>el.classList.toggle('selected',i<p))}document.getElementById('nprobe')?.addEventListener('input',updateIVF);updateIVF();
-let drawn=false;function initPlot(){if(drawn||!window.Plotly)return;const el=document.getElementById('pca-plot');if(!el)return;drawn=true;const groups=[['text','#147d7d'],['image','#d86b48'],['video','#6554ae']];let traces=groups.map(([kind,color])=>({type:'scatter3d',mode:'markers+text',name:kind,x:points.filter(x=>x.kind===kind).map(x=>x.x),y:points.filter(x=>x.kind===kind).map(x=>x.y),z:points.filter(x=>x.kind===kind).map(x=>x.z),text:points.filter(x=>x.kind===kind).map(x=>x.name),textposition:'top center',marker:{size:7,color:color,line:{width:1,color:'#fff'}},hovertemplate:'%{text}<br>PC1 %{x:.3f}<br>PC2 %{y:.3f}<br>PC3 %{z:.3f}<extra></extra>'}));Plotly.newPlot(el,traces,{margin:{l:0,r:0,t:5,b:0},paper_bgcolor:'#fff',font:{family:'Arial',color:'#334a50',size:13},scene:{xaxis:{title:'PC1'},yaxis:{title:'PC2'},zaxis:{title:'PC3'},aspectmode:'data'},legend:{x:.03,y:.97}},{responsive:true,displaylogo:false});}
-const sections=[...document.querySelectorAll('.slides>section')];let idx=0;
-function showFallback(i,replaceHash=true){idx=Math.max(0,Math.min(i,sections.length-1));sections.forEach((s,j)=>s.classList.toggle('fallback-active',j===idx));if(replaceHash)history.replaceState(null,'','#'+(idx+1));if(sections[idx]?.querySelector('#pca-plot'))initPlot()}
-function revealLoaded(){return typeof window.Reveal!=='undefined' && typeof window.Reveal.initialize==='function'}
-if(revealLoaded()){
-  document.body.classList.add('reveal-ready');window.Reveal.initialize({hash:true,center:false,progress:true,controls:true,slideNumber:'c/t',transition:'fade',width:1440,height:810,margin:0}).then(()=>{window.Reveal.on('slidechanged',ev=>{if(ev.currentSlide.querySelector('#pca-plot'))initPlot()});if(window.Reveal.getCurrentSlide()?.querySelector('#pca-plot'))initPlot()}).catch(e=>{document.body.classList.remove('reveal-ready');showFallback(0)});
-}else{const h=+(location.hash.replace('#',''));showFallback(h>=1?h-1:0);document.addEventListener('keydown',ev=>{if(ev.target.matches('input,textarea,button'))return;if(['ArrowRight',' ','PageDown'].includes(ev.key)){ev.preventDefault();showFallback(idx+1)}if(['ArrowLeft','PageUp'].includes(ev.key)){ev.preventDefault();showFallback(idx-1)}if(ev.key==='Home')showFallback(0);if(ev.key==='End')showFallback(sections.length-1)});document.getElementById('prev')?.addEventListener('click',()=>showFallback(idx-1));document.getElementById('next')?.addEventListener('click',()=>showFallback(idx+1));window.addEventListener('hashchange',()=>{let a=+location.hash.replace('#','');if(a>=1&&a<=sections.length)showFallback(a-1,false)});}
+    // Elements
+    const domCounter = document.getElementById('slide-counter');
+    const domTitle = document.getElementById('slide-title');
+    const btnPrev = document.getElementById('btn-prev');
+    const btnNext = document.getElementById('btn-next');
+    const btnLaser = document.getElementById('btn-laser');
+    const btnClose = document.getElementById('btn-close');
+    const btnToggleView = document.getElementById('btn-toggle-view');
+    const btnToggleViewText = document.getElementById('btn-toggle-view-text');
+    const laserPointer = document.getElementById('laser-pointer');
+    const pdfContainer = document.getElementById('pdf-container');
+    const slides = [
+      document.getElementById('slide-1'),
+      document.getElementById('slide-2'),
+      document.getElementById('slide-3')
+    ];
+    const dots = document.querySelectorAll('.quick-dot');
 
+    function goToSlide(index) {
+      if (index < 0 || index >= TOTAL_SLIDES) return;
+      currentIndex = index;
 
-  // Hook up header navigation buttons
-  if (btnPrev) {
-    btnPrev.addEventListener('click', (e) => {
-      e.preventDefault();
-      if (typeof window.Reveal !== 'undefined' && window.Reveal.isReady && window.Reveal.isReady()) {
-        window.Reveal.prev();
-      } else {
-        showFallback(idx - 1);
-      }
-    });
-  }
+      slides.forEach((slide, idx) => {
+        if (slide) slide.classList.toggle('active', idx === currentIndex);
+      });
 
-  if (btnNext) {
-    btnNext.addEventListener('click', (e) => {
-      e.preventDefault();
-      if (typeof window.Reveal !== 'undefined' && window.Reveal.isReady && window.Reveal.isReady()) {
-        window.Reveal.next();
-      } else {
-        showFallback(idx + 1);
-      }
-    });
-  }
+      dots.forEach((dot, idx) => {
+        dot.classList.toggle('active', idx === currentIndex);
+      });
 
-  if (btnLaser) {
-    btnLaser.addEventListener('click', (e) => {
-      e.preventDefault();
-      btnLaser.classList.toggle('active');
-      window.parent?.postMessage({ type: 'toggle-annotation', mode: 'laser' }, '*');
-    });
-  }
+      if (domCounter) domCounter.textContent = `Slide ${currentIndex + 1} of ${TOTAL_SLIDES}`;
+      if (domTitle) domTitle.textContent = SLIDE_TITLES[currentIndex];
+      if (btnPrev) btnPrev.disabled = (currentIndex === 0);
+      if (btnNext) btnNext.disabled = (currentIndex === TOTAL_SLIDES - 1);
 
-  if (btnClose) {
-    btnClose.addEventListener('click', (e) => {
-      e.preventDefault();
-      window.parent?.postMessage({ type: 'CLOSE_SLIDES' }, '*');
-      window.parent?.postMessage({ type: 'EXIT_FOCUS' }, '*');
-    });
-  }
-
-  // Check if in iframe modal/fullscreen
-  const urlParams = new URLSearchParams(window.location.search);
-  const isModal = urlParams.get('modal') === 'true' || window.location.hash.includes('modal');
-  if (isModal && btnClose) {
-    btnClose.classList.remove('hidden');
-  }
-
-  // Update header on slide changes
-  if (typeof window.Reveal !== 'undefined') {
-    window.Reveal.on('slidechanged', (event) => {
-      updateHeader(event.indexh);
-    });
-    window.Reveal.on('ready', (event) => {
-      updateHeader(event.indexh);
-    });
-  }
-
-  // Parent postMessage coordination
-  window.addEventListener('message', (event) => {
-    if (!event.data || typeof event.data !== 'object') return;
-    const msg = event.data;
-    
-    if (msg.type === 'REVEAL_LAYOUT') {
-      if (typeof window.Reveal !== 'undefined' && window.Reveal.layout) {
-        window.Reveal.layout();
-      }
-    } else if (msg.type === 'reveal-navigate') {
-      if (typeof window.Reveal !== 'undefined') {
-        if (msg.direction === 'prev') window.Reveal.prev();
-        else if (msg.direction === 'next') window.Reveal.next();
-      }
-    } else if (msg.type === 'SLIDES_MODAL_STATE') {
-      if (btnClose) {
-        if (msg.isOpen) btnClose.classList.remove('hidden');
-        else btnClose.classList.add('hidden');
-      }
+      // Post update to parent if embedded
+      try {
+        window.parent?.postMessage({
+          type: 'SLIDE_CHANGED',
+          index: currentIndex,
+          total: TOTAL_SLIDES,
+          title: SLIDE_TITLES[currentIndex]
+        }, '*');
+      } catch (_) {}
     }
-  });
 
-  // Keyboard shortcut Esc for closing modal
-  window.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape') {
-      window.parent?.postMessage({ type: 'CLOSE_SLIDES' }, '*');
-      window.parent?.postMessage({ type: 'EXIT_FOCUS' }, '*');
+    function prevSlide() {
+      if (currentIndex > 0) goToSlide(currentIndex - 1);
     }
-  });
+
+    function nextSlide() {
+      if (currentIndex < TOTAL_SLIDES - 1) goToSlide(currentIndex + 1);
+    }
+
+    btnPrev.addEventListener('click', prevSlide);
+    btnNext.addEventListener('click', nextSlide);
+
+    dots.forEach(dot => {
+      dot.addEventListener('click', () => {
+        const target = parseInt(dot.getAttribute('data-target'), 10);
+        if (!isNaN(target)) goToSlide(target);
+      });
+    });
+
+    // Toggle Raw PDF vs Slides
+    btnToggleView.addEventListener('click', () => {
+      isPdfMode = !isPdfMode;
+      pdfContainer.classList.toggle('active', isPdfMode);
+      btnToggleViewText.textContent = isPdfMode ? 'Slide View' : 'PDF View';
+    });
+
+    // Laser Pointer
+    btnLaser.addEventListener('click', () => {
+      isLaserActive = !isLaserActive;
+      btnLaser.classList.toggle('active', isLaserActive);
+      laserPointer.style.display = isLaserActive ? 'block' : 'none';
+    });
+
+    window.addEventListener('mousemove', (e) => {
+      if (isLaserActive) {
+        laserPointer.style.left = e.clientX + 'px';
+        laserPointer.style.top = e.clientY + 'px';
+      }
+    });
+
+    // Modal Close
+    if (btnClose) {
+      btnClose.addEventListener('click', (e) => {
+        e.preventDefault();
+        window.parent?.postMessage({ type: 'CLOSE_SLIDES' }, '*');
+        window.parent?.postMessage({ type: 'EXIT_FOCUS' }, '*');
+      });
+    }
+
+    // Modal Detection
+    const urlParams = new URLSearchParams(window.location.search);
+    const isModal = urlParams.get('modal') === 'true' || window.location.hash.includes('modal');
+    if (isModal && btnClose) {
+      btnClose.classList.remove('hidden');
+    }
+
+    // Keyboard Shortcuts
+    window.addEventListener('keydown', (e) => {
+      if (e.target.matches('input, textarea')) return;
+      if (e.key === 'ArrowRight' || e.key === ' ' || e.key === 'PageDown' || e.key === 'l' || e.key === 'ArrowDown') {
+        e.preventDefault();
+        nextSlide();
+      } else if (e.key === 'ArrowLeft' || e.key === 'PageUp' || e.key === 'h' || e.key === 'ArrowUp') {
+        e.preventDefault();
+        prevSlide();
+      } else if (e.key === 'Home') {
+        e.preventDefault();
+        goToSlide(0);
+      } else if (e.key === 'End') {
+        e.preventDefault();
+        goToSlide(TOTAL_SLIDES - 1);
+      } else if (e.key === 'Escape') {
+        window.parent?.postMessage({ type: 'CLOSE_SLIDES' }, '*');
+        window.parent?.postMessage({ type: 'EXIT_FOCUS' }, '*');
+      }
+    });
+
+    // Parent Message Coordination
+    window.addEventListener('message', (event) => {
+      if (!event.data || typeof event.data !== 'object') return;
+      const msg = event.data;
+      if (msg.type === 'reveal-navigate') {
+        if (msg.direction === 'prev') prevSlide();
+        else if (msg.direction === 'next') nextSlide();
+      } else if (msg.type === 'GO_TO_SLIDE') {
+        if (typeof msg.index === 'number') goToSlide(msg.index);
+      } else if (msg.type === 'SLIDES_MODAL_STATE') {
+        if (btnClose) {
+          if (msg.isOpen) btnClose.classList.remove('hidden');
+          else btnClose.classList.add('hidden');
+        }
+      }
+    });
+
+    // Initial state
+    goToSlide(0);
+  })();
   </script>
 </body>
 </html>
